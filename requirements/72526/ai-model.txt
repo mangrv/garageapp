@@ -1,0 +1,41 @@
+I’m checking what AI model should run behind GarageMeet’s local AI endpoint.
+
+GarageMeet currently calls an OpenAI-compatible chat completions endpoint at:
+
+http://192.168.1.199:12881/v1/chat/completions
+
+The app is configured with:
+
+GARAGEMEET_AI_PROVIDER=ollama
+GARAGEMEET_AI_MODEL=qwen3.5:27b-q4_K_M
+
+GarageMeet needs the model/server to support:
+
+1. OpenAI-compatible /v1/chat/completions API
+2. Regular text chat for a vehicle maintenance assistant
+3. JSON-only responses for structured outputs
+4. Vision/image input for receipt scanning, using message content like:
+   [
+     { "type": "text", "text": "..." },
+     { "type": "image_url", "image_url": { "url": "data:image/jpeg;base64,..." } }
+   ]
+5. Context windows large enough for project/job planning prompts, ideally 8k+ output token support
+6. Reliable instruction following, especially returning valid JSON without markdown
+7. Low temperature operation for specs, schedules, receipts, and planning
+
+Can you check:
+
+1. What AI server is actually running behind this endpoint?
+   Is it Ollama, LM Studio, vLLM, llama.cpp server, or something else exposing an OpenAI-compatible API?
+
+2. What models are currently installed and available on that server?
+
+3. Is `qwen3.5:27b-q4_K_M` installed and usable right now?
+
+4. Does the currently configured model support image/vision input through OpenAI-style `image_url` messages?
+
+5. If not, what is the best available local model for GarageMeet’s main chat/planning features?
+
+6. What vision-capable model or separate endpoint should GarageMeet use for receipt scanning?
+
+Important: GarageMeet mostly cares that the API shape works, but vision support can differ a lot between servers. Receipt scanning specifically requires vision support, so if the main chat model does not support images, please recommend a separate vision-capable model or endpoint for receipt parsing.

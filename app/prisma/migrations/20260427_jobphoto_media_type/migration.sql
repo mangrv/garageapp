@@ -1,0 +1,1 @@
+ALTER TABLE "JobPhoto" ADD COLUMN "mediaType" TEXT NOT NULL DEFAULT 'image';

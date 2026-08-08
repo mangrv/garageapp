@@ -1,0 +1,14 @@
+CREATE TABLE "JobBomItem" (
+  "id" TEXT NOT NULL PRIMARY KEY,
+  "jobId" TEXT NOT NULL,
+  "name" TEXT NOT NULL,
+  "partNumber" TEXT,
+  "vendor" TEXT,
+  "quantity" INTEGER NOT NULL DEFAULT 1,
+  "unitCost" REAL,
+  "status" TEXT NOT NULL DEFAULT 'needed',
+  "notes" TEXT,
+  "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT "JobBomItem_jobId_fkey" FOREIGN KEY ("jobId") REFERENCES "Job" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);

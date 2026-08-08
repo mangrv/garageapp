@@ -1,0 +1,39 @@
+{
+  "name": "app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "node --import ts-node/register --test \"**/*.test.ts\"",
+    "db:seed": "ts-node prisma/seed.ts",
+    "media:process-pending": "ts-node scripts/process-pending-media.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.78.0",
+    "@aws-sdk/client-s3": "^3.1038.0",
+    "@aws-sdk/s3-request-presigner": "^3.1041.0",
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.3.1",
+    "jose": "^6.2.1",
+    "jszip": "^3.10.1",
+    "lucide-react": "^1.6.0",
+    "next": "16.1.6",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "sharp": "^0.33.5",
+    "ts-node": "^10.9.2"
+  },
+  "devDependencies": {
+    "@prisma/client": "6.4.1",
+    "@tailwindcss/postcss": "^4",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "prisma": "6.4.1",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

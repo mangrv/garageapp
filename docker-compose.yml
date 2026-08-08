@@ -1,0 +1,45 @@
+services:
+  garage:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: garage-app
+    user: "0:0"
+    restart: unless-stopped
+    ports:
+      - "3011:3000"
+    environment:
+      DATABASE_URL: file:/data/garage.db
+      SESSION_SECRET: ${SESSION_SECRET}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      GARAGEMEET_AI_PROVIDER: ${GARAGEMEET_AI_PROVIDER:-ollama}
+      GARAGEMEET_AI_MODEL: ${GARAGEMEET_AI_MODEL:-qwen3.5:27b-q4_K_M}
+      OLLAMA_OPENAI_BASE_URL: ${OLLAMA_OPENAI_BASE_URL:-http://192.168.1.199:12881/v1}
+      OLLAMA_API_KEY: ${OLLAMA_API_KEY:-ollama}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI:-}
+      NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL:-}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      AWS_REGION: ${AWS_REGION:-us-east-1}
+      AWS_BUCKET: ${AWS_BUCKET:-}
+      AWS_ACL: ${AWS_ACL:-}
+      AWS_SIGNED_URL_EXPIRES: ${AWS_SIGNED_URL_EXPIRES:-900}
+      GARAGE_REQUEST_LOGS: ${GARAGE_REQUEST_LOGS:-1}
+    volumes:
+      # SQLite database — persisted across rebuilds
+      - garage-data:/data
+      # User uploads (car photos, task photos)
+      - garage-uploads:/app/public/uploads
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "--no-check-certificate", "-T", "5", "http://127.0.0.1:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  garage-data:
+  garage-uploads:

@@ -1,0 +1,3 @@
+ALTER TABLE "Task" ADD COLUMN "partsCost" REAL;
+ALTER TABLE "Task" ADD COLUMN "laborCost"  REAL;
+ALTER TABLE "Task" ADD COLUMN "partsNote"  TEXT;

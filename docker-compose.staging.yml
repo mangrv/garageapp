@@ -1,0 +1,29 @@
+services:
+  garage-staging:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: garage-app-staging
+    user: "0:0"
+    restart: unless-stopped
+    ports:
+      - "3012:3000"
+    environment:
+      DATABASE_URL: file:/data/garage.db
+      SESSION_SECRET: ${SESSION_SECRET}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI:-}
+      NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL:-http://192.168.1.198:3012}
+      GARAGE_REQUEST_LOGS: ${GARAGE_REQUEST_LOGS:-1}
+    volumes:
+      - ./staging/data:/data
+      - ./staging/uploads:/app/public/uploads
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "--no-check-certificate", "-T", "5", "http://127.0.0.1:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s

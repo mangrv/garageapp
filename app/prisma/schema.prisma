@@ -1,0 +1,654 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  name         String?
+  displayName  String?
+  role         String    @default("user") // "admin" | "user"
+  createdAt    DateTime  @default(now())
+  cars         Car[]
+  jobs         Job[]
+  invites      Invite[]
+  connectionsA Connection[] @relation("ConnA")
+  connectionsB Connection[] @relation("ConnB")
+  aiConversations AIConversation[]
+  receipts     Receipt[]
+  attachments  JobAttachment[]
+  aiModel      String  @default("default")
+  aiApiKey     String?
+  username     String? @unique
+  publicBio    String?
+  isPublic     Boolean @default(false)
+  likedJobs    JobLike[]
+  savedJobs    JobBookmark[]
+  posts        Post[]
+}
+
+model Invite {
+  id          String    @id @default(cuid())
+  token       String    @unique
+  email       String?
+  accessLevel String    @default("view") // view | full
+  createdById String
+  createdBy   User      @relation(fields: [createdById], references: [id])
+  usedById    String?
+  usedAt      DateTime?
+  expiresAt   DateTime
+  createdAt   DateTime  @default(now())
+}
+
+model Connection {
+  id          String   @id @default(cuid())
+  requesterId String
+  requester   User     @relation("ConnA", fields: [requesterId], references: [id])
+  addresseeId String
+  addressee   User     @relation("ConnB", fields: [addresseeId], references: [id])
+  status      String   @default("pending") // pending | accepted | blocked
+  accessLevel String   @default("view")    // view | full
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([requesterId, addresseeId])
+}
+
+model Car {
+  id        String     @id @default(cuid())
+  userId    String?
+  user      User?      @relation(fields: [userId], references: [id])
+  assetType String     @default("vehicle") // vehicle | trailer | riding_mower | equipment | bicycle
+  relationshipToUser String @default("owned") // owned | family | friend_customer | other
+  managedOwnerName String?
+  managedOwnerContact String?
+  managedOwnerNotes String?
+  year      Int
+  make      String
+  model     String
+  trim      String?
+  color     String?
+  mileage   Int?
+  vin          String?
+  transmission String? // "automatic" | "manual" | "cvt" | "dct"
+  notes        String?
+  // Bicycle-specific fields
+  bikeType     String? // road | mountain | gravel | hybrid | bmx | electric | cruiser | other
+  frameSize    String? // S | M | L | XL | 54cm | 56cm | etc.
+  wheelSize    String? // 26" | 27.5" | 29" | 700c | 20" | etc.
+  publicNotes  String?
+  isPublic     Boolean  @default(false)
+  acquiredDate DateTime?
+  purchasePrice Float?
+  createdAt    DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  jobs                Job[]
+  photos              CarPhoto[]
+  serviceRecords      ServiceRecord[]
+  mileageLogs         MileageLog[]
+  maintenanceForecast MaintenanceForecast?
+  documents           CarDocument[]
+  vinEnrichment       VinEnrichment?
+  vehicleExternalData VehicleExternalData[]
+  vehicleRecalls      VehicleRecall[]
+  vehicleMarketValues VehicleMarketValue[]
+  vehicleEstimate     VehicleEstimate?
+  estimateSnapshots   VehicleEstimateSnapshot[]
+  vehicleSpecs             VehicleSpecs?
+  maintenanceScheduleItems MaintenanceScheduleItem[]
+}
+
+model CarDocument {
+  id        String    @id @default(cuid())
+  carId     String
+  car       Car       @relation(fields: [carId], references: [id], onDelete: Cascade)
+  filename  String
+  type      String    @default("other")
+  label     String?
+  expiresAt DateTime?
+  notes     String?
+  isPrivate Boolean   @default(false)
+  createdAt DateTime  @default(now())
+}
+
+model ServiceRecord {
+  id             String   @id @default(cuid())
+  carId          String
+  car            Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  jobId          String?
+  title          String
+  serviceType    String?
+  notes          String?
+  details        String?
+  partsUsed      String?
+  cost           Float?
+  nextServiceDue String?
+  duration       String?
+  partsSource    String?
+  mileage        Int?
+  serviceDate    DateTime
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  receipts       Receipt[]
+  attachments    JobAttachment[]
+}
+
+model MaintenanceForecast {
+  id          String   @id @default(cuid())
+  carId       String   @unique
+  car         Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  items       String   // JSON array of forecast items
+  generatedAt DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model CarPhoto {
+  id         String   @id @default(cuid())
+  carId      String
+  car        Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  filename   String
+  caption    String?
+  takenAt    DateTime?
+  isFeatured Boolean  @default(false)
+  isPrivate  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
+
+model Job {
+  id              String   @id @default(cuid())
+  userId          String?
+  user            User?    @relation(fields: [userId], references: [id])
+  title           String
+  carId           String?
+  car             Car?     @relation(fields: [carId], references: [id], onDelete: SetNull)
+  notes           String?
+  status          String   @default("active") // todo | up_next | active | in_progress | blocked | testing | done | archived
+  serviceType     String?  // oil_change | tire_rotation | brakes | tires | alignment | detailing | inspection | parts | maintenance | modifications | other
+  shareToken      String?  @unique
+  toolsJson       String?  // JSON array of strings
+  startedAt       DateTime?
+  completedAt     DateTime?
+  clonedFromId    String?
+  clonedFrom      Job?     @relation("ClonedFrom", fields: [clonedFromId], references: [id], onDelete: SetNull)
+  clones          Job[]    @relation("ClonedFrom")
+  clonedFromTitle String?  // cached in case source job is deleted
+  sortOrder       Int      @default(0)
+  feedCaption     String?    // public-facing post description shown on the feed
+  feedUpdatedAt   DateTime?  // set when first/any public photo is toggled on
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  phases      Phase[]
+  attachments JobAttachment[]
+  receipts    Receipt[]
+  photos      JobPhoto[]
+  bomItems    JobBomItem[]
+  likes       JobLike[]
+  bookmarks   JobBookmark[]
+  posts       Post[]
+}
+
+model JobAttachment {
+  id              String         @id @default(cuid())
+  jobId           String?
+  job             Job?           @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  serviceRecordId String?
+  serviceRecord   ServiceRecord? @relation(fields: [serviceRecordId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  filename        String
+  type            String         @default("other") // estimate | invoice | photo | other
+  vendor          String?
+  amount          Float?
+  caption         String?
+  createdAt       DateTime       @default(now())
+}
+
+model Phase {
+  id          String   @id @default(cuid())
+  title       String
+  emoji       String?
+  notes       String?
+  sortOrder   Int
+  status      String   @default("todo") // todo | in_progress | done
+  toolsJson   String?  // JSON array of strings
+  jobId       String
+  job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  tasks       Task[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Task {
+  id          String    @id @default(cuid())
+  title       String
+  warning     String?
+  tip         String?
+  torqueValue Float?
+  torqueUnit  String?   // "ft-lbs" | "Nm" | "in-lbs"
+  partsCost   Float?
+  laborCost   Float?
+  partsNote   String?   // part numbers, vendor, etc.
+  done        Boolean   @default(false)
+  dueDate     DateTime?
+  sortOrder   Int
+  phaseId     String
+  phase       Phase     @relation(fields: [phaseId], references: [id], onDelete: Cascade)
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  comments        Comment[]
+  photos          Photo[]
+  receiptLineItems ReceiptLineItem[]
+}
+
+model MileageLog {
+  id         String   @id @default(cuid())
+  carId      String
+  car        Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  mileage    Int
+  recordedAt DateTime
+  source     String   @default("manual") // manual | service | job
+  sourceId   String?
+  notes      String?
+  createdAt  DateTime @default(now())
+}
+
+model AIConversation {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobId     String?  // null = general garage chat
+  messages  String   @default("[]") // JSON array
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, jobId])
+}
+
+model UserTemplate {
+  id         String   @id @default(cuid())
+  name       String
+  phasesJson String
+  createdAt  DateTime @default(now())
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  taskId    String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  text      String
+  createdAt DateTime @default(now())
+}
+
+model Photo {
+  id        String   @id @default(cuid())
+  taskId    String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  filename  String
+  caption   String?
+  createdAt DateTime @default(now())
+}
+
+model TranslationCache {
+  id         String   @id @default(cuid())
+  hash       String   @unique
+  original   String
+  lang       String
+  translated String
+  createdAt  DateTime @default(now())
+}
+
+model Receipt {
+  id              String    @id @default(cuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  filename        String?
+  vendor          String?
+  totalAmount     Float?
+  receiptDate     DateTime?
+  notes           String?
+  status          String    @default("inbox") // inbox | linked
+  jobId           String?
+  job             Job?      @relation(fields: [jobId], references: [id], onDelete: SetNull)
+  serviceRecordId String?
+  serviceRecord   ServiceRecord? @relation(fields: [serviceRecordId], references: [id], onDelete: SetNull)
+  lineItems       ReceiptLineItem[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model ReceiptLineItem {
+  id               String   @id @default(cuid())
+  receiptId        String
+  receipt          Receipt  @relation(fields: [receiptId], references: [id], onDelete: Cascade)
+  name             String
+  amount           Float?
+  quantity         Int      @default(1)
+  taskId           String?
+  task             Task?    @relation(fields: [taskId], references: [id], onDelete: SetNull)
+  notes            String?
+  warrantyProvider String?
+  warrantyStart    DateTime?
+  warrantyEnd      DateTime?
+  warrantyNotes    String?
+  createdAt        DateTime @default(now())
+}
+
+model VinEnrichment {
+  id                String   @id @default(cuid())
+  carId             String   @unique
+  car               Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+
+  // Raw API responses (stored for reprocessing)
+  nhtsaDecodeRaw    String?
+  recallsRaw        String?
+  marketDataRaw     String?
+
+  // Normalized VIN-decoded fields
+  engine            String?
+  displacement      String?
+  drivetrain        String?
+  bodyStyle         String?
+  plant             String?
+  fuelType          String?
+  doors             Int?
+  series            String?
+  trim              String?
+
+  // Recall data
+  hasOpenRecalls    Boolean  @default(false)
+  recallCount       Int      @default(0)
+  recallsSummary    String?  // JSON array
+
+  // Market valuation (from external provider or manual)
+  marketValueLow    Float?
+  marketValueMid    Float?
+  marketValueHigh   Float?
+  marketValueSource String?  // "nhtsa" | "marketcheck" | "vinaudit" | "manual"
+  marketValueDate   DateTime?
+
+  // Garage estimate (app-computed)
+  garageEstimate    Float?
+  conditionScore    Int?     // 1–5 user rating
+  adjustmentJson    String?  // JSON: AdjustmentFactor[]
+  estimatedAt       DateTime?
+
+  // Valuation history snapshots
+  valuationHistory  String?  // JSON: { date, market, garage }[]
+
+  enrichedAt        DateTime?
+
+  // AI-generated vehicle history blurb (about the model/generation, not the owner)
+  blurb             String?  // markdown text
+  blurbGeneratedAt  DateTime?
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model VehicleExternalData {
+  id               String   @id @default(cuid())
+  carId            String
+  car              Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  provider         String   // "nhtsa_vin" | "nhtsa_recall" | "marketcheck" | "vinaudit"
+  recordType       String   // "vin_decode" | "recall_list" | "market_value" | "history"
+  rawJson          String
+  normalizedStatus String   @default("raw")
+  fetchedAt        DateTime @default(now())
+  createdAt        DateTime @default(now())
+}
+
+model VehicleRecall {
+  id             String   @id @default(cuid())
+  carId          String
+  car            Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  campaignNumber String
+  component      String
+  summary        String?
+  recallDate     String?
+  isOpen         Boolean  @default(true)
+  consequence    String?
+  remedy         String?
+  sourceProvider String   @default("nhtsa")
+  lastCheckedAt  DateTime @default(now())
+  createdAt      DateTime @default(now())
+
+  @@unique([carId, campaignNumber])
+}
+
+model VehicleMarketValue {
+  id             String   @id @default(cuid())
+  carId          String
+  car            Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  sourceProvider String   // "marketcheck" | "vinaudit" | "manual"
+  valueLow       Float?
+  valueAvg       Float?
+  valueHigh      Float?
+  currency       String   @default("USD")
+  mileageUsed    Int?
+  zipUsed        String?
+  fetchedAt      DateTime @default(now())
+  rawJson        String?
+  createdAt      DateTime @default(now())
+}
+
+model VehicleEstimate {
+  id                    String   @id @default(cuid())
+  carId                 String   @unique
+  car                   Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+
+  // Inputs
+  marketBaseline        Float?
+  marketSource          String?  // "manual" | "marketcheck" | "vinaudit"
+
+  // Output
+  garageEstimate        Float?
+
+  // Component adjustments (dollar amounts)
+  maintenanceAdjustment Float    @default(0)
+  repairAdjustment      Float    @default(0)
+  conditionAdjustment   Float    @default(0)
+  mileageAdjustment     Float    @default(0)
+  recallAdjustment      Float    @default(0)
+  modAdjustment         Float    @default(0)
+
+  // Breakdown detail (JSON array of line items)
+  adjustmentDetailJson  String?
+
+  // Confidence
+  confidenceScore       Int      @default(0)  // 0-100
+  confidence            String   @default("low")
+  confidenceReason      String?
+
+  // User inputs
+  conditionScore        Int?     // 1–5 stars
+  conditionNotes        String?
+
+  version               Int      @default(1)
+  generatedAt           DateTime @default(now())
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model VehicleEstimateSnapshot {
+  id             String   @id @default(cuid())
+  carId          String
+  car            Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  garageEstimate Float?
+  marketBaseline Float?
+  confidence     String?
+  triggerSource  String   @default("manual")  // "manual" | "service_added" | "scheduled"
+  generatedAt    DateTime @default(now())
+  createdAt      DateTime @default(now())
+}
+
+model VehicleSpecs {
+  id    String @id @default(cuid())
+  carId String @unique
+  car   Car    @relation(fields: [carId], references: [id], onDelete: Cascade)
+
+  // Engine & Oil
+  engineOilType       String?   // "5W-20 Full Synthetic"
+  engineOilCapacity   String?   // "4.5 quarts with filter"
+  oilDrainPlugTorque  String?   // "33 ft-lbs"
+  oilChangeInterval   String?   // "5,000–7,500 miles"
+
+  // Transmission
+  transmissionFluid    String?  // "Honda ATF DW-1"
+  transmissionCapacity String?  // "6.9 quarts (total)"
+  transmissionService  String?  // "30,000 miles"
+
+  // Coolant
+  coolantType         String?   // "Honda Blue Type 2 / OAT"
+  coolantCapacity     String?   // "6.3 quarts"
+  thermostatTemp      String?   // "180°F / 82°C"
+  coolantPressureCap  String?   // "16 psi"
+
+  // Ignition
+  sparkPlugBrand      String?   // "NGK ILZKR7A-11S (OEM)"
+  sparkPlugGap        String?   // "0.044 in / 1.1 mm"
+  firingOrder         String?   // "1-3-4-2"
+  ignitionCoilTorque  String?   // "9 ft-lbs"
+
+  // Brakes
+  brakeFluidType      String?   // "DOT 3"
+  frontBrakeMinThick  String?   // "2 mm"
+  rearBrakeMinThick   String?   // "1.6 mm"
+  frontRotorMinThick  String?   // "20 mm"
+  rearRotorMinThick   String?   // "8 mm"
+  caliperBoltTorqueFront String? // "25 ft-lbs (slide pin)"
+  caliperBoltTorqueRear  String? // "17 ft-lbs (slide pin)"
+
+  // Torque Specs
+  lugNutTorque        String?   // "80 ft-lbs"
+  wheelSize           String?   // "16–17 in OEM"
+  tireSize            String?   // "205/60R16 or 215/55R17"
+  coldTirePressure    String?   // "32 psi front & rear"
+
+  // Power Steering / Other Fluids
+  powerSteeringFluid  String?   // "Honda PS Fluid"
+  acRefrigerant       String?   // "R-134a, 19.8 oz"
+  diffFluid           String?   // "n/a" or "Honda VTM-4"
+
+  // Additional
+  batterySpec         String?   // "Group 51R, 410 CCA"
+  airFilterInterval   String?   // "15,000–30,000 miles"
+  timingBeltOrChain   String?   // "Chain — no scheduled replacement"
+  notes               String?   // Free-text notes / manual overrides
+
+  generatedAt DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model MaintenanceScheduleItem {
+  id            String   @id @default(cuid())
+  carId         String
+  car           Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+
+  task          String   // "Oil & filter change"
+  category      String   @default("general")  // engine|brakes|fluids|tires|electrical|filters|inspection|cooling
+  notes         String?  // "Use 0W-20 full synthetic"
+
+  intervalMiles  Int?    // 5000
+  intervalMonths Int?    // 12
+
+  lastDoneMiles  Int?
+  lastDoneDate   DateTime?
+
+  isCustom   Boolean  @default(false)
+  sortOrder  Int      @default(0)
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model JobPhoto {
+  id        String   @id @default(cuid())
+  jobId     String
+  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  filename  String
+  mediaType String   @default("image") // image | video
+  caption   String?
+  isPublic  Boolean  @default(false)
+  isPrimary Boolean  @default(false)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model JobBomItem {
+  id         String   @id @default(cuid())
+  jobId      String
+  job        Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  name       String
+  partNumber String?
+  vendor     String?
+  quantity   Int      @default(1)
+  unitCost   Float?
+  status     String   @default("needed") // needed | ordered | received | installed
+  notes      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Post {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobId       String?
+  job         Job?     @relation(fields: [jobId], references: [id], onDelete: SetNull)
+  title       String?
+  caption     String?
+  isPublished Boolean  @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  media       PostMedia[]
+
+  @@index([userId, createdAt])
+  @@index([isPublished, publishedAt])
+  @@unique([jobId])
+}
+
+model PostMedia {
+  id        String   @id @default(cuid())
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  filename  String
+  mediaType String   @default("image") // image | video
+  caption   String?
+  isPrimary Boolean  @default(false)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([postId, sortOrder])
+}
+
+model JobLike {
+  id        String   @id @default(cuid())
+  jobId     String
+  userId    String
+  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([jobId, userId])
+}
+
+model JobBookmark {
+  id        String   @id @default(cuid())
+  jobId     String
+  userId    String
+  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([jobId, userId])
+}

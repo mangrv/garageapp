@@ -1,0 +1,7 @@
+app/node_modules
+app/.next
+app/prisma/dev.db
+app/prisma/dev.db-journal
+**/.git
+**/.env.local
+**/README.md

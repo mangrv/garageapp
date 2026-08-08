@@ -1,0 +1,2 @@
+ALTER TABLE "Car" ADD COLUMN "acquiredDate"  DATETIME;
+ALTER TABLE "Car" ADD COLUMN "purchasePrice" REAL;

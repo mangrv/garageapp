@@ -1,0 +1,4 @@
+ALTER TABLE "Task" ADD COLUMN "torqueValue" REAL;
+ALTER TABLE "Task" ADD COLUMN "torqueUnit" TEXT;
+ALTER TABLE "Project" ADD COLUMN "toolsJson" TEXT;
+ALTER TABLE "Phase" ADD COLUMN "toolsJson" TEXT;
