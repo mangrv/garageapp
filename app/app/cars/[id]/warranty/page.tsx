@@ -5,6 +5,7 @@ import { requireSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Shield } from "lucide-react";
+import Glyph from "@/app/components/Glyph";
 
 export default async function WarrantyPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -106,7 +107,7 @@ export default async function WarrantyPage({ params }: { params: Promise<{ id: s
         <div className="space-y-6">
           {soon.length > 0 && (
             <div>
-              <h2 className="text-xs font-semibold text-amber-400 uppercase tracking-wide mb-3">⚠ {lang === "es" ? "Vence pronto" : "Expiring Soon"} ({soon.length})</h2>
+              <h2 className="text-xs font-semibold text-amber-400 uppercase tracking-wide mb-3"><Glyph e="⚠" /> {lang === "es" ? "Vence pronto" : "Expiring Soon"} ({soon.length})</h2>
               <div className="space-y-2">{soon.map(w => <Card key={w.id} w={w} />)}</div>
             </div>
           )}

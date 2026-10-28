@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import Glyph from "@/app/components/Glyph";
 
 type Invite = {
   id: string;
@@ -92,13 +93,13 @@ export default function AdminPage() {
     });
   };
 
-  const BASE = typeof window !== "undefined" ? window.location.origin : "https://garage.jorgeiglesias.com";
+  const BASE = typeof window !== "undefined" ? window.location.origin : "https://garagemeet.com";
 
   return (
     <div className="min-h-screen bg-gray-950 text-white p-4 max-w-2xl mx-auto">
       <div className="flex items-center gap-3 mb-6">
         <a href="/dashboard" className="text-gray-500 text-lg">←</a>
-        <h1 className="text-xl font-bold">🔐 Admin Panel</h1>
+        <h1 className="text-xl font-bold"><Glyph e="🔐" /> Admin Panel</h1>
       </div>
 
       {/* Generate invite */}
@@ -123,22 +124,22 @@ export default function AdminPage() {
               onClick={() => setAccessLevel("view")}
               className={`flex-1 py-2 rounded-xl text-sm font-semibold border transition-colors ${
                 accessLevel === "view"
-                  ? "bg-sky-600 border-sky-500 text-white"
+                  ? "bg-sky-600 border-sky-500 text-on-accent"
                   : "bg-gray-800 border-gray-700 text-gray-400"
               }`}
             >
-              👁 View only
+              <Glyph e="👁" /> View only
             </button>
             <button
               type="button"
               onClick={() => setAccessLevel("full")}
               className={`flex-1 py-2 rounded-xl text-sm font-semibold border transition-colors ${
                 accessLevel === "full"
-                  ? "bg-amber-500 border-amber-400 text-gray-950"
+                  ? "bg-amber-500 border-amber-400 text-on-accent"
                   : "bg-gray-800 border-gray-700 text-gray-400"
               }`}
             >
-              🔧 Full access
+              <Glyph e="🔧" /> Full access
             </button>
           </div>
           <p className="text-xs text-gray-500 mt-1.5">
@@ -151,9 +152,9 @@ export default function AdminPage() {
         <button
           onClick={handleGenerate}
           disabled={generating}
-          className="w-full bg-amber-500 text-gray-950 font-bold py-2.5 rounded-xl text-sm disabled:opacity-40"
+          className="w-full bg-amber-500 text-on-accent font-bold py-2.5 rounded-xl text-sm disabled:opacity-40"
         >
-          {generating ? "Generating…" : "✉️ Generate Invite Link"}
+          {generating ? "Generating…" : <>{"✉️ Generate Invite Link"}</>}
         </button>
 
         {generatedUrl && (
@@ -162,9 +163,9 @@ export default function AdminPage() {
             <div className="font-mono text-xs text-emerald-300 break-all">{generatedUrl}</div>
             <button
               onClick={() => handleCopy(generatedUrl)}
-              className="text-xs bg-emerald-700 text-white px-3 py-1.5 rounded-lg"
+              className="text-xs bg-emerald-700 text-on-accent px-3 py-1.5 rounded-lg"
             >
-              {copied ? "✓ Copied!" : "📋 Copy link"}
+              {copied ? <>{"✓ Copied!"}</> : <>{"📋 Copy link"}</>}
             </button>
           </div>
         )}
@@ -188,7 +189,7 @@ export default function AdminPage() {
             <div key={inv.id} className={`bg-gray-900 border rounded-xl p-4 space-y-2 ${used ? "border-gray-700 opacity-60" : expired ? "border-red-900" : "border-gray-700"}`}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${used ? "bg-emerald-800 text-emerald-200" : expired ? "bg-red-900 text-red-300" : "bg-blue-900 text-blue-200"}`}>
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${used ? "bg-emerald-900 text-emerald-400" : expired ? "bg-red-900 text-red-300" : "bg-blue-900 text-blue-200"}`}>
                     {used ? "Used" : expired ? "Expired" : "Active"}
                   </span>
                   {inv.email && <span className="text-xs text-gray-400">→ {inv.email}</span>}
@@ -200,7 +201,7 @@ export default function AdminPage() {
               <div className="font-mono text-xs text-gray-500 break-all">{url}</div>
               <div className="flex items-center justify-between text-xs text-gray-600">
                 <span>Expires: {new Date(inv.expiresAt).toLocaleDateString()}</span>
-                <button onClick={() => handleCopy(url)} className="text-xs text-gray-400 hover:text-gray-300">📋 Copy</button>
+                <button onClick={() => handleCopy(url)} className="text-xs text-gray-400 hover:text-gray-300"><Glyph e="📋" /> Copy</button>
               </div>
               {inv.usedAt && (
                 <div className="text-xs text-gray-600">Used: {new Date(inv.usedAt).toLocaleDateString()}</div>
@@ -212,7 +213,7 @@ export default function AdminPage() {
 
       {/* Connections manager */}
       <div className="space-y-3 mt-8">
-        <div className="text-sm font-bold text-white">🤝 Connections & Access</div>
+        <div className="text-sm font-bold text-white"><Glyph e="🤝" /> Connections & Access</div>
         {connections.length === 0 && (
           <p className="text-gray-600 text-sm">No connections yet.</p>
         )}
@@ -232,7 +233,7 @@ export default function AdminPage() {
                   ? conn.accessLevel === "full" ? "bg-amber-900/50 text-amber-300" : "bg-sky-900/50 text-sky-300"
                   : "bg-gray-800 text-gray-400"
               }`}>
-                {conn.accessLevel === "full" ? "🔧 Full" : "👁 View"}
+                {conn.accessLevel === "full" ? <>{"🔧 Full"}</> : <>{"👁 View"}</>}
               </span>
             </div>
 
@@ -241,27 +242,27 @@ export default function AdminPage() {
                 onClick={() => setConnectionAccess(conn.id, "view")}
                 className={`flex-1 py-1.5 rounded-lg text-xs font-semibold border transition-colors ${
                   conn.accessLevel === "view"
-                    ? "bg-sky-600 border-sky-500 text-white"
+                    ? "bg-sky-600 border-sky-500 text-on-accent"
                     : "bg-gray-800 border-gray-700 text-gray-400"
                 }`}
               >
-                👁 View only
+                <Glyph e="👁" /> View only
               </button>
               <button
                 onClick={() => setConnectionAccess(conn.id, "full")}
                 className={`flex-1 py-1.5 rounded-lg text-xs font-semibold border transition-colors ${
                   conn.accessLevel === "full"
-                    ? "bg-amber-500 border-amber-400 text-gray-950"
+                    ? "bg-amber-500 border-amber-400 text-on-accent"
                     : "bg-gray-800 border-gray-700 text-gray-400"
                 }`}
               >
-                🔧 Full access
+                <Glyph e="🔧" /> Full access
               </button>
               <button
                 onClick={() => removeConnection(conn.id)}
                 className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-800 border border-gray-700 text-red-400 hover:bg-red-900/30 transition-colors"
               >
-                ✕
+                <Glyph e="✕" />
               </button>
             </div>
           </div>

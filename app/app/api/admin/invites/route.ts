@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  const base = process.env.NEXT_PUBLIC_BASE_URL || "https://garage.jorgeiglesias.com";
+  const base = process.env.NEXT_PUBLIC_BASE_URL || "https://garagemeet.com";
   const url = `${base}/register/${token}`;
 
   return NextResponse.json({ invite, url, token });

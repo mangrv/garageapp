@@ -1,9 +1,11 @@
+import type { Metadata } from "next";
 import React from "react";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import PrintButton from "./PrintButton";
 import { callGarageAIText } from "@/lib/ai-provider";
+import Glyph from "@/app/components/Glyph";
 
 // Force dark theme CSS vars regardless of user's app theme preference
 const DARK: React.CSSProperties = {
@@ -182,6 +184,27 @@ const SVC_EMOJI: Record<string, string> = {
 };
 
 // ── Page ─────────────────────────────────────────────────────────────────────
+export async function generateMetadata({ params }: { params: Promise<{ username: string; carId: string }> }): Promise<Metadata> {
+  const { username, carId } = await params;
+  const user = await (prisma.user as any).findFirst({
+    where: { username: username.toLowerCase(), isPublic: true },
+    select: { id: true, name: true, username: true },
+  }).catch(() => null);
+  const car = user ? await (prisma.car as any).findFirst({
+    where: { id: carId, userId: user.id, isPublic: true },
+    select: { year: true, make: true, model: true, trim: true, publicNotes: true },
+  }).catch(() => null) : null;
+  if (!user || !car) return { title: "Vehicle not found", robots: { index: false } };
+  const who = user.name || `@${user.username}`;
+  const name = [car.year, car.make, car.model, car.trim].filter(Boolean).join(" ");
+  const title = `${name} — ${who}'s garage`;
+  const description = car.publicNotes
+    ? String(car.publicNotes).slice(0, 155)
+    : `${name} on GarageMeet: specs, service history and completed projects shared by ${who}.`;
+  const path = `/u/${user.username}/car/${carId}`;
+  return { title, description, alternates: { canonical: path }, openGraph: { title: `${title} · GarageMeet`, description, url: path } };
+}
+
 export default async function CarShowCardPage({
   params,
 }: {
@@ -296,7 +319,7 @@ export default async function CarShowCardPage({
               />
             ) : (
               <div className="absolute inset-0 flex items-center justify-center" style={{ background: "linear-gradient(135deg, #1f2937, #0a0a0a)" }}>
-                <span className="text-7xl opacity-20">🚗</span>
+                <span className="text-7xl opacity-20"><Glyph e="🚗" /></span>
               </div>
             )}
             {/* Strong bottom gradient — readable over any photo */}
@@ -341,7 +364,7 @@ export default async function CarShowCardPage({
               </div>
               <div>{renderBlurb(vehicleBlurb)}</div>
               <p style={{ fontSize: "0.7rem", color: "#374151", marginTop: "14px", paddingTop: "12px", borderTop: "1px solid #1f2937" }}>
-                ✦ AI-generated overview about the {car.year} {car.make} {car.model} model
+                <Glyph e="✦" /> AI-generated overview about the {car.year} {car.make} {car.model} model
               </p>
             </div>
           )}
@@ -355,7 +378,7 @@ export default async function CarShowCardPage({
               </div>
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <span className="text-base w-7 text-center flex-shrink-0">🔑</span>
+                  <span className="text-base w-7 text-center flex-shrink-0"><Glyph e="🔑" /></span>
                   <div>
                     <p style={{ fontSize: "0.875rem", fontWeight: 600, color: "#f3f4f6" }}>Acquired</p>
                     <p style={{ fontSize: "0.75rem", marginTop: "2px", color: "#9ca3af" }}>
@@ -367,7 +390,7 @@ export default async function CarShowCardPage({
 
                 {milesAdded !== null && milesAdded > 0 && (
                   <div className="flex items-start gap-3">
-                    <span className="text-base w-7 text-center flex-shrink-0">📍</span>
+                    <span className="text-base w-7 text-center flex-shrink-0"><Glyph e="📍" /></span>
                     <div>
                       <p style={{ fontSize: "0.875rem", fontWeight: 600, color: "#f3f4f6" }}>{fmtMiles(milesAdded)} added under this ownership</p>
                       <p style={{ fontSize: "0.75rem", marginTop: "2px", color: "#9ca3af" }}>{fmtMiles(acquiredMileage!)} → {fmtMiles(car.mileage)}</p>
@@ -377,7 +400,7 @@ export default async function CarShowCardPage({
 
                 {car.serviceRecords.length > 0 && (
                   <div className="flex items-start gap-3">
-                    <span className="text-base w-7 text-center flex-shrink-0">🔧</span>
+                    <span className="text-base w-7 text-center flex-shrink-0"><Glyph e="🔧" /></span>
                     <div>
                       <p style={{ fontSize: "0.875rem", fontWeight: 600, color: "#f3f4f6" }}>
                         {car.serviceRecords.length} service record{car.serviceRecords.length !== 1 ? "s" : ""} logged
@@ -391,7 +414,7 @@ export default async function CarShowCardPage({
 
                 {car.jobs.length > 0 && (
                   <div className="flex items-start gap-3">
-                    <span className="text-base w-7 text-center flex-shrink-0">🏗️</span>
+                    <span className="text-base w-7 text-center flex-shrink-0"><Glyph e="🏗" /></span>
                     <div>
                       <p style={{ fontSize: "0.875rem", fontWeight: 600, color: "#f3f4f6" }}>
                         {car.jobs.length} project{car.jobs.length !== 1 ? "s" : ""} completed
@@ -450,7 +473,7 @@ export default async function CarShowCardPage({
               <div className="space-y-2.5">
                 {car.jobs.map((j: any) => (
                   <div key={j.id} className="flex items-start gap-3">
-                    <span className="mt-0.5 text-xs" style={{ color: "#22c55e" }}>✓</span>
+                    <span className="mt-0.5 text-xs" style={{ color: "#22c55e" }}><Glyph e="✓" /></span>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium" style={{ color: "#f3f4f6" }}>{j.title}</p>
                       {j.notes && <p className="text-xs mt-0.5 line-clamp-1" style={{ color: "#4b5563" }}>{j.notes}</p>}
@@ -473,7 +496,7 @@ export default async function CarShowCardPage({
               <div className="space-y-2.5">
                 {car.serviceRecords.map((r: any) => (
                   <div key={r.id} className="flex items-center gap-2.5 text-sm">
-                    <span className="w-5 text-center flex-shrink-0">{SVC_EMOJI[r.serviceType] ?? "🔧"}</span>
+                    <span className="w-5 text-center flex-shrink-0">{SVC_EMOJI[r.serviceType] ?? <Glyph e="🔧" />}</span>
                     <span className="flex-1 min-w-0 truncate" style={{ color: "#e5e7eb" }}>{r.title}</span>
                     <div className="flex items-center gap-2 text-xs flex-shrink-0" style={{ color: "#4b5563" }}>
                       {r.mileage && <span>{r.mileage.toLocaleString()} mi</span>}
@@ -521,7 +544,7 @@ export default async function CarShowCardPage({
           </div>
 
           <p className="text-center text-xs pb-2" style={{ color: "#1f2937" }}>
-            Built with <span style={{ color: "#4b5563" }}>My Garage</span> · garage.jorgeiglesias.com
+            Built with <span style={{ color: "#4b5563" }}>My Garage</span> · garagemeet.com
           </p>
 
         </div>

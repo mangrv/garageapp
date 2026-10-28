@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import SearchBar from "./SearchBar";
 import { requireSession } from "@/lib/session";
+import Glyph from "@/app/components/Glyph";
 
 function highlight(text: string, q: string) {
   if (!q || !text) return text;
@@ -26,11 +27,11 @@ export default async function SearchPage({
           where: {
             userId: session.userId,
             OR: [
-              { make: { contains: query } },
-              { model: { contains: query } },
-              { trim: { contains: query } },
-              { color: { contains: query } },
-              { notes: { contains: query } },
+              { make: { contains: query, mode: "insensitive" } },
+              { model: { contains: query, mode: "insensitive" } },
+              { trim: { contains: query, mode: "insensitive" } },
+              { color: { contains: query, mode: "insensitive" } },
+              { notes: { contains: query, mode: "insensitive" } },
             ],
           },
           take: 10,
@@ -39,8 +40,8 @@ export default async function SearchPage({
           where: {
             userId: session.userId,
             OR: [
-              { title: { contains: query } },
-              { notes: { contains: query } },
+              { title: { contains: query, mode: "insensitive" } },
+              { notes: { contains: query, mode: "insensitive" } },
             ],
           },
           include: { car: true },
@@ -49,10 +50,10 @@ export default async function SearchPage({
         prisma.task.findMany({
           where: {
             OR: [
-              { title: { contains: query } },
-              { tip: { contains: query } },
-              { warning: { contains: query } },
-              { comments: { some: { text: { contains: query } } } },
+              { title: { contains: query, mode: "insensitive" } },
+              { tip: { contains: query, mode: "insensitive" } },
+              { warning: { contains: query, mode: "insensitive" } },
+              { comments: { some: { text: { contains: query, mode: "insensitive" } } } },
             ],
           },
           include: { phase: { include: { job: { include: { car: true } } } } },
@@ -61,8 +62,8 @@ export default async function SearchPage({
         prisma.serviceRecord.findMany({
           where: {
             OR: [
-              { title: { contains: query } },
-              { notes: { contains: query } },
+              { title: { contains: query, mode: "insensitive" } },
+              { notes: { contains: query, mode: "insensitive" } },
             ],
           },
           include: { car: true },
@@ -77,7 +78,7 @@ export default async function SearchPage({
       <header className="sticky top-0 z-10 bg-gray-950 border-b border-gray-800 px-4 py-4">
         <div className="flex items-center gap-3 mb-3">
           <Link href="/dashboard" className="text-gray-400 text-sm">←</Link>
-          <h1 className="font-bold text-base">🔍 Search</h1>
+          <h1 className="font-bold text-base"><Glyph e="🔍" /> Search</h1>
         </div>
         <SearchBar defaultValue={query} />
       </header>
@@ -92,13 +93,13 @@ export default async function SearchPage({
             {/* Cars */}
             {cars.length > 0 && (
               <section>
-                <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">🚗 Cars ({cars.length})</h2>
+                <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2"><Glyph e="🚗" /> Cars ({cars.length})</h2>
                 <div className="space-y-2">
                   {cars.map((car) => (
                     <Link key={car.id} href={`/cars/${car.id}`}>
                       <div className="bg-gray-900 border border-gray-800 rounded-xl px-3 py-2.5 active:scale-[0.98] transition-transform">
                         <div className="font-medium text-sm">{car.year} {car.make} {car.model} {car.trim}</div>
-                        {car.color && <div className="text-xs text-gray-500 mt-0.5">🎨 {car.color}</div>}
+                        {car.color && <div className="text-xs text-gray-500 mt-0.5"><Glyph e="🎨" /> {car.color}</div>}
                       </div>
                     </Link>
                   ))}
@@ -109,7 +110,7 @@ export default async function SearchPage({
             {/* Jobs */}
             {projects.length > 0 && (
               <section>
-                <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">🔧 Jobs ({projects.length})</h2>
+                <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2"><Glyph e="🔧" /> Jobs ({projects.length})</h2>
                 <div className="space-y-2">
                   {projects.map((p) => {
                     const carLabel = p.car ? `${p.car.year} ${p.car.make} ${p.car.model}` : null;
@@ -133,7 +134,7 @@ export default async function SearchPage({
             {/* Tasks */}
             {tasks.length > 0 && (
               <section>
-                <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">✅ Tasks ({tasks.length})</h2>
+                <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2"><Glyph e="✅" /> Tasks ({tasks.length})</h2>
                 <div className="space-y-2">
                   {tasks.map((t) => {
                     const job = t.phase.job;
@@ -158,7 +159,7 @@ export default async function SearchPage({
             {/* Service records */}
             {serviceRecords.length > 0 && (
               <section>
-                <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">🛠 Service Records ({serviceRecords.length})</h2>
+                <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2"><Glyph e="🛠" /> Service Records ({serviceRecords.length})</h2>
                 <div className="space-y-2">
                   {serviceRecords.map((r) => {
                     const carLabel = `${r.car.year} ${r.car.make} ${r.car.model}`;

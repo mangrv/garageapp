@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useApp } from "@/app/providers/AppProviders";
 import { t } from "@/lib/i18n";
+import Glyph from "@/app/components/Glyph";
 
 type ForecastItem = {
   id: string;
@@ -195,7 +196,7 @@ export default function MaintenanceForecast({
         <button onClick={() => setOpen(o => !o)} className="flex items-center gap-2 font-bold text-base">
           <span>{t("maintenanceForecast", lang)}</span>
           {overdueCount > 0 && (
-            <span className="text-xs bg-red-700 text-white px-2 py-0.5 rounded-full font-medium">{overdueCount} {t("overdue", lang).toLowerCase()}</span>
+            <span className="text-xs bg-red-700 text-on-accent px-2 py-0.5 rounded-full font-medium">{overdueCount} {t("overdue", lang).toLowerCase()}</span>
           )}
           <span className="text-gray-600 text-sm">{open ? "▲" : "▼"}</span>
         </button>
@@ -216,7 +217,7 @@ export default function MaintenanceForecast({
 
           {!loading && !items && (
             <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 text-center space-y-3">
-              <div className="text-3xl">🤖</div>
+              <div className="text-3xl"><Glyph e="🤖" /></div>
               <div className="text-sm text-gray-300 font-medium">AI Maintenance Forecast</div>
               <div className="text-xs text-gray-500 leading-relaxed">
                 Claude will analyze your {carName}'s mileage, age, and service history to generate a personalized maintenance checklist — showing what's overdue, due now, and coming up.
@@ -224,7 +225,7 @@ export default function MaintenanceForecast({
               <button
                 onClick={generate}
                 disabled={generating}
-                className="w-full bg-amber-500 text-gray-950 font-bold py-2.5 rounded-xl text-sm disabled:opacity-40"
+                className="w-full bg-amber-500 text-on-accent font-bold py-2.5 rounded-xl text-sm disabled:opacity-40"
               >
                 {generating ? t("analyzing", lang) : t("generateForecast", lang)}
               </button>
@@ -260,7 +261,7 @@ export default function MaintenanceForecast({
               <div className="flex gap-2">
                 {(["action", "all"] as const).map(f => (
                   <button key={f} onClick={() => setFilter(f)}
-                    className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-colors ${filter === f ? "bg-amber-500 text-gray-950" : "bg-gray-800 text-gray-400"}`}>
+                    className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-colors ${filter === f ? "bg-amber-500 text-on-accent" : "bg-gray-800 text-gray-400"}`}>
                     {f === "action" ? `${t("needsAttention", lang)} (${overdueCount + dueNowCount + upcomingCount})` : `${t("all", lang)} (${items.length})`}
                   </button>
                 ))}
@@ -280,20 +281,20 @@ export default function MaintenanceForecast({
                       {/* Main item row */}
                       <div className="p-3">
                         <div className="flex items-start gap-2">
-                          <span className="text-base flex-shrink-0 mt-0.5">{cfg.icon}</span>
+                          <span className="text-base flex-shrink-0 mt-0.5"><Glyph e={cfg.icon} /></span>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
                               <span className={`text-sm font-semibold ${isDone ? "line-through text-gray-500" : "text-white"}`}>{item.name}</span>
-                              <span className="text-xs text-gray-600">{catIcon} {item.category}</span>
-                              {isDone && <span className="text-xs text-emerald-500">✓ {t("done", lang)} {item.doneAt}</span>}
+                              <span className="text-xs text-gray-600"><Glyph e={catIcon} /> {item.category}</span>
+                              {isDone && <span className="text-xs text-emerald-500"><Glyph e="✓" /> {t("done", lang)} {item.doneAt}</span>}
                               {isAddedToJob && !isDone && (
                                 <span className="text-xs text-sky-400">{t("addedTo", lang)} {added[item.id]}</span>
                               )}
                             </div>
                             <div className="flex flex-wrap gap-3 mt-1 text-xs text-gray-500">
-                              <span>🔁 {item.interval}</span>
-                              {item.dueMileage && <span>📍 {t("dueAt", lang)} {item.dueMileage.toLocaleString()} mi</span>}
-                              {item.dueDate && <span>📅 {t("dueDate", lang)} {item.dueDate}</span>}
+                              <span><Glyph e="🔁" /> {item.interval}</span>
+                              {item.dueMileage && <span><Glyph e="📍" /> {t("dueAt", lang)} {item.dueMileage.toLocaleString()} mi</span>}
+                              {item.dueDate && <span><Glyph e="📅" /> {t("dueDate", lang)} {item.dueDate}</span>}
                             </div>
                             {item.notes && (
                               <div className="mt-1.5 text-xs text-gray-500 leading-relaxed">{item.notes}</div>
@@ -312,7 +313,7 @@ export default function MaintenanceForecast({
                               onClick={() => openTaskPanel(item.id)}
                               className={`flex-1 text-xs py-1.5 rounded-lg font-medium border transition-colors ${
                                 panelOpen && panel?.type === "task"
-                                  ? "bg-sky-600 border-sky-500 text-white"
+                                  ? "bg-sky-600 border-sky-500 text-on-accent"
                                   : "bg-gray-800/80 border-gray-700 text-gray-300 hover:border-sky-600 hover:text-sky-300"
                               }`}
                             >
@@ -322,7 +323,7 @@ export default function MaintenanceForecast({
                               onClick={() => openDonePanel(item.id)}
                               className={`flex-1 text-xs py-1.5 rounded-lg font-medium border transition-colors ${
                                 panelOpen && panel?.type === "done"
-                                  ? "bg-emerald-600 border-emerald-500 text-white"
+                                  ? "bg-emerald-600 border-emerald-500 text-on-accent"
                                   : "bg-gray-800/80 border-gray-700 text-gray-300 hover:border-emerald-600 hover:text-emerald-300"
                               }`}
                             >
@@ -361,7 +362,7 @@ export default function MaintenanceForecast({
                             <button
                               onClick={() => submitDone(item)}
                               disabled={submitting || !panel.date}
-                              className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white text-xs py-2 rounded-lg font-medium disabled:opacity-40"
+                              className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-on-accent text-xs py-2 rounded-lg font-medium disabled:opacity-40"
                             >
                               {submitting ? t("saving", lang) : t("saveRecord", lang)}
                             </button>
@@ -469,7 +470,7 @@ export default function MaintenanceForecast({
                                   submitting ||
                                   (panel.creatingNew ? !panel.newProjectTitle.trim() : !panel.jobId)
                                 }
-                                className="flex-1 bg-sky-600 hover:bg-sky-500 text-white text-xs py-2 rounded-lg font-medium disabled:opacity-40"
+                                className="flex-1 bg-sky-600 hover:bg-sky-500 text-on-accent text-xs py-2 rounded-lg font-medium disabled:opacity-40"
                               >
                                 {submitting
                                   ? (panel.creatingNew ? t("creating", lang) : t("adding", lang))

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { compressImage } from "@/app/lib/compressImage";
 import { useApp } from "@/app/providers/AppProviders";
 import { useT } from "@/app/hooks/useT";
+import Glyph from "@/app/components/Glyph";
 
 interface LineItem {
   id: string;
@@ -82,7 +83,7 @@ function ReceiptSection({ receipt, onMoved }: { receipt: Receipt; onMoved: (id: 
             <p className="font-semibold text-white">{receipt.vendor ?? "Receipt"}</p>
             {receipt.receiptDate && (
               <p className="text-xs text-gray-500 mt-0.5">
-                📅 {formatDate(receipt.receiptDate)}
+                <Glyph e="📅" /> {formatDate(receipt.receiptDate)}
               </p>
             )}
           </div>
@@ -106,7 +107,7 @@ function ReceiptSection({ receipt, onMoved }: { receipt: Receipt; onMoved: (id: 
               <div key={li.id} className="text-sm">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5 min-w-0">
-                    <span className="text-amber-500/50 text-xs">🔩</span>
+                    <span className="text-amber-500/50 text-xs"><Glyph e="🔩" /></span>
                     <span className="text-gray-200 truncate">{li.name}</span>
                     {li.quantity > 1 && <span className="text-gray-500 text-xs">×{li.quantity}</span>}
                   </div>
@@ -118,7 +119,7 @@ function ReceiptSection({ receipt, onMoved }: { receipt: Receipt; onMoved: (id: 
                 </div>
                 {(li.warrantyProvider || li.warrantyEnd || li.warrantyStart) && (
                   <div className="ml-5 mt-0.5 text-xs text-sky-300">
-                    🛡️ {li.warrantyProvider || "Warranty"}
+                    <Glyph e="🛡" /> {li.warrantyProvider || "Warranty"}
                     {li.warrantyStart ? ` · ${new Date(li.warrantyStart).toLocaleDateString()}` : ""}
                     {li.warrantyEnd ? ` → ${new Date(li.warrantyEnd).toLocaleDateString()}` : ""}
                     {li.warrantyNotes ? ` · ${li.warrantyNotes}` : ""}
@@ -148,7 +149,7 @@ function ReceiptSection({ receipt, onMoved }: { receipt: Receipt; onMoved: (id: 
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={imgUrl} alt="" className="max-w-full max-h-full rounded-xl object-contain" />
-          <button className="absolute top-4 right-4 text-white text-3xl" onClick={() => setLightbox(false)}>✕</button>
+          <button className="absolute top-4 right-4 text-white text-3xl" onClick={() => setLightbox(false)}><Glyph e="✕" /></button>
         </div>
       )}
     </div>
@@ -158,10 +159,10 @@ function ReceiptSection({ receipt, onMoved }: { receipt: Receipt; onMoved: (id: 
 // ── Attachment upload (estimates, quotes, photos — NOT receipts) ──
 
 const ATT_TYPES = [
-  { value: "estimate", label: "📋 Estimate / Quote" },
-  { value: "invoice",  label: "📄 Invoice" },
-  { value: "photo",    label: "📷 Photo" },
-  { value: "other",    label: "📎 Other" },
+  { value: "estimate", label: "Estimate / Quote" },
+  { value: "invoice",  label: "Invoice" },
+  { value: "photo",    label: "Photo" },
+  { value: "other",    label: "Other" },
 ];
 
 function AttachmentUpload({ serviceRecordId, onAdded, onCancel }: {
@@ -226,27 +227,27 @@ function AttachmentUpload({ serviceRecordId, onAdded, onCancel }: {
   return (
     <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4 space-y-3">
       {uploading ? (
-        <p className="text-sm text-amber-400 text-center animate-pulse">⏳ {progress}</p>
+        <p className="text-sm text-amber-400 text-center animate-pulse"><Glyph e="⏳" /> {progress}</p>
       ) : (
         <>
           {files.length === 0 ? (
             <div className="grid grid-cols-2 gap-3">
               <button onClick={() => cameraRef.current?.click()}
                 className="flex flex-col items-center gap-2 p-4 rounded-xl bg-gray-800 border border-gray-700 active:bg-gray-700 transition">
-                <span className="text-2xl">📷</span><span className="text-xs text-gray-400">Take Photo</span>
+                <span className="text-2xl"><Glyph e="📷" /></span><span className="text-xs text-gray-400">Take Photo</span>
               </button>
               <button onClick={openPicker}
                 className="flex flex-col items-center gap-2 p-4 rounded-xl bg-gray-800 border border-gray-700 active:bg-gray-700 transition">
-                <span className="text-2xl">🗂️</span><span className="text-xs text-gray-400">Choose Files</span>
+                <span className="text-2xl"><Glyph e="🗂" /></span><span className="text-xs text-gray-400">Choose Files</span>
               </button>
             </div>
           ) : (
             <div className="space-y-2">
               {files.map((f, i) => (
                 <div key={i} className="flex items-center gap-2 bg-gray-800 rounded-xl px-3 py-2 text-xs">
-                  <span>{/\.(jpg|jpeg|png|webp|heic|gif)/i.test(f.name) ? "🖼️" : "📄"}</span>
+                  <span>{/\.(jpg|jpeg|png|webp|heic|gif)/i.test(f.name) ? <Glyph e="🖼" /> : <Glyph e="📄" />}</span>
                   <span className="flex-1 truncate text-gray-300">{f.name}</span>
-                  <button onClick={() => setFiles((p) => p.filter((_, j) => j !== i))} className="text-gray-500 active:text-red-400">✕</button>
+                  <button onClick={() => setFiles((p) => p.filter((_, j) => j !== i))} className="text-gray-500 active:text-red-400"><Glyph e="✕" /></button>
                 </div>
               ))}
               <button onClick={openPicker} className="w-full text-xs text-amber-500 border border-dashed border-amber-700/40 rounded-xl py-2">
@@ -272,7 +273,7 @@ function AttachmentUpload({ serviceRecordId, onAdded, onCancel }: {
 
           <div className="flex gap-2">
             <button onClick={handleSave} disabled={files.length === 0}
-              className="flex-1 py-2.5 bg-amber-500 text-black font-bold rounded-xl text-sm disabled:opacity-40 active:bg-amber-400 transition">
+              className="flex-1 py-2.5 bg-amber-500 text-on-accent font-bold rounded-xl text-sm disabled:opacity-40 active:bg-amber-400 transition">
               Save{files.length > 1 ? ` ${files.length} files` : ""}
             </button>
             <button onClick={onCancel} className="px-4 py-2.5 bg-gray-800 text-gray-300 rounded-xl text-sm">Cancel</button>
@@ -351,7 +352,7 @@ function AttachmentGrid({ attachments, onDelete, onBulkUpdate, serviceRecordId }
                 className="relative w-full aspect-video bg-gray-800 flex items-center justify-center overflow-hidden">
                 {img
                   ? <img src={`/uploads/${primary.filename}`} alt="" className="w-full h-full object-cover" />
-                  : <span className="text-4xl">📄</span>}
+                  : <span className="text-4xl"><Glyph e="📄" /></span>}
                 {multi && (
                   <span className="absolute bottom-1.5 right-1.5 bg-black/70 text-white text-xs px-1.5 py-0.5 rounded-full">
                     1/{g.items.length}
@@ -387,12 +388,12 @@ function AttachmentGrid({ attachments, onDelete, onBulkUpdate, serviceRecordId }
             <span className="text-white text-sm">{lightbox.items[lightbox.idx].caption || "File"}
               {lightbox.items.length > 1 && <span className="text-gray-400 ml-2">{lightbox.idx + 1}/{lightbox.items.length}</span>}
             </span>
-            <button className="text-white text-2xl px-2" onClick={() => setLightbox(null)}>✕</button>
+            <button className="text-white text-2xl px-2" onClick={() => setLightbox(null)}><Glyph e="✕" /></button>
           </div>
           <div className="flex-1 flex items-center justify-center p-4" onClick={(e) => e.stopPropagation()}>
             {isImage(lightbox.items[lightbox.idx].filename)
               ? <img src={`/uploads/${lightbox.items[lightbox.idx].filename}`} alt="" className="max-w-full max-h-full rounded-xl object-contain" />
-              : <div className="text-6xl">📄</div>}
+              : <div className="text-6xl"><Glyph e="📄" /></div>}
           </div>
           {lightbox.items.length > 1 && (
             <div className="flex gap-3 px-4 pb-8" onClick={(e) => e.stopPropagation()}>
@@ -410,7 +411,7 @@ function AttachmentGrid({ attachments, onDelete, onBulkUpdate, serviceRecordId }
           <div className="w-full max-w-xl bg-gray-900 border border-gray-800 rounded-t-3xl p-4 space-y-3" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold text-white">Manage group</h3>
-              <button className="text-gray-400 text-xl" onClick={() => setGroupEditor(null)}>✕</button>
+              <button className="text-gray-400 text-xl" onClick={() => setGroupEditor(null)}><Glyph e="✕" /></button>
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">Group label</label>
@@ -430,7 +431,7 @@ function AttachmentGrid({ attachments, onDelete, onBulkUpdate, serviceRecordId }
             <button
               onClick={handleRenameGroup}
               disabled={renaming}
-              className="w-full py-2.5 bg-amber-500 text-black font-bold rounded-xl text-sm disabled:opacity-40"
+              className="w-full py-2.5 bg-amber-500 text-on-accent font-bold rounded-xl text-sm disabled:opacity-40"
             >
               {renaming ? "Saving…" : "Save group label"}
             </button>
@@ -461,7 +462,7 @@ function FileGroupCard({ group }: { group: { key: string; label: string; fileTyp
             // eslint-disable-next-line @next/next/no-img-element
             <img src={imgUrl} alt="" className="w-full h-full object-cover" />
           ) : (
-            <span className="text-4xl">📄</span>
+            <span className="text-4xl"><Glyph e="📄" /></span>
           )}
           {multi && (
             <span className="absolute bottom-1.5 right-1.5 bg-black/70 text-white text-xs px-1.5 py-0.5 rounded-full">
@@ -491,7 +492,7 @@ function FileGroupCard({ group }: { group: { key: string; label: string; fileTyp
             <span className="text-white text-sm font-medium">
               {group.label}{multi && <span className="text-gray-400 ml-2">{page + 1}/{group.items.length}</span>}
             </span>
-            <button className="text-white text-2xl px-2" onClick={() => setLightbox(false)}>✕</button>
+            <button className="text-white text-2xl px-2" onClick={() => setLightbox(false)}><Glyph e="✕" /></button>
           </div>
           <div className="flex-1 flex items-center justify-center p-4" onClick={(e) => e.stopPropagation()}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -512,10 +513,10 @@ function FileGroupCard({ group }: { group: { key: string; label: string; fileTyp
 }
 
 const FILE_TYPES = [
-  { value: "estimate", label: "📋 Estimate / Quote" },
-  { value: "invoice",  label: "📄 Invoice" },
-  { value: "photo",    label: "📷 Photo" },
-  { value: "other",    label: "📎 Other" },
+  { value: "estimate", label: "Estimate / Quote" },
+  { value: "invoice",  label: "Invoice" },
+  { value: "photo",    label: "Photo" },
+  { value: "other",    label: "Other" },
 ];
 
 function AddFileSection({ serviceRecordId, onAdded }: {
@@ -585,7 +586,7 @@ function AddFileSection({ serviceRecordId, onAdded }: {
   if (status) {
     return (
       <div className="flex items-center justify-center gap-2 py-4 text-sm text-amber-400">
-        <span className="animate-pulse">⏳</span> {status}
+        <span className="animate-pulse"><Glyph e="⏳" /></span> {status}
       </div>
     );
   }
@@ -596,12 +597,12 @@ function AddFileSection({ serviceRecordId, onAdded }: {
         <div className="grid grid-cols-2 gap-3">
           <button onClick={() => cameraRef.current?.click()}
             className="flex flex-col items-center gap-2 p-4 rounded-xl bg-gray-800 border border-gray-700 active:bg-gray-700 transition">
-            <span className="text-2xl">📷</span>
+            <span className="text-2xl"><Glyph e="📷" /></span>
             <span className="text-xs text-gray-400">Take Photo</span>
           </button>
           <button onClick={() => openFilePicker(true)}
             className="flex flex-col items-center gap-2 p-4 rounded-xl bg-gray-800 border border-gray-700 active:bg-gray-700 transition">
-            <span className="text-2xl">🗂️</span>
+            <span className="text-2xl"><Glyph e="🗂" /></span>
             <span className="text-xs text-gray-400">Choose Files</span>
           </button>
         </div>
@@ -609,10 +610,10 @@ function AddFileSection({ serviceRecordId, onAdded }: {
         <div className="space-y-2">
           {selectedFiles.map((f, i) => (
             <div key={i} className="flex items-center gap-2 text-xs bg-gray-800 rounded-xl px-3 py-2">
-              <span>{/\.(jpg|jpeg|png|webp|gif|heic)/i.test(f.name) ? "🖼️" : "📄"}</span>
+              <span>{/\.(jpg|jpeg|png|webp|gif|heic)/i.test(f.name) ? <Glyph e="🖼" /> : <Glyph e="📄" />}</span>
               <span className="flex-1 truncate text-gray-300">{f.name}</span>
               <button onClick={() => setSelectedFiles((p) => p.filter((_, j) => j !== i))}
-                className="text-gray-500 active:text-red-400">✕</button>
+                className="text-gray-500 active:text-red-400"><Glyph e="✕" /></button>
             </div>
           ))}
           <button onClick={() => openFilePicker(true)}
@@ -718,7 +719,7 @@ function AddReceiptButton({ serviceRecordId, onAdded }: {
   if (status) {
     return (
       <div className="flex items-center justify-center gap-2 py-4 text-sm text-amber-400">
-        <span className="animate-pulse">🤖</span> {status}
+        <span className="animate-pulse"><Glyph e="🤖" /></span> {status}
       </div>
     );
   }
@@ -727,12 +728,12 @@ function AddReceiptButton({ serviceRecordId, onAdded }: {
     <div className="grid grid-cols-2 gap-3">
       <button onClick={() => cameraRef.current?.click()}
         className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-gray-900 border border-amber-700/40 active:bg-gray-800 transition">
-        <span className="text-2xl">📷</span>
+        <span className="text-2xl"><Glyph e="📷" /></span>
         <span className="text-xs text-amber-400">Scan Receipt</span>
       </button>
       <button onClick={() => fileRef.current?.click()}
         className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-gray-900 border border-amber-700/40 active:bg-gray-800 transition">
-        <span className="text-2xl">🗂️</span>
+        <span className="text-2xl"><Glyph e="🗂" /></span>
         <span className="text-xs text-amber-400">Scan from File</span>
       </button>
       <input ref={cameraRef} type="file" accept="image/*" capture="environment" className="hidden"
@@ -842,7 +843,7 @@ function ManualReceiptForm({ serviceRecordId, onAdded, lang }: {
             <input type="number" value={l.amount} onChange={e => updateLine(i, "amount", e.target.value)}
               placeholder="0.00" step="0.01" className={`col-span-3 ${inputCls}`} />
             <button onClick={() => removeLine(i)} disabled={lines.length === 1}
-              className="col-span-2 text-gray-600 hover:text-red-400 text-lg disabled:opacity-20 text-center">✕</button>
+              className="col-span-2 text-gray-600 hover:text-red-400 text-lg disabled:opacity-20 text-center"><Glyph e="✕" /></button>
           </div>
         ))}
         <button onClick={addLine} className="text-xs text-amber-500 hover:text-amber-400 pt-1">
@@ -861,7 +862,7 @@ function ManualReceiptForm({ serviceRecordId, onAdded, lang }: {
       {error && <p className="text-xs text-red-400">{error}</p>}
 
       <button onClick={save} disabled={saving}
-        className="w-full bg-amber-500 text-gray-950 font-bold py-2.5 rounded-xl text-sm disabled:opacity-50">
+        className="w-full bg-amber-500 text-on-accent font-bold py-2.5 rounded-xl text-sm disabled:opacity-50">
         {saving ? (es ? "Guardando…" : "Saving…") : (es ? "Guardar" : "Save")}
       </button>
     </div>
@@ -1056,7 +1057,7 @@ export default function ServiceRecordDetailClient({
             <textarea value={editNotes} onChange={(e) => setEditNotes(e.target.value)} rows={2}
               className="w-full bg-gray-800 border border-gray-700 rounded-xl px-3 py-2 text-sm text-white" placeholder={lang === "es" ? "Notas" : "Notes"} />
             <div className="flex gap-2">
-              <button onClick={saveRecordEdit} className="flex-1 py-2.5 rounded-xl bg-amber-500 text-black font-semibold text-sm">{lang === "es" ? "Guardar" : "Save"}</button>
+              <button onClick={saveRecordEdit} className="flex-1 py-2.5 rounded-xl bg-amber-500 text-on-accent font-semibold text-sm">{lang === "es" ? "Guardar" : "Save"}</button>
               <button onClick={() => setEditingRecord(false)} className="px-4 py-2.5 rounded-xl bg-gray-800 text-gray-300 text-sm">{lang === "es" ? "Cancelar" : "Cancel"}</button>
             </div>
           </div>
@@ -1098,7 +1099,7 @@ export default function ServiceRecordDetailClient({
 
           {record.nextServiceDue && (
             <div className="text-xs text-sky-400 bg-sky-900/20 border border-sky-700/30 rounded-xl px-3 py-2">
-              🔔 Next service due: {record.nextServiceDue}
+              <Glyph e="🔔" /> Next service due: {record.nextServiceDue}
             </div>
           )}
         </div>
@@ -1119,11 +1120,11 @@ export default function ServiceRecordDetailClient({
         {/* Parts used (imported text) */}
         {record.partsUsed && (
           <div className="space-y-2">
-            <h2 className="text-xs text-gray-500 font-semibold uppercase tracking-wider">🔩 Parts Used</h2>
+            <h2 className="text-xs text-gray-500 font-semibold uppercase tracking-wider"><Glyph e="🔩" /> Parts Used</h2>
             <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4">
               <p className="text-sm text-gray-300 whitespace-pre-wrap">{record.partsUsed}</p>
               {record.partsSource && (
-                <p className="text-xs text-gray-500 mt-2">🛒 From: {record.partsSource}</p>
+                <p className="text-xs text-gray-500 mt-2"><Glyph e="🛒" /> From: {record.partsSource}</p>
               )}
             </div>
           </div>
@@ -1132,10 +1133,10 @@ export default function ServiceRecordDetailClient({
         {/* Warranty manager */}
         <div id="warranty" className="space-y-3 scroll-mt-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-xs text-gray-500 font-semibold uppercase tracking-wider">🛡️ {txt.warranty}</h2>
+            <h2 className="text-xs text-gray-500 font-semibold uppercase tracking-wider"><Glyph e="🛡" /> {txt.warranty}</h2>
             <button
               onClick={() => { setShowWarranty((x) => !x); setShowAddReceipt(false); setShowAddFile(false); }}
-              className={`text-xs px-3 py-1.5 rounded-xl font-semibold active:opacity-80 transition ${showWarranty ? "bg-gray-700 text-white" : "bg-sky-700/40 text-sky-200"}`}
+              className={`text-xs px-3 py-1.5 rounded-xl font-semibold active:opacity-80 transition ${showWarranty ? "bg-gray-700 text-white" : "bg-sky-900 text-sky-400"}`}
             >
               {txt.addEditWarranty}
             </button>
@@ -1181,7 +1182,7 @@ export default function ServiceRecordDetailClient({
                 className="w-full bg-gray-800 border border-gray-700 rounded-xl px-3 py-2 text-sm text-white" />
               <div className="flex gap-2">
                 <button onClick={saveWarranty} disabled={savingWarranty}
-                  className="flex-1 py-2.5 rounded-xl bg-amber-500 text-black font-semibold text-sm disabled:opacity-40">
+                  className="flex-1 py-2.5 rounded-xl bg-amber-500 text-on-accent font-semibold text-sm disabled:opacity-40">
                   {savingWarranty ? "…" : txt.save}
                 </button>
                 <button onClick={() => setShowWarranty(false)} className="px-4 py-2.5 rounded-xl bg-gray-800 text-gray-300 text-sm">{txt.cancel}</button>
@@ -1193,19 +1194,19 @@ export default function ServiceRecordDetailClient({
         {/* Scanned Receipts */}
         <div className="space-y-3">
           <div className="flex items-center justify-between gap-2">
-            <h2 className="text-xs text-gray-500 font-semibold uppercase tracking-wider">🧾 {lang === "es" ? "Recibos" : "Receipts"}</h2>
+            <h2 className="text-xs text-gray-500 font-semibold uppercase tracking-wider"><Glyph e="🧾" /> {lang === "es" ? "Recibos" : "Receipts"}</h2>
             <div className="flex gap-1.5">
               <button
                 onClick={() => { setShowManualReceipt(x => !x); setShowAddReceipt(false); setShowAddFile(false); }}
                 className={`text-xs px-2.5 py-1.5 rounded-xl font-semibold active:opacity-80 transition ${showManualReceipt ? "bg-gray-700 text-white" : "bg-gray-800 text-gray-300 border border-gray-700"}`}
               >
-                {showManualReceipt ? "✕" : `+ ${lang === "es" ? "Manual" : "Manual"}`}
+                {showManualReceipt ? <Glyph e="✕" /> : `+ ${lang === "es" ? "Manual" : "Manual"}`}
               </button>
               <button
                 onClick={() => { setShowAddReceipt((x) => !x); setShowManualReceipt(false); setShowAddFile(false); }}
-                className={`text-xs px-2.5 py-1.5 rounded-xl font-semibold active:opacity-80 transition ${showAddReceipt ? "bg-gray-700 text-white" : "bg-amber-500 text-black"}`}
+                className={`text-xs px-2.5 py-1.5 rounded-xl font-semibold active:opacity-80 transition ${showAddReceipt ? "bg-gray-700 text-white" : "bg-amber-500 text-on-accent"}`}
               >
-                {showAddReceipt ? "✕" : "🤖 Scan"}
+                {showAddReceipt ? <Glyph e="✕" /> : <>{"🤖 Scan"}</>}
               </button>
             </div>
           </div>
@@ -1238,7 +1239,7 @@ export default function ServiceRecordDetailClient({
         <div className="space-y-3 pb-10">
           <div className="flex items-center justify-between">
             <h2 className="text-xs text-gray-500 font-semibold uppercase tracking-wider">
-              📎 Files & Estimates
+              <Glyph e="📎" /> Files & Estimates
               {attachments.length > 0 && (
                 <span className="ml-2 bg-gray-800 text-gray-400 px-1.5 py-0.5 rounded-full text-xs font-normal">{attachments.length}</span>
               )}
@@ -1247,7 +1248,7 @@ export default function ServiceRecordDetailClient({
               onClick={() => { setShowAddFile((x) => !x); setShowAddReceipt(false); }}
               className={`text-xs px-3 py-1.5 rounded-xl font-semibold active:opacity-80 transition ${showAddFile ? "bg-gray-700 text-white" : "bg-gray-800 text-gray-300"}`}
             >
-              {showAddFile ? "✕ Cancel" : "+ Add"}
+              {showAddFile ? <>{"✕ Cancel"}</> : "+ Add"}
             </button>
           </div>
 

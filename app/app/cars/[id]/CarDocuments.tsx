@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useApp } from '@/app/providers/AppProviders';
+import Glyph from "@/app/components/Glyph";
 
 const DOC_TYPES: Record<string, { label: string; icon: string }> = {
   registration: { label: 'Registration', icon: '📋' },
@@ -145,11 +146,11 @@ export default function CarDocuments({ carId, initialDocuments }: CarDocumentsPr
   return (
     <div className="mt-8">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-white">📁 {lang === 'es' ? 'Documentos' : 'Documents'}</h2>
+        <h2 className="text-lg font-semibold text-white"><Glyph e="📁" /> {lang === 'es' ? 'Documentos' : 'Documents'}</h2>
         {!showForm && (
           <button
             onClick={() => setShowForm(true)}
-            className="text-sm px-3 py-1.5 rounded-xl bg-amber-500 text-black font-semibold active:bg-amber-400 transition"
+            className="text-sm px-3 py-1.5 rounded-xl bg-amber-500 text-on-accent font-semibold active:bg-amber-400 transition"
           >
             {lang === 'es' ? '+ Agregar' : '+ Add'}
           </button>
@@ -166,14 +167,14 @@ export default function CarDocuments({ carId, initialDocuments }: CarDocumentsPr
               onClick={() => cameraRef.current?.click()}
               className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-gray-800 border border-gray-700 text-white active:bg-gray-700 transition"
             >
-              <span className="text-2xl">📷</span>
+              <span className="text-2xl"><Glyph e="📷" /></span>
               <span className="text-xs text-gray-400">{lang === 'es' ? 'Tomar foto' : 'Take Photo'}</span>
             </button>
             <button
               onClick={() => fileRef.current?.click()}
               className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-gray-800 border border-gray-700 text-white active:bg-gray-700 transition"
             >
-              <span className="text-2xl">🗂️</span>
+              <span className="text-2xl"><Glyph e="🗂" /></span>
               <span className="text-xs text-gray-400">{lang === 'es' ? 'Elegir archivos' : 'Choose Files'}</span>
             </button>
             {/* Camera: single shot */}
@@ -189,12 +190,12 @@ export default function CarDocuments({ carId, initialDocuments }: CarDocumentsPr
             <div className="space-y-2">
               {files.map((f, i) => (
                 <div key={i} className="flex items-center gap-3 p-2.5 rounded-xl bg-gray-800 border border-gray-700">
-                  <span className="text-xl">{isImage(f.name) ? '🖼️' : '📄'}</span>
+                  <span className="text-xl">{isImage(f.name) ? <Glyph e="🖼" /> : <Glyph e="📄" />}</span>
                   <div className="flex-1 min-w-0">
                     <p className="text-xs text-white truncate">{f.name}</p>
                     <p className="text-xs text-gray-500">{(f.size / 1024).toFixed(1)} KB</p>
                   </div>
-                  <button onClick={() => removeFile(i)} className="text-gray-500 active:text-red-400 text-lg px-1">✕</button>
+                  <button onClick={() => removeFile(i)} className="text-gray-500 active:text-red-400 text-lg px-1"><Glyph e="✕" /></button>
                 </div>
               ))}
               {/* Tap again to add more */}
@@ -213,7 +214,7 @@ export default function CarDocuments({ carId, initialDocuments }: CarDocumentsPr
             <select value={type} onChange={(e) => setType(e.target.value)}
               className="w-full bg-gray-800 border border-gray-700 rounded-xl px-3 py-2 text-white text-sm">
               {Object.entries(DOC_TYPES).map(([k, v]) => (
-                <option key={k} value={k}>{v.icon} {v.label}</option>
+                <option key={k} value={k}>{v.label}</option>
               ))}
             </select>
           </div>
@@ -246,7 +247,7 @@ export default function CarDocuments({ carId, initialDocuments }: CarDocumentsPr
 
           <div className="flex gap-3">
             <button onClick={handleUpload} disabled={files.length === 0 || uploading}
-              className="flex-1 py-2.5 rounded-xl bg-amber-500 text-black font-semibold active:bg-amber-400 disabled:opacity-40 transition text-sm">
+              className="flex-1 py-2.5 rounded-xl bg-amber-500 text-on-accent font-semibold active:bg-amber-400 disabled:opacity-40 transition text-sm">
               {uploading ? `Uploading ${files.length > 1 ? `(1 of ${files.length})` : ''}…` : `Upload${files.length > 1 ? ` ${files.length} pages` : ''}`}
             </button>
             <button onClick={resetForm}
@@ -281,7 +282,7 @@ export default function CarDocuments({ carId, initialDocuments }: CarDocumentsPr
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={getDocUrl(primary)} alt={group.label} className="w-full h-full object-cover" />
                   ) : (
-                    <span className="text-4xl">{typeInfo.icon}</span>
+                    <span className="text-4xl"><Glyph e={typeInfo.icon} /></span>
                   )}
                   {/* Page count badge */}
                   {isMulti && (
@@ -293,7 +294,7 @@ export default function CarDocuments({ carId, initialDocuments }: CarDocumentsPr
 
                 <div className="p-3 flex-1 flex flex-col gap-1">
                   <p className="text-sm text-white font-medium truncate">{group.label}</p>
-                  <p className="text-xs text-gray-500">{typeInfo.icon} {typeInfo.label}{isMulti ? ` · ${group.docs.length} pages` : ''}</p>
+                  <p className="text-xs text-gray-500"><Glyph e={typeInfo.icon} /> {typeInfo.label}{isMulti ? ` · ${group.docs.length} pages` : ''}</p>
                   <ExpiryBadge expiresAt={primary.expiresAt} />
                 </div>
 
@@ -318,7 +319,7 @@ export default function CarDocuments({ carId, initialDocuments }: CarDocumentsPr
                 <span className="text-gray-400 ml-2">Page {lightbox.idx + 1} of {lightbox.docs.length}</span>
               )}
             </span>
-            <button className="text-white text-2xl leading-none px-2" onClick={() => setLightbox(null)}>✕</button>
+            <button className="text-white text-2xl leading-none px-2" onClick={() => setLightbox(null)}><Glyph e="✕" /></button>
           </div>
 
           {/* Image */}

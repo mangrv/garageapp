@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  const base = process.env.NEXT_PUBLIC_BASE_URL || "https://garage.jorgeiglesias.com";
+  const base = process.env.NEXT_PUBLIC_BASE_URL || "https://garagemeet.com";
   const url = `${base}/register/${invite.token}`;
 
   return NextResponse.json({ url, token: invite.token });

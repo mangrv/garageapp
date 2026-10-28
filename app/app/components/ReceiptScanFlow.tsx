@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Glyph from "@/app/components/Glyph";
 
 interface LineItem {
   name: string;
@@ -210,12 +211,12 @@ export default function ReceiptScanFlow({ carId: initialCarId, cars, onDone, onC
           {/* Header */}
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-white">
-              {state === "idle" && "🤖 Scan Receipt"}
+              {state === "idle" && <>{"🤖 Scan Receipt"}</>}
               {state === "uploading" && "Uploading..."}
               {state === "processing" && "Reading Receipt..."}
               {state === "review" && "Review & Confirm"}
               {state === "saving" && "Saving..."}
-              {state === "done" && "✅ Done!"}
+              {state === "done" && <>{"✅ Done!"}</>}
             </h2>
             {(state === "idle" || state === "done") && (
               <button onClick={handleClose} className="text-gray-500 hover:text-white text-xl leading-none">×</button>
@@ -252,14 +253,14 @@ export default function ReceiptScanFlow({ carId: initialCarId, cars, onDone, onC
                   onClick={() => cameraRef.current?.click()}
                   className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-700 rounded-xl py-6 text-gray-400 active:border-amber-500/60 active:bg-amber-500/5 transition"
                 >
-                  <span className="text-3xl">📷</span>
+                  <span className="text-3xl"><Glyph e="📷" /></span>
                   <span className="text-xs">Take photo</span>
                 </button>
                 <button
                   onClick={() => fileRef.current?.click()}
                   className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-700 rounded-xl py-6 text-gray-400 active:border-amber-500/60 active:bg-amber-500/5 transition"
                 >
-                  <span className="text-3xl">🗂</span>
+                  <span className="text-3xl"><Glyph e="🗂" /></span>
                   <span className="text-xs">Choose file</span>
                 </button>
               </div>
@@ -278,7 +279,7 @@ export default function ReceiptScanFlow({ carId: initialCarId, cars, onDone, onC
           {/* Uploading / Processing */}
           {(state === "uploading" || state === "processing") && (
             <div className="py-8 text-center space-y-3">
-              <div className="text-4xl animate-bounce">{state === "uploading" ? "📤" : "🤖"}</div>
+              <div className="text-4xl animate-bounce">{state === "uploading" ? <Glyph e="📤" /> : <Glyph e="🤖" />}</div>
               <p className="text-gray-400 text-sm">
                 {state === "uploading" ? "Uploading receipt..." : "Reading receipt with AI..."}
               </p>
@@ -386,12 +387,12 @@ export default function ReceiptScanFlow({ carId: initialCarId, cars, onDone, onC
                 <p className="text-xs font-medium text-amber-400 uppercase tracking-wider">Dates</p>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs text-gray-400 mb-1">📅 Purchase date</label>
+                    <label className="block text-xs text-gray-400 mb-1"><Glyph e="📅" /> Purchase date</label>
                     <input type="date" value={editDate} onChange={(e) => setEditDate(e.target.value)} className={inputCls} />
                     <p className="text-xs text-gray-600 mt-0.5">Date on receipt</p>
                   </div>
                   <div>
-                    <label className="block text-xs text-gray-400 mb-1">🔧 Service date</label>
+                    <label className="block text-xs text-gray-400 mb-1"><Glyph e="🔧" /> Service date</label>
                     <input type="date" value={serviceDate} onChange={(e) => setServiceDate(e.target.value)} className={inputCls} />
                     <p className="text-xs text-gray-600 mt-0.5">When work was done</p>
                   </div>
@@ -404,7 +405,7 @@ export default function ReceiptScanFlow({ carId: initialCarId, cars, onDone, onC
 
                 {matchedSr && (
                   <div className="flex items-center gap-2 bg-green-900/20 border border-green-700/30 rounded-lg px-3 py-2">
-                    <span className="text-green-400">✓</span>
+                    <span className="text-green-400"><Glyph e="✓" /></span>
                     <p className="text-xs text-green-300">Auto-matched: <strong>{matchedSr.title}</strong> · {new Date(matchedSr.serviceDate).toLocaleDateString()}</p>
                   </div>
                 )}
@@ -418,10 +419,10 @@ export default function ReceiptScanFlow({ carId: initialCarId, cars, onDone, onC
                     onChange={(e) => setSelectedSrId(e.target.value)}
                     className={inputCls}
                   >
-                    <option value="">➕ Create new service record</option>
+                    <option value=""><Glyph e="➕" /> Create new service record</option>
                     {matchedSr && (
                       <option value={matchedSr.id}>
-                        ✓ {matchedSr.title} — {new Date(matchedSr.serviceDate).toLocaleDateString()} (matched)
+                        <Glyph e="✓" /> {matchedSr.title} — {new Date(matchedSr.serviceDate).toLocaleDateString()} (matched)
                       </option>
                     )}
                     {allServiceRecords
@@ -451,7 +452,7 @@ export default function ReceiptScanFlow({ carId: initialCarId, cars, onDone, onC
                 </button>
                 <button
                   onClick={handleConfirm}
-                  className="flex-1 py-2.5 rounded-xl bg-amber-500 text-black font-semibold hover:bg-amber-400 transition text-sm"
+                  className="flex-1 py-2.5 rounded-xl bg-amber-500 text-on-accent font-semibold hover:bg-amber-400 transition text-sm"
                 >
                   Confirm & Save
                 </button>
@@ -462,7 +463,7 @@ export default function ReceiptScanFlow({ carId: initialCarId, cars, onDone, onC
           {/* Saving */}
           {state === "saving" && (
             <div className="py-8 text-center space-y-3">
-              <div className="text-4xl">💾</div>
+              <div className="text-4xl"><Glyph e="💾" /></div>
               <p className="text-gray-400 text-sm">Saving...</p>
             </div>
           )}
@@ -470,7 +471,7 @@ export default function ReceiptScanFlow({ carId: initialCarId, cars, onDone, onC
           {/* Done */}
           {state === "done" && (
             <div className="py-6 text-center space-y-4">
-              <div className="text-5xl">✅</div>
+              <div className="text-5xl"><Glyph e="✅" /></div>
               <div>
                 <p className="text-white font-semibold">Receipt saved!</p>
                 <p className="text-gray-400 text-sm mt-1">{doneTitle}</p>
@@ -483,7 +484,7 @@ export default function ReceiptScanFlow({ carId: initialCarId, cars, onDone, onC
                       router.refresh();
                       handleClose();
                     }}
-                    className="flex-1 py-2.5 rounded-xl bg-amber-500 text-black font-semibold text-sm text-center"
+                    className="flex-1 py-2.5 rounded-xl bg-amber-500 text-on-accent font-semibold text-sm text-center"
                   >
                     View Record
                   </a>

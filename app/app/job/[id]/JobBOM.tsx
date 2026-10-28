@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Package, Plus, X, ChevronDown, ChevronUp, Edit2, ShoppingCart, Receipt } from "lucide-react";
+import Glyph from "@/app/components/Glyph";
 
 type BomItem = {
   id: string;
@@ -36,9 +37,9 @@ type TaskPartNote = {
 
 const STATUS_CONFIG = {
   needed:    { label: "Needed",    color: "bg-gray-700 text-gray-300",       next: "ordered"   },
-  ordered:   { label: "Ordered",   color: "bg-blue-700 text-blue-100",       next: "received"  },
-  received:  { label: "Received",  color: "bg-amber-700 text-amber-100",     next: "installed" },
-  installed: { label: "Installed", color: "bg-emerald-700 text-emerald-100", next: null        },
+  ordered:   { label: "Ordered",   color: "bg-blue-900 text-blue-400",       next: "received"  },
+  received:  { label: "Received",  color: "bg-amber-900 text-amber-400",     next: "installed" },
+  installed: { label: "Installed", color: "bg-emerald-900 text-emerald-400", next: null        },
 } as const;
 
 function fmt(n: number | null | undefined) {
@@ -118,7 +119,7 @@ function AddItemForm({ jobId, onAdd }: { jobId: string; onAdd: (item: BomItem) =
       <input value={notes} onChange={e => setNotes(e.target.value)} placeholder="Notes" className={cls} />
       <div className="flex gap-2">
         <button onClick={save} disabled={saving || !name.trim()}
-          className="flex-1 bg-amber-500 text-gray-950 font-bold text-xs py-2 rounded-lg disabled:opacity-40">
+          className="flex-1 bg-amber-500 text-on-accent font-bold text-xs py-2 rounded-lg disabled:opacity-40">
           {saving ? "Saving…" : "Add to BOM"}
         </button>
         <button onClick={() => setOpen(false)} className="px-3 py-2 bg-gray-800 text-gray-400 text-xs rounded-lg">
@@ -193,7 +194,7 @@ function BomRow({ item, jobId, onUpdate, onDelete }: {
         </div>
         <input value={notes} onChange={e => setNotes(e.target.value)} className={cls} placeholder="Notes" />
         <div className="flex gap-2">
-          <button onClick={save} disabled={saving} className="flex-1 bg-amber-500 text-gray-950 font-bold text-xs py-1.5 rounded-lg disabled:opacity-40">
+          <button onClick={save} disabled={saving} className="flex-1 bg-amber-500 text-on-accent font-bold text-xs py-1.5 rounded-lg disabled:opacity-40">
             {saving ? "Saving…" : "Save"}
           </button>
           <button onClick={() => setEditing(false)} className="px-3 py-1.5 bg-gray-800 text-gray-400 text-xs rounded-lg">Cancel</button>
@@ -313,7 +314,7 @@ export default function JobBOM({
                       {li.notes && <p className="text-[11px] text-gray-600 italic mt-0.5">{li.notes}</p>}
                       {li.warrantyProvider && li.warrantyEnd && (
                         <p className="text-[10px] text-blue-400 mt-0.5">
-                          🛡 Warranty: {li.warrantyProvider} · until {new Date(li.warrantyEnd).toLocaleDateString()}
+                          <Glyph e="🛡" /> Warranty: {li.warrantyProvider} · until {new Date(li.warrantyEnd).toLocaleDateString()}
                         </p>
                       )}
                     </div>
@@ -327,7 +328,7 @@ export default function JobBOM({
                     </div>
                   </div>
                   <div className="mt-1">
-                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-900/50 text-emerald-400 font-medium">✅ Purchased</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-900/50 text-emerald-400 font-medium"><Glyph e="✅" /> Purchased</span>
                   </div>
                 </div>
               ))}
@@ -343,7 +344,7 @@ export default function JobBOM({
             onClick={() => setShowTaskParts(r => !r)}
             className="w-full px-3 pt-3 pb-2 border-b border-gray-800 flex items-center justify-between"
           >
-            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">📋 Task Parts Notes</span>
+            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide"><Glyph e="📋" /> Task Parts Notes</span>
             <div className="flex items-center gap-2">
               {taskPartsTotal > 0 && <span className="text-xs text-amber-400 font-semibold">{fmt(taskPartsTotal)}</span>}
               {showTaskParts ? <ChevronUp size={12} className="text-gray-600" /> : <ChevronDown size={12} className="text-gray-600" />}

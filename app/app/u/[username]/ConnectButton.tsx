@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Glyph from "@/app/components/Glyph";
 
 type Status = "none" | "pending_sent" | "pending_received" | "accepted" | "self";
 
@@ -19,9 +20,9 @@ export default function ConnectButton({ username, initialStatus, isLoggedIn }: C
     return (
       <a
         href={`/login`}
-        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-gray-950 font-bold text-sm hover:bg-amber-400 transition-colors"
+        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-on-accent font-bold text-sm hover:bg-amber-400 transition-colors"
       >
-        🤝 Sign in to Connect
+        <Glyph e="🤝" /> Sign in to Connect
       </a>
     );
   }
@@ -31,7 +32,7 @@ export default function ConnectButton({ username, initialStatus, isLoggedIn }: C
   if (status === "accepted") {
     return (
       <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-900/50 border border-emerald-700/50 text-emerald-300 text-sm font-semibold">
-        ✓ Connected
+        <Glyph e="✓" /> Connected
       </span>
     );
   }
@@ -39,7 +40,7 @@ export default function ConnectButton({ username, initialStatus, isLoggedIn }: C
   if (status === "pending_sent") {
     return (
       <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-800 border border-gray-700 text-amber-400 text-sm font-medium">
-        ⏳ Request sent
+        <Glyph e="⏳" /> Request sent
       </span>
     );
   }
@@ -47,7 +48,7 @@ export default function ConnectButton({ username, initialStatus, isLoggedIn }: C
   if (status === "pending_received") {
     return (
       <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-900/30 border border-amber-700/40 text-amber-300 text-sm font-medium">
-        🔔 Sent you a request — check <a href="/friends" className="underline">Friends</a>
+        <Glyph e="🔔" /> Sent you a request — check <a href="/friends" className="underline">Friends</a>
       </span>
     );
   }
@@ -77,9 +78,9 @@ export default function ConnectButton({ username, initialStatus, isLoggedIn }: C
       <button
         onClick={handleConnect}
         disabled={pending}
-        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-gray-950 font-bold text-sm hover:bg-amber-400 active:scale-95 transition-all disabled:opacity-40"
+        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-on-accent font-bold text-sm hover:bg-amber-400 active:scale-95 transition-all disabled:opacity-40"
       >
-        {pending ? "Sending…" : "🤝 Connect"}
+        {pending ? "Sending…" : <>{"🤝 Connect"}</>}
       </button>
       {error && <p className="text-xs text-red-400">{error}</p>}
     </div>

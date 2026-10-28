@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import Glyph from "@/app/components/Glyph";
 
 type Photo = {
   id: string;
@@ -65,7 +66,7 @@ function Lightbox({
           onClick={onClose}
           className="text-2xl text-gray-300 w-10 h-10 flex items-center justify-center"
         >
-          ✕
+          <Glyph e="✕" />
         </button>
       </div>
 
@@ -106,7 +107,7 @@ function Lightbox({
               type="button"
               onClick={() => onNavigate(i)}
               className={`rounded-full transition-all ${
-                i === index ? "w-4 h-1.5 bg-white" : "w-1.5 h-1.5 bg-gray-600"
+                i === index ? "w-4 h-1.5 bg-[#ffffff]" : "w-1.5 h-1.5 bg-gray-600"
               }`}
             />
           ))}
@@ -120,7 +121,7 @@ function Lightbox({
           download
           className="flex flex-col items-center gap-1 text-xs text-gray-300 bg-gray-800 px-5 py-3 rounded-xl"
         >
-          <span className="text-xl">⬇️</span>
+          <span className="text-xl"><Glyph e="⬇" /></span>
           Save
         </a>
         <button
@@ -128,7 +129,7 @@ function Lightbox({
           onClick={onClose}
           className="flex flex-col items-center gap-1 text-xs text-gray-300 bg-gray-800 px-5 py-3 rounded-xl"
         >
-          <span className="text-xl">✕</span>
+          <span className="text-xl"><Glyph e="✕" /></span>
           Close
         </button>
       </div>
@@ -170,7 +171,7 @@ export default function SharePhotoGallery({ photos }: { photos: Photo[] }) {
             />
             {/* Expand hint on hover */}
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-              <span className="bg-black/60 rounded-full w-8 h-8 flex items-center justify-center text-white text-sm">⛶</span>
+              <span className="bg-black/60 rounded-full w-8 h-8 flex items-center justify-center text-white text-sm"><Glyph e="⛶" /></span>
             </div>
             {/* Count badge on first photo */}
             {i === 0 && photos.length > 1 && (

@@ -3,11 +3,11 @@
 import { useState, useRef } from "react";
 
 const ASSET_TYPES = [
-  { value: "vehicle",      label: "🚗 Vehicle" },
-  { value: "trailer",      label: "🚚 Trailer" },
-  { value: "riding_mower", label: "🚜 Riding mower" },
-  { value: "equipment",    label: "🧰 Equipment" },
-  { value: "bicycle",      label: "🚲 Bicycle" },
+  { value: "vehicle",      label: "Vehicle" },
+  { value: "trailer",      label: "Trailer" },
+  { value: "riding_mower", label: "Riding mower" },
+  { value: "equipment",    label: "Equipment" },
+  { value: "bicycle",      label: "Bicycle" },
 ];
 
 const BIKE_TYPES = [
@@ -348,7 +348,7 @@ export default function CarForm({ action, title, backHref, submitLabel, defaults
 
           <button
             type="submit"
-            className="w-full bg-amber-500 text-gray-950 font-bold py-3.5 rounded-xl text-base active:scale-95 transition-transform"
+            className="w-full bg-amber-500 text-on-accent font-bold py-3.5 rounded-xl text-base active:scale-95 transition-transform"
           >
             {submitLabel}
           </button>

@@ -15,29 +15,29 @@ export async function GET(req: NextRequest) {
     const redirectUri = process.env.GOOGLE_REDIRECT_URI;
 
     if (!clientId || !clientSecret || !redirectUri) {
-      return NextResponse.redirect(new URL("/login?error=google_not_configured", req.url));
+      return NextResponse.redirect(new URL("/login?error=google_not_configured", process.env.NEXT_PUBLIC_BASE_URL || req.url));
     }
 
     const code = req.nextUrl.searchParams.get("code");
     const state = req.nextUrl.searchParams.get("state");
     if (!code || !state) {
-      return NextResponse.redirect(new URL("/login?error=google_missing_code", req.url));
+      return NextResponse.redirect(new URL("/login?error=google_missing_code", process.env.NEXT_PUBLIC_BASE_URL || req.url));
     }
 
     const stateCookieRaw = req.cookies.get(OAUTH_STATE_COOKIE)?.value;
     if (!stateCookieRaw) {
-      return NextResponse.redirect(new URL("/login?error=google_invalid_state", req.url));
+      return NextResponse.redirect(new URL("/login?error=google_invalid_state", process.env.NEXT_PUBLIC_BASE_URL || req.url));
     }
 
     let stateCookie: { state: string; returnTo?: string; inviteToken?: string } | null = null;
     try {
       stateCookie = JSON.parse(stateCookieRaw);
     } catch {
-      return NextResponse.redirect(new URL("/login?error=google_invalid_state", req.url));
+      return NextResponse.redirect(new URL("/login?error=google_invalid_state", process.env.NEXT_PUBLIC_BASE_URL || req.url));
     }
 
     if (!stateCookie || stateCookie.state !== state) {
-      return NextResponse.redirect(new URL("/login?error=google_state_mismatch", req.url));
+      return NextResponse.redirect(new URL("/login?error=google_state_mismatch", process.env.NEXT_PUBLIC_BASE_URL || req.url));
     }
 
     const tokenRes = await fetch(GOOGLE_TOKEN_URL, {
@@ -53,12 +53,12 @@ export async function GET(req: NextRequest) {
     });
 
     if (!tokenRes.ok) {
-      return NextResponse.redirect(new URL("/login?error=google_token_exchange_failed", req.url));
+      return NextResponse.redirect(new URL("/login?error=google_token_exchange_failed", process.env.NEXT_PUBLIC_BASE_URL || req.url));
     }
 
     const tokenData = (await tokenRes.json()) as { access_token?: string };
     if (!tokenData.access_token) {
-      return NextResponse.redirect(new URL("/login?error=google_no_access_token", req.url));
+      return NextResponse.redirect(new URL("/login?error=google_no_access_token", process.env.NEXT_PUBLIC_BASE_URL || req.url));
     }
 
     const profileRes = await fetch(GOOGLE_USERINFO_URL, {
@@ -68,7 +68,7 @@ export async function GET(req: NextRequest) {
     });
 
     if (!profileRes.ok) {
-      return NextResponse.redirect(new URL("/login?error=google_profile_failed", req.url));
+      return NextResponse.redirect(new URL("/login?error=google_profile_failed", process.env.NEXT_PUBLIC_BASE_URL || req.url));
     }
 
     const profile = (await profileRes.json()) as {
@@ -78,7 +78,7 @@ export async function GET(req: NextRequest) {
     };
 
     if (!profile.email || !profile.email_verified) {
-      return NextResponse.redirect(new URL("/login?error=google_email_not_verified", req.url));
+      return NextResponse.redirect(new URL("/login?error=google_email_not_verified", process.env.NEXT_PUBLIC_BASE_URL || req.url));
     }
 
     const email = profile.email.toLowerCase();
@@ -165,6 +165,6 @@ export async function GET(req: NextRequest) {
 
     return res;
   } catch {
-    return NextResponse.redirect(new URL("/login?error=google_callback_crash", req.url));
+    return NextResponse.redirect(new URL("/login?error=google_callback_crash", process.env.NEXT_PUBLIC_BASE_URL || req.url));
   }
 }

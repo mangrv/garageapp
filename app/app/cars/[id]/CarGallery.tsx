@@ -5,6 +5,7 @@ import { useT } from "@/app/hooks/useT";
 import { useApp } from "@/app/providers/AppProviders";
 import { setFeaturedPhoto, deleteCarPhoto, updateCarPhoto } from "./actions";
 import { compressImage } from "@/app/lib/compressImage";
+import Glyph from "@/app/components/Glyph";
 
 type Photo = {
   id: string;
@@ -113,9 +114,9 @@ function Lightbox({
       <div className="flex items-center justify-between px-4 py-3 bg-black/80 flex-shrink-0">
         <span className="text-sm text-gray-400">{index + 1} / {photos.length}</span>
         {photo.isFeatured && (
-          <span className="text-xs bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-full">⭐ Featured</span>
+          <span className="text-xs bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-full"><Glyph e="⭐" /> Featured</span>
         )}
-        <button onClick={onClose} className="text-2xl text-gray-300 w-10 h-10 flex items-center justify-center">✕</button>
+        <button onClick={onClose} className="text-2xl text-gray-300 w-10 h-10 flex items-center justify-center"><Glyph e="✕" /></button>
       </div>
 
       {/* Image + arrows */}
@@ -149,7 +150,7 @@ function Lightbox({
             <button
               key={i}
               onClick={() => onNavigate(i)}
-              className={`rounded-full transition-all ${i === index ? "w-4 h-1.5 bg-white" : "w-1.5 h-1.5 bg-gray-600"}`}
+              className={`rounded-full transition-all ${i === index ? "w-4 h-1.5 bg-[#ffffff]" : "w-1.5 h-1.5 bg-gray-600"}`}
             />
           ))}
         </div>
@@ -173,7 +174,7 @@ function Lightbox({
               className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white"
             />
             <div className="flex gap-2">
-              <button onClick={handleSave} disabled={pending} className="flex-1 bg-amber-500 text-gray-950 font-bold py-2 rounded-xl text-sm disabled:opacity-40">
+              <button onClick={handleSave} disabled={pending} className="flex-1 bg-amber-500 text-on-accent font-bold py-2 rounded-xl text-sm disabled:opacity-40">
                 {lang === "es" ? "Guardar" : "Save"}
               </button>
               <button onClick={() => setEditing(false)} className="flex-1 bg-gray-800 text-gray-300 py-2 rounded-xl text-sm">
@@ -184,7 +185,7 @@ function Lightbox({
         ) : (
           <div>
             {photo.caption && <p className="text-sm text-white mb-0.5">{photo.caption}</p>}
-            {photo.takenAt && <p className="text-xs text-gray-400">📅 {formatDate(photo.takenAt)}</p>}
+            {photo.takenAt && <p className="text-xs text-gray-400"><Glyph e="📅" /> {formatDate(photo.takenAt)}</p>}
             {!photo.caption && !photo.takenAt && <p className="text-xs text-gray-600">{lang === "es" ? "Sin descripción" : "No caption"}</p>}
           </div>
         )}
@@ -194,11 +195,11 @@ function Lightbox({
       {!editing && (
         <div className="flex justify-around px-4 py-3 bg-black/90 border-t border-gray-800 flex-shrink-0">
           <button onClick={() => setEditing(true)} className="flex flex-col items-center gap-1 text-xs text-gray-300">
-            <span className="text-xl">✏️</span>{lang === "es" ? "Editar" : "Edit"}
+            <span className="text-xl"><Glyph e="✏" /></span>{lang === "es" ? "Editar" : "Edit"}
           </button>
           {!photo.isFeatured && (
             <button onClick={handleFeature} disabled={pending} className="flex flex-col items-center gap-1 text-xs text-amber-300 disabled:opacity-40">
-              <span className="text-xl">⭐</span>{lang === "es" ? "Destacar" : "Feature"}
+              <span className="text-xl"><Glyph e="⭐" /></span>{lang === "es" ? "Destacar" : "Feature"}
             </button>
           )}
           <a
@@ -206,10 +207,10 @@ function Lightbox({
             download
             className="flex flex-col items-center gap-1 text-xs text-gray-300"
           >
-            <span className="text-xl">⬇️</span>{lang === "es" ? "Guardar" : "Save"}
+            <span className="text-xl"><Glyph e="⬇" /></span>{lang === "es" ? "Guardar" : "Save"}
           </a>
           <button onClick={handleDelete} disabled={pending} className="flex flex-col items-center gap-1 text-xs text-red-400 disabled:opacity-40">
-            <span className="text-xl">🗑</span>{lang === "es" ? "Eliminar" : "Delete"}
+            <span className="text-xl"><Glyph e="🗑" /></span>{lang === "es" ? "Eliminar" : "Delete"}
           </button>
         </div>
       )}
@@ -316,7 +317,7 @@ export default function CarGallery({ carId, photos: initialPhotos }: { carId: st
             <button
               onClick={handleUpload}
               disabled={pending || uploading}
-              className="flex-1 bg-amber-500 text-gray-950 font-bold py-2.5 rounded-xl text-sm disabled:opacity-40"
+              className="flex-1 bg-amber-500 text-on-accent font-bold py-2.5 rounded-xl text-sm disabled:opacity-40"
             >
               {uploading ? t("uploading") : t("addPhoto")}
             </button>
@@ -330,7 +331,7 @@ export default function CarGallery({ carId, photos: initialPhotos }: { carId: st
         </div>
       ) : (
         <label className="flex items-center justify-center gap-2 border-2 border-dashed border-gray-700 rounded-2xl p-4 cursor-pointer active:border-amber-500 transition-colors">
-          <span className="text-2xl">📷</span>
+          <span className="text-2xl"><Glyph e="📷" /></span>
           <span className="text-sm text-gray-400">{lang === "es" ? "Agregar una foto" : "Add a photo"}</span>
           <input ref={fileRef} type="file" accept="image/*,video/*" className="hidden" onChange={handleFileSelect} />
         </label>
@@ -356,7 +357,7 @@ export default function CarGallery({ carId, photos: initialPhotos }: { carId: st
               </div>
               {photo.isFeatured && (
                 <div className="absolute top-2 left-2 bg-amber-400 text-gray-950 text-xs font-bold px-2 py-0.5 rounded-full">
-                  ⭐ {lang === "es" ? "Destacada" : "Featured"}
+                  <Glyph e="⭐" /> {lang === "es" ? "Destacada" : "Featured"}
                 </div>
               )}
               {photo.caption && (

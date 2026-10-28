@@ -5,6 +5,7 @@ import { useT } from "@/app/hooks/useT";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { trackMatomoEvent } from "@/app/lib/matomo";
+import Glyph from "@/app/components/Glyph";
 
 interface LineItem {
   id: string;
@@ -314,7 +315,7 @@ export default function ReceiptDetailClient({ receipt: initial, cars, jobs, task
               onClick={() => cameraInputRef.current?.click()}
               className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 active:opacity-100 transition"
             >
-              📷 Replace photo
+              <Glyph e="📷" /> Replace photo
             </button>
           </div>
         )}
@@ -325,7 +326,7 @@ export default function ReceiptDetailClient({ receipt: initial, cars, jobs, task
             rel="noreferrer"
             className="block p-4 bg-gray-900 border border-gray-800 rounded-2xl text-amber-400 hover:border-amber-500/30 transition"
           >
-            📄 View PDF
+            <Glyph e="📄" /> View PDF
           </a>
         )}
 
@@ -339,7 +340,7 @@ export default function ReceiptDetailClient({ receipt: initial, cars, jobs, task
                 disabled={attachingPhoto}
                 className="flex flex-col items-center gap-1.5 py-4 rounded-xl border border-gray-700 text-gray-400 active:bg-gray-800 transition disabled:opacity-40"
               >
-                <span className="text-2xl">📷</span>
+                <span className="text-2xl"><Glyph e="📷" /></span>
                 <span className="text-xs">{attachingPhoto ? "Uploading…" : "Take photo"}</span>
               </button>
               <button
@@ -347,7 +348,7 @@ export default function ReceiptDetailClient({ receipt: initial, cars, jobs, task
                 disabled={attachingPhoto}
                 className="flex flex-col items-center gap-1.5 py-4 rounded-xl border border-gray-700 text-gray-400 active:bg-gray-800 transition disabled:opacity-40"
               >
-                <span className="text-2xl">🗂</span>
+                <span className="text-2xl"><Glyph e="🗂" /></span>
                 <span className="text-xs">{attachingPhoto ? "Uploading…" : "Choose file"}</span>
               </button>
             </div>
@@ -362,7 +363,7 @@ export default function ReceiptDetailClient({ receipt: initial, cars, jobs, task
               disabled={reprocessing}
               className="w-full py-2 rounded-xl bg-gray-800 border border-gray-700 text-sm text-amber-400 disabled:opacity-40 active:bg-gray-700 transition"
             >
-              {reprocessing ? "🤖 Processing…" : "🤖 Process receipt"}
+              {reprocessing ? <>{"🤖 Processing…"}</> : <>{"🤖 Process receipt"}</>}
             </button>
             {processStatus && <p className="text-xs text-emerald-400">{processStatus}</p>}
             {processError && <p className="text-xs text-red-400">{processError}</p>}
@@ -421,7 +422,7 @@ export default function ReceiptDetailClient({ receipt: initial, cars, jobs, task
               <button
                 onClick={saveEdits}
                 disabled={saving}
-                className="w-full py-2 rounded-xl bg-amber-500 text-black font-semibold hover:bg-amber-400 transition disabled:opacity-50"
+                className="w-full py-2 rounded-xl bg-amber-500 text-on-accent font-semibold hover:bg-amber-400 transition disabled:opacity-50"
               >
                 {saving ? "Saving…" : "Save Changes"}
               </button>
@@ -612,7 +613,7 @@ export default function ReceiptDetailClient({ receipt: initial, cars, jobs, task
             <button
               onClick={saveLink}
               disabled={saving || !selectedCarId}
-              className="w-full py-2.5 rounded-xl bg-amber-500 text-gray-950 font-semibold hover:bg-amber-400 transition text-sm disabled:opacity-40"
+              className="w-full py-2.5 rounded-xl bg-amber-500 text-on-accent font-semibold hover:bg-amber-400 transition text-sm disabled:opacity-40"
             >
               {saving ? "Saving…" : "Update Link"}
             </button>
@@ -680,7 +681,7 @@ export default function ReceiptDetailClient({ receipt: initial, cars, jobs, task
                       />
                       <div className="flex gap-2">
                         <button onClick={() => saveEditLi(li.id)} disabled={savingLi}
-                          className="flex-1 py-1.5 bg-amber-500 text-black font-semibold rounded-lg text-xs disabled:opacity-40">
+                          className="flex-1 py-1.5 bg-amber-500 text-on-accent font-semibold rounded-lg text-xs disabled:opacity-40">
                           {savingLi ? "…" : t("save")}
                         </button>
                         <button onClick={() => setEditingLi(null)}
@@ -697,7 +698,7 @@ export default function ReceiptDetailClient({ receipt: initial, cars, jobs, task
                         {li.notes && <p className="text-xs text-gray-500">{li.notes}</p>}
                         {(li.warrantyProvider || li.warrantyEnd) && (
                           <p className="text-xs text-sky-400">
-                            🛡️ {li.warrantyProvider || t("warranty")}
+                            <Glyph e="🛡" /> {li.warrantyProvider || t("warranty")}
                             {li.warrantyEnd ? ` · until ${new Date(li.warrantyEnd).toLocaleDateString()}` : ""}
                           </p>
                         )}
@@ -708,8 +709,8 @@ export default function ReceiptDetailClient({ receipt: initial, cars, jobs, task
                           {li.amount != null ? `$${(li.amount * li.quantity).toFixed(2)}` : "—"}
                         </p>
                       </div>
-                      <button onClick={() => startEditLi(li)} className="text-gray-600 active:text-amber-400 text-sm">✏️</button>
-                      <button onClick={() => deleteLineItem(li.id)} className="text-gray-600 active:text-red-400 text-sm">✕</button>
+                      <button onClick={() => startEditLi(li)} className="text-gray-600 active:text-amber-400 text-sm"><Glyph e="✏" /></button>
+                      <button onClick={() => deleteLineItem(li.id)} className="text-gray-600 active:text-red-400 text-sm"><Glyph e="✕" /></button>
                     </div>
                   )}
                 </div>

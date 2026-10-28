@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useApp } from "@/app/providers/AppProviders";
 import { CheckCircle2, Circle, RefreshCw, ChevronDown, ChevronRight, AlertCircle, Clock, Cpu, Droplets, Zap, CircleDot, Filter, Thermometer, Eye, Battery, Wrench } from "lucide-react";
+import Glyph from "@/app/components/Glyph";
 
 type Item = {
   id: string;
@@ -184,7 +185,7 @@ function DoneModal({
         <div className="flex gap-3">
           <button
             onClick={() => onSave(miles ? parseInt(miles) : null, date, createRecord)}
-            className="flex-1 bg-amber-500 text-gray-950 font-bold py-3 rounded-xl text-sm"
+            className="flex-1 bg-amber-500 text-on-accent font-bold py-3 rounded-xl text-sm"
           >
             {es ? "Guardar" : "Save"}
           </button>
@@ -270,7 +271,7 @@ export default function ScheduleClient({
         <button
           onClick={generate}
           disabled={generating}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-amber-500 text-gray-950 hover:bg-amber-400 disabled:opacity-50 transition-colors"
+          className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-amber-500 text-on-accent hover:bg-amber-400 disabled:opacity-50 transition-colors"
         >
           <RefreshCw size={13} className={generating ? "animate-spin" : ""} />
           {generating ? (es ? "Generando…" : "Generating…") : items.length > 0 ? (es ? "Regenerar" : "Regenerate") : (es ? "Generar con IA" : "Generate")}
@@ -284,16 +285,16 @@ export default function ScheduleClient({
         <div className="flex gap-2 flex-wrap">
           {overdueCount > 0 && (
             <span className="text-xs bg-red-900/30 border border-red-800/50 text-red-400 px-3 py-1 rounded-full font-semibold">
-              🔴 {overdueCount} {es ? "atrasado(s)" : "overdue"}
+              <Glyph e="🔴" /> {overdueCount} {es ? "atrasado(s)" : "overdue"}
             </span>
           )}
           {dueSoonCount > 0 && (
             <span className="text-xs bg-amber-900/30 border border-amber-800/50 text-amber-400 px-3 py-1 rounded-full font-semibold">
-              🟡 {dueSoonCount} {es ? "próximo(s)" : "due soon"}
+              <Glyph e="🟡" /> {dueSoonCount} {es ? "próximo(s)" : "due soon"}
             </span>
           )}
           <span className="text-xs bg-gray-800 text-gray-400 px-3 py-1 rounded-full">
-            ✅ {doneCount}/{items.length} {es ? "registrados" : "logged"}
+            <Glyph e="✅" /> {doneCount}/{items.length} {es ? "registrados" : "logged"}
           </span>
         </div>
       )}
@@ -310,7 +311,7 @@ export default function ScheduleClient({
                 : `Generate the complete factory schedule for your ${carName} — mileage intervals, service items, and specs.`}
             </p>
           </div>
-          <button onClick={generate} disabled={generating} className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-amber-500 text-gray-950 font-bold text-sm disabled:opacity-50">
+          <button onClick={generate} disabled={generating} className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-amber-500 text-on-accent font-bold text-sm disabled:opacity-50">
             <RefreshCw size={14} className={generating ? "animate-spin" : ""} />
             {es ? "Generar con IA" : "Generate with AI"}
           </button>
@@ -346,8 +347,8 @@ export default function ScheduleClient({
             >
               <div className="flex items-center gap-2">
                 <span className="text-sm font-bold text-white">{es ? group.labelEs : group.label}</span>
-                {groupOverdue > 0 && <span className="text-[10px] bg-red-900/50 text-red-400 px-1.5 py-0.5 rounded-full">{groupOverdue} 🔴</span>}
-                {groupDueSoon > 0 && <span className="text-[10px] bg-amber-900/50 text-amber-400 px-1.5 py-0.5 rounded-full">{groupDueSoon} 🟡</span>}
+                {groupOverdue > 0 && <span className="text-[10px] bg-red-900/50 text-red-400 px-1.5 py-0.5 rounded-full">{groupOverdue} <Glyph e="🔴" /></span>}
+                {groupDueSoon > 0 && <span className="text-[10px] bg-amber-900/50 text-amber-400 px-1.5 py-0.5 rounded-full">{groupDueSoon} <Glyph e="🟡" /></span>}
               </div>
               <div className="flex items-center gap-2 text-gray-500">
                 <span className="text-xs">{group.items.length} {es ? "ítems" : "items"}</span>
@@ -389,13 +390,13 @@ export default function ScheduleClient({
                           {/* Last done */}
                           {(item.lastDoneMiles || item.lastDoneDate) && (
                             <span>
-                              ✔ {es ? "Último" : "Last"}: {item.lastDoneMiles ? `${item.lastDoneMiles.toLocaleString()} mi` : ""}{item.lastDoneMiles && item.lastDoneDate ? " · " : ""}{item.lastDoneDate ? new Date(item.lastDoneDate).toLocaleDateString(es ? "es-US" : "en-US", { month: "short", day: "numeric", year: "numeric" }) : ""}
+                              <Glyph e="✔" /> {es ? "Último" : "Last"}: {item.lastDoneMiles ? `${item.lastDoneMiles.toLocaleString()} mi` : ""}{item.lastDoneMiles && item.lastDoneDate ? " · " : ""}{item.lastDoneDate ? new Date(item.lastDoneDate).toLocaleDateString(es ? "es-US" : "en-US", { month: "short", day: "numeric", year: "numeric" }) : ""}
                             </span>
                           )}
                           {/* Next due by mileage */}
                           {nextMi && currentMileage && (
                             <span className={status === "overdue" ? "text-red-400" : status === "due-soon" ? "text-amber-400" : ""}>
-                              📍 {es ? "Próximo" : "Next"}: {nextMi.toLocaleString()} mi
+                              <Glyph e="📍" /> {es ? "Próximo" : "Next"}: {nextMi.toLocaleString()} mi
                               {status === "overdue" && <span className="ml-1">({(currentMileage - nextMi).toLocaleString()} mi {es ? "atrasado" : "overdue"})</span>}
                               {status === "due-soon" && <span className="ml-1">({(nextMi - currentMileage).toLocaleString()} mi {es ? "restantes" : "to go"})</span>}
                             </span>
@@ -408,7 +409,7 @@ export default function ScheduleClient({
                             const isDateSoon = daysLeft >= 0 && daysLeft <= 30;
                             return (
                               <span className={isDateOverdue ? "text-red-400" : isDateSoon ? "text-amber-400" : ""}>
-                                📅 {dateStr}
+                                <Glyph e="📅" /> {dateStr}
                                 {isDateOverdue && <span className="ml-1">({Math.abs(daysLeft)}d {es ? "atrasado" : "overdue"})</span>}
                                 {isDateSoon && <span className="ml-1">({daysLeft}d {es ? "restantes" : "left"})</span>}
                               </span>

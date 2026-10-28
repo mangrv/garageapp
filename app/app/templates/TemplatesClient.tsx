@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { renameTemplate, deleteTemplate } from "./actions";
 import Link from "next/link";
+import Glyph from "@/app/components/Glyph";
 
 type Template = {
   id: string; name: string; createdAt: string; phaseCount: number; taskCount: number;
@@ -39,7 +40,7 @@ function TemplateRow({ t }: { t: Template }) {
           />
           <div className="flex gap-2">
             <button onClick={handleSave} disabled={pending || !name.trim()}
-              className="flex-1 bg-amber-500 text-gray-950 font-bold py-2 rounded-xl text-sm disabled:opacity-40">
+              className="flex-1 bg-amber-500 text-on-accent font-bold py-2 rounded-xl text-sm disabled:opacity-40">
               Save
             </button>
             <button onClick={() => { setEditing(false); setName(t.name); }}
@@ -52,12 +53,12 @@ function TemplateRow({ t }: { t: Template }) {
         <>
           <div className="flex items-start justify-between gap-2">
             <div>
-              <div className="font-semibold text-sm text-white">💾 {t.name}</div>
+              <div className="font-semibold text-sm text-white"><Glyph e="💾" /> {t.name}</div>
               <div className="text-xs text-gray-500 mt-0.5">
                 {t.phaseCount} phase{t.phaseCount !== 1 ? "s" : ""} · {t.taskCount} task{t.taskCount !== 1 ? "s" : ""} · saved {new Date(t.createdAt).toLocaleDateString()}
               </div>
             </div>
-            <button onClick={() => setEditing(true)} className="text-gray-600 text-sm active:text-amber-400 px-1 flex-shrink-0">✏️</button>
+            <button onClick={() => setEditing(true)} className="text-gray-600 text-sm active:text-amber-400 px-1 flex-shrink-0"><Glyph e="✏" /></button>
           </div>
 
           {showDelete ? (
@@ -65,7 +66,7 @@ function TemplateRow({ t }: { t: Template }) {
               <p className="text-xs text-gray-400 text-center">Delete this template?</p>
               <div className="flex gap-2">
                 <button onClick={handleDelete} disabled={pending}
-                  className="flex-1 bg-red-700 text-white font-semibold py-2 rounded-xl text-sm disabled:opacity-40">
+                  className="flex-1 bg-red-700 text-on-accent font-semibold py-2 rounded-xl text-sm disabled:opacity-40">
                   Yes, delete
                 </button>
                 <button onClick={() => setShowDelete(false)}
@@ -77,7 +78,7 @@ function TemplateRow({ t }: { t: Template }) {
           ) : (
             <button onClick={() => setShowDelete(true)}
               className="w-full text-xs text-red-500 py-1.5 active:bg-red-900/20 rounded-lg border border-red-900/30">
-              🗑 Delete template
+              <Glyph e="🗑" /> Delete template
             </button>
           )}
         </>
@@ -93,7 +94,7 @@ export default function TemplatesClient({ templates }: { templates: Template[] }
         <div className="flex items-center gap-3">
           <Link href="/dashboard" className="text-gray-400 text-sm">←</Link>
           <div>
-            <h1 className="font-bold text-base">💾 My Templates</h1>
+            <h1 className="font-bold text-base"><Glyph e="💾" /> My Templates</h1>
             <p className="text-xs text-gray-500">{templates.length} saved</p>
           </div>
         </div>
@@ -102,9 +103,9 @@ export default function TemplatesClient({ templates }: { templates: Template[] }
       <div className="px-4 pt-4 space-y-3">
         {templates.length === 0 ? (
           <div className="text-center py-12 space-y-2">
-            <div className="text-4xl">💾</div>
+            <div className="text-4xl"><Glyph e="💾" /></div>
             <p className="text-sm text-gray-500">No saved templates yet.</p>
-            <p className="text-xs text-gray-600">Open a project board and tap 💾 to save it as a template.</p>
+            <p className="text-xs text-gray-600">Open a project board and tap <Glyph e="💾" /> to save it as a template.</p>
           </div>
         ) : (
           templates.map((t) => <TemplateRow key={t.id} t={t} />)
@@ -112,7 +113,7 @@ export default function TemplatesClient({ templates }: { templates: Template[] }
 
         <div className="pt-2">
           <Link href="/jobs/new"
-            className="block w-full text-center bg-amber-500 text-gray-950 font-bold py-3 rounded-xl text-sm active:scale-95 transition-transform">
+            className="block w-full text-center bg-amber-500 text-on-accent font-bold py-3 rounded-xl text-sm active:scale-95 transition-transform">
             + New Job from Template →
           </Link>
         </div>

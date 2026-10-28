@@ -2,6 +2,7 @@
 import { useT } from "@/app/hooks/useT";
 
 import Link from "next/link";
+import Glyph from "@/app/components/Glyph";
 
 interface ReceiptCardProps {
   receipt: {
@@ -45,7 +46,7 @@ export default function ReceiptCard({ receipt, onDelete }: ReceiptCardProps) {
               className="w-full h-full object-cover"
             />
           ) : (
-            <span className="text-2xl">🧾</span>
+            <span className="text-2xl"><Glyph e="🧾" /></span>
           )}
         </div>
 
@@ -87,7 +88,7 @@ export default function ReceiptCard({ receipt, onDelete }: ReceiptCardProps) {
             onClick={handleDelete}
             className="text-gray-600 hover:text-red-400 transition opacity-0 group-hover:opacity-100 text-lg"
           >
-            ✕
+            <Glyph e="✕" />
           </button>
         )}
       </div>

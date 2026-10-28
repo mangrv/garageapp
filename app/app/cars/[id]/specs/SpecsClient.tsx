@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useApp } from "@/app/providers/AppProviders";
 import { Cpu, Droplets, Zap, Thermometer, CircleDot, Wrench, Battery, Wind, Copy, Check, RefreshCw, Pencil, Save, X, Search, AlertTriangle, CheckCircle, BookOpen, Sparkles, ExternalLink } from "lucide-react";
+import Glyph from "@/app/components/Glyph";
 
 type Specs = Record<string, string | null>;
 type VinEnrichment = {
@@ -305,7 +306,7 @@ export default function SpecsClient({
         <button
           onClick={generate}
           disabled={generating}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-amber-500 text-gray-950 hover:bg-amber-400 transition-colors disabled:opacity-50"
+          className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-amber-500 text-on-accent hover:bg-amber-400 transition-colors disabled:opacity-50"
         >
           <RefreshCw size={13} className={generating ? "animate-spin" : ""} />
           {generating ? (es ? "Generando…" : "Generating…") : hasAnyData ? (es ? "Regenerar" : "Regenerate") : (es ? "Generar con IA" : "Generate with AI")}
@@ -460,7 +461,7 @@ export default function SpecsClient({
           <button
             onClick={generate}
             disabled={generating}
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-amber-500 text-gray-950 font-bold text-sm disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-amber-500 text-on-accent font-bold text-sm disabled:opacity-50"
           >
             <RefreshCw size={14} className={generating ? "animate-spin" : ""} />
             {es ? "Generar con IA" : "Generate with AI"}
@@ -488,7 +489,7 @@ export default function SpecsClient({
       {hasAnyData && !generating && (
         <>
           <p className="text-xs text-gray-600 flex items-center gap-1">
-            ⚠️ {es ? "Generado por IA — verifica con tu manual del propietario" : "AI-generated — verify with your owner's manual"}
+            <Glyph e="⚠" /> {es ? "Generado por IA — verifica con tu manual del propietario" : "AI-generated — verify with your owner's manual"}
           </p>
 
           {SECTIONS.map((section) => {
@@ -507,7 +508,7 @@ export default function SpecsClient({
                   </div>
                   {isEditing ? (
                     <div className="flex gap-2">
-                      <button onClick={saveEdit} disabled={saving} className="flex items-center gap-1 text-xs bg-amber-500 text-gray-950 font-semibold px-2.5 py-1.5 rounded-lg disabled:opacity-50">
+                      <button onClick={saveEdit} disabled={saving} className="flex items-center gap-1 text-xs bg-amber-500 text-on-accent font-semibold px-2.5 py-1.5 rounded-lg disabled:opacity-50">
                         <Save size={11} />{saving ? (es ? "Guardando…" : "Saving…") : (es ? "Guardar" : "Save")}
                       </button>
                       <button onClick={() => setEditSection(null)} className="flex items-center gap-1 text-xs bg-gray-800 text-gray-300 px-2.5 py-1.5 rounded-lg">
@@ -555,7 +556,7 @@ export default function SpecsClient({
           {/* Notes */}
           {specs?.notes && (
             <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4">
-              <p className="text-xs font-semibold text-gray-400 mb-1">📝 {es ? "Notas" : "Notes"}</p>
+              <p className="text-xs font-semibold text-gray-400 mb-1"><Glyph e="📝" /> {es ? "Notas" : "Notes"}</p>
               <p className="text-xs text-gray-300 leading-relaxed">{specs.notes}</p>
             </div>
           )}

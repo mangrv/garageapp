@@ -1,59 +1,158 @@
 @import "tailwindcss";
 
-:root {
-  --background: #030712;
-  --foreground: #f3f4f6;
+/* ══════════════════════════════════════════════════════════════════════════
+   GarageMeet "Torque" theme.
+   Components use Tailwind's gray/amber scales with dark-UI semantics
+   (gray-950 = page, gray-900 = card, text-white = primary text, amber = accent).
+   Each theme below remaps those scales, so every page follows the brand.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+@theme inline {
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
 }
 
-/* ── Light mode: invert gray scale so dark→light, text→dark ── */
+@theme {
+  --color-on-accent: #ffffff;
+  --color-brand: #2446f0;
+  --color-brand-ink: #0e1a2b;
+}
+
+/* ── Light (default) ── */
+:root,
 [data-theme="light"] {
-  /* These two drive html,body { background/color } in globals — must override here */
-  --background: #fcfcfc;
-  --foreground: #0a0a0a;
-  --color-gray-950: oklch(0.99 0 0);
-  --color-gray-900: oklch(0.96 0 0);
-  --color-gray-800: oklch(0.90 0 0);
-  --color-gray-700: oklch(0.80 0 0);
-  --color-gray-600: oklch(0.55 0 0);
-  --color-gray-500: oklch(0.50 0 0);
-  --color-gray-400: oklch(0.35 0 0);
-  --color-gray-300: oklch(0.25 0 0);
-  --color-gray-200: oklch(0.18 0 0);
-  --color-gray-100: oklch(0.13 0 0);
-  --color-gray-50:  oklch(0.10 0 0);
-  /* white → dark (used in text-white) */
-  --color-white: oklch(0.13 0 0);
-  /* primary accent: muted steel-blue (professional, not overpowering) */
-  --color-amber-300: oklch(0.565 0.155 255.0);
-  --color-amber-400: oklch(0.505 0.145 255.0);
-  --color-amber-500: oklch(0.445 0.130 255.0);
-  --color-amber-600: oklch(0.385 0.110 255.0);
-  --color-amber-700: oklch(0.330 0.095 255.0);
-  --color-amber-800: oklch(0.270 0.075 255.0);
-  --color-amber-900: oklch(0.210 0.055 255.0);
-  /* text-on-colored-button always stays white */
-  --color-gray-950: oklch(0.99 0 0);
-  /* status colors: darken for light bg */
-  --color-red-400:     oklch(0.577 0.245 27.325);
-  --color-emerald-400: oklch(0.596 0.145 163.225);
-  --color-sky-400:     oklch(0.588 0.158 241.966);
+  --background: #f3f6fb;
+  --foreground: #0e1a2b;
+  --font-body: var(--font-plex), "IBM Plex Sans", system-ui, sans-serif;
+  --font-display: var(--font-grotesk), "Space Grotesk", var(--font-body);
+
+  --color-white: #0e1a2b;
+  --color-gray-50: #0e1a2b;
+  --color-gray-100: #0e1a2b;
+  --color-gray-200: #1b2740;
+  --color-gray-300: #2b3850;
+  --color-gray-400: #46536a;
+  --color-gray-500: #576478;
+  --color-gray-600: #6f7b8f;
+  --color-gray-700: #dce2ec;
+  --color-gray-800: #e9edf4;
+  --color-gray-900: #ffffff;
+  --color-gray-950: #f3f6fb;
+
+  /* accent: cobalt */
+  --color-amber-50: #eef1fe;
+  --color-amber-100: #13258f;
+  --color-amber-200: #1a33b8;
+  --color-amber-300: #1a33b8;
+  --color-amber-400: #3355f2;
+  --color-amber-500: #2446f0;
+  --color-amber-600: #1a33b8;
+  --color-amber-700: #172b9e;
+  --color-amber-800: #c9d3fd;
+  --color-amber-900: #e8ecfe;
+  --color-amber-950: #f2f5ff;
+
+  /* status colors readable on white */
+  --color-red-100: #9f1d1d; --color-red-200: #9f1d1d; --color-red-300: #9f1d1d;
+  --color-red-400: #c42727; --color-red-500: #dc2626; --color-red-600: #c42727;
+  --color-red-700: #a51d1d; --color-red-800: #f8cfcf; --color-red-900: #fdecec; --color-red-950: #fef4f4;
+  --color-emerald-100: #065f46; --color-emerald-200: #065f46; --color-emerald-300: #065f46;
+  --color-emerald-400: #047857; --color-emerald-500: #059669; --color-emerald-600: #047857;
+  --color-emerald-700: #065f46; --color-emerald-800: #c9ebdd; --color-emerald-900: #e6f4ef; --color-emerald-950: #f1faf6;
+  --color-green-400: #047857; --color-green-500: #059669;
+  --color-sky-100: #075985; --color-sky-200: #075985; --color-sky-300: #075985;
+  --color-sky-400: #0369a1; --color-sky-500: #0284c7; --color-sky-600: #0369a1;
+  --color-sky-700: #075985; --color-sky-800: #d3eaf7; --color-sky-900: #e8f4fb; --color-sky-950: #f3f9fd;
+  --color-blue-100: #1e3a8a; --color-blue-200: #1e3a8a; --color-blue-300: #1e3a8a;
+  --color-blue-400: #1d4ed8; --color-blue-500: #2563eb; --color-blue-600: #1d4ed8;
+  --color-blue-700: #1e40af; --color-blue-800: #d6e1fd; --color-blue-900: #ebf0fe; --color-blue-950: #f4f7ff;
+  --color-yellow-300: #92400e; --color-yellow-400: #a16207;
+  --color-orange-300: #9a3412; --color-orange-400: #c2410c;
+  --color-purple-300: #6b21a8; --color-purple-400: #7e22ce;
+  --color-violet-300: #5b21b6; --color-violet-400: #6d28d9;
+  --color-purple-100: #6b21a8; --color-purple-200: #6b21a8; --color-purple-700: #6b21a8; --color-purple-800: #e9d5ff; --color-purple-900: #f3e8ff;
+
+  --sidebar-bg: #ffffff;
+  --sidebar-border: #e3e8f0;
+  --sidebar-accent: #f3f6fb;
+  --sidebar-muted: #576478;
+  --sidebar-text: #33415a;
+  --sidebar-active-text: #2446f0;
+  --sidebar-hover-bg: #f3f6fb;
+  --sidebar-active-bg: #eef1fe;
+  --sidebar-logo: #0e1a2b;
+
+  --card-shadow: 0 1px 2px rgba(14, 26, 43, 0.05), 0 1px 3px rgba(14, 26, 43, 0.04);
 }
 
-/* ── Font size increase ── */
+/* ── Dark: navy ── */
+[data-theme="dark"] {
+  --background: #0b1220;
+  --foreground: #eef1f6;
+
+  --color-white: #ffffff;
+  --color-gray-50: #f7f9fc;
+  --color-gray-100: #eef1f6;
+  --color-gray-200: #dce1ea;
+  --color-gray-300: #c5ccda;
+  --color-gray-400: #a3adc2;
+  --color-gray-500: #8590a6;
+  --color-gray-600: #687490;
+  --color-gray-700: #24314c;
+  --color-gray-800: #18233a;
+  --color-gray-900: #111a2c;
+  --color-gray-950: #0b1220;
+
+  --color-amber-50: #101a3a;
+  --color-amber-100: #e3e8ff;
+  --color-amber-200: #c9d3ff;
+  --color-amber-300: #a9b8ff;
+  --color-amber-400: #8ea2ff;
+  --color-amber-500: #3d5bf6;
+  --color-amber-600: #2e4be6;
+  --color-amber-700: #2a3f9e;
+  --color-amber-800: #1f2e6e;
+  --color-amber-900: #172350;
+  --color-amber-950: #101a3a;
+
+  --sidebar-bg: #0e1626;
+  --sidebar-border: #1d2940;
+  --sidebar-accent: #16213a;
+  --sidebar-muted: #8590a6;
+  --sidebar-text: #c5ccda;
+  --sidebar-active-text: #ffffff;
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.05);
+  --sidebar-active-bg: #1b2a52;
+  --sidebar-logo: #ffffff;
+
+  --card-shadow: none;
+}
+
 html {
-  font-size: 112.5%; /* 18px base — scales all rem/text-* sizes */
+  font-size: 100%;
 }
 
 html,
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
   /* Prevent horizontal scroll / page wobble on mobile */
   overflow-x: hidden;
   max-width: 100vw;
   -webkit-overflow-scrolling: touch;
 }
+
+h1, h2, h3, .font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
+}
+
+.tabular { font-variant-numeric: tabular-nums; }
+
+::selection { background: rgba(36, 70, 240, 0.18); }
+
+:focus-visible { outline: 2px solid #2446f0; outline-offset: 2px; }
 
 /* Hide scrollbar utility (used on filter bars) */
 .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -65,32 +164,6 @@ body {
 /* Smooth momentum scrolling for main content */
 main { -webkit-overflow-scrolling: touch; }
 
-/* ── Sidebar design tokens ────────────────────────────────── */
-:root,
-[data-theme="dark"] {
-  --sidebar-bg: #0f1117;
-  --sidebar-border: #1e2230;
-  --sidebar-accent: #1a1f2e;
-  --sidebar-muted: #6b7280;
-  --sidebar-text: #e5e7eb;
-  --sidebar-active-text: #ffffff;
-  --sidebar-hover-bg: rgba(255,255,255,0.06);
-  --sidebar-active-bg: #1e2536;
-  --sidebar-logo: #ffffff;
-}
-
-[data-theme="light"] {
-  --sidebar-bg: #ffffff;
-  --sidebar-border: #e5e7eb;
-  --sidebar-accent: #f3f4f6;
-  --sidebar-muted: #6b7280;
-  --sidebar-text: #374151;
-  --sidebar-active-text: #111827;
-  --sidebar-hover-bg: rgba(0,0,0,0.04);
-  --sidebar-active-bg: #eff6ff;
-  --sidebar-logo: #111827;
-}
-
 @utility bg-sidebar { background-color: var(--sidebar-bg); }
 @utility bg-background { background-color: var(--background); }
 @utility bg-sidebar-accent { background-color: var(--sidebar-accent); }
@@ -100,38 +173,41 @@ main { -webkit-overflow-scrolling: touch; }
 @utility text-sidebar { color: var(--sidebar-text); }
 @utility text-sidebar-active { color: var(--sidebar-active-text); }
 @utility text-sidebar-logo { color: var(--sidebar-logo); }
+@utility shadow-card { box-shadow: var(--card-shadow); }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   DESIGN TOKENS — semantic button / brand colors
-   Use these classes instead of raw violet/amber utility shades for consistency.
+   Semantic button colors
    ══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* Primary action — blue (Add Photos, Save, Submit) */
-  --btn-primary:        #2563eb;   /* blue-600  */
-  --btn-primary-hover:  #1d4ed8;   /* blue-700  */
+  --btn-primary:        #2446f0;
+  --btn-primary-hover:  #1a33b8;
   --btn-primary-text:   #ffffff;
 
-  /* Social / feed action — green-teal (Share to feed) */
-  --btn-social:         #059669;   /* emerald-600 */
-  --btn-social-hover:   #047857;   /* emerald-700 */
+  --btn-social:         #047857;
+  --btn-social-hover:   #065f46;
   --btn-social-text:    #ffffff;
-  /* "already shared" state */
-  --btn-social-on-bg:   rgba(5,150,105,0.15);
-  --btn-social-on-border: #059669;
-  --btn-social-on-text: #34d399;   /* emerald-400 */
+  --btn-social-on-bg:   rgba(4, 120, 87, 0.12);
+  --btn-social-on-border: #047857;
+  --btn-social-on-text: #047857;
 
-  /* Destructive */
-  --btn-danger:         #dc2626;   /* red-600 */
+  --btn-danger:         #dc2626;
   --btn-danger-text:    #ffffff;
 
-  /* Secondary / ghost */
-  --btn-secondary-bg:   #1f2937;   /* gray-800 */
-  --btn-secondary-text: #d1d5db;   /* gray-300 */
-  --btn-secondary-border: #374151; /* gray-700 */
+  --btn-secondary-bg:   #eef1f6;
+  --btn-secondary-text: #1b2740;
+  --btn-secondary-border: #dce2ec;
 }
 
-/* Utility classes */
+[data-theme="dark"] {
+  --btn-primary:        #3d5bf6;
+  --btn-primary-hover:  #2e4be6;
+  --btn-social-on-text: #34d399;
+  --btn-secondary-bg:   #18233a;
+  --btn-secondary-text: #c5ccda;
+  --btn-secondary-border: #24314c;
+}
+
 @utility btn-primary {
   background-color: var(--btn-primary);
   color: var(--btn-primary-text);
@@ -149,28 +225,35 @@ main { -webkit-overflow-scrolling: touch; }
   border-color: var(--btn-social-on-border);
 }
 
-/* ── Photo overlay: always dark gradient + white text (theme-invariant) ── */
+/* ── Text on black scrims, lightboxes and photo captions stays light in every theme ── */
+[class*="bg-black"] :is(.text-white, .text-gray-100, .text-gray-200),
+[class*="bg-black"]:is(.text-white, .text-gray-100, .text-gray-200),
+.drop-shadow.text-white { color: #ffffff; }
+[class*="bg-black"] :is(.text-gray-300, .text-gray-400),
+[class*="bg-black"]:is(.text-gray-300, .text-gray-400) { color: #c5ccda; }
+
+/* ── Photo overlay: always dark scrim + white text (theme-invariant) ── */
 .photo-overlay-gradient {
-  background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+  background: linear-gradient(to top, rgba(8, 14, 26, 0.85) 0%, rgba(8, 14, 26, 0.25) 60%, transparent 100%);
 }
 .photo-overlay-text {
   color: #ffffff !important;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.7);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 .photo-overlay-subtext {
-  color: rgba(255,255,255,0.82) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
 }
 
-/* ── Active jobs chip: theme-safe colors ── */
+/* ── Active jobs chip ── */
 .chip-active {
+  background-color: #fef3c7;
+  color: #92400e;
+  border-color: #f5c46b;
+}
+[data-theme="dark"] .chip-active {
   background-color: rgba(180, 83, 9, 0.25);
   color: #fcd34d;
   border-color: rgba(217, 119, 6, 0.45);
-}
-[data-theme="light"] .chip-active {
-  background-color: #fef3c7;
-  color: #92400e;
-  border-color: #f59e0b;
 }
 
 /* Ensure page content below bottom nav on mobile */

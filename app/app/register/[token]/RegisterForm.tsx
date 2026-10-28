@@ -69,7 +69,7 @@ export default function RegisterForm({
       {/* Google sign-up */}
       <a
         href={googleHref}
-        className="flex items-center justify-center gap-3 w-full bg-white text-gray-900 font-semibold py-3 rounded-xl text-sm hover:bg-gray-100 transition-colors"
+        className="flex items-center justify-center gap-3 w-full bg-gray-900 border border-gray-700 text-white font-semibold py-3 rounded-xl text-sm hover:bg-gray-800 transition-colors shadow-card"
       >
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
           <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z" fill="#4285F4"/>
@@ -142,7 +142,7 @@ export default function RegisterForm({
       <button
         type="submit"
         disabled={pending}
-        className="w-full bg-amber-500 text-gray-950 font-bold py-3 rounded-xl text-sm disabled:opacity-40"
+        className="w-full bg-amber-500 text-on-accent font-bold py-3 rounded-xl text-sm disabled:opacity-40"
       >
         {pending ? txt.creating : txt.create}
       </button>

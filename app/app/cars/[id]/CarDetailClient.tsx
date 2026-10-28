@@ -11,6 +11,7 @@ import MaintenanceForecast from "./MaintenanceForecast";
 import CarDocuments from "./CarDocuments";
 import VehicleBlurbPanel from "./VehicleBlurbPanel";
 import Link from "next/link";
+import Glyph from "@/app/components/Glyph";
 
 type Photo = {
   id: string; filename: string; caption: string | null;
@@ -43,8 +44,6 @@ function carEmoji(make: string, assetType = "vehicle") {
   if (assetType === "riding_mower") return "🚜";
   if (assetType === "equipment") return "🧰";
   if (assetType === "bicycle") return "🚲";
-  if (make.toLowerCase() === "ford") return "🐎";
-  if (make.toLowerCase() === "jeep") return "🚙";
   return "🚗";
 }
 
@@ -218,23 +217,23 @@ export default function CarDetailClient({
       {featured ? (
         <div className="relative w-full h-56 bg-gray-900">
           <img src={`/uploads/${featured.filename}`} alt={carName} className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/40 to-transparent" />
+          <div className="absolute inset-0 photo-overlay-gradient" />
           <div className="absolute bottom-4 left-4 right-4">
-            <div className="text-white font-bold text-xl drop-shadow">{carEmoji(car.make, car.assetType)} {carName}</div>
+            <div className="text-white font-bold text-xl drop-shadow"><Glyph e={carEmoji(car.make, car.assetType)} /> {carName}</div>
             {featured.takenAt && (
-              <div className="text-gray-300 text-xs mt-0.5">📅 {formatDate(featured.takenAt)}</div>
+              <div className="photo-overlay-subtext text-xs mt-0.5"><Glyph e="📅" /> {formatDate(featured.takenAt)}</div>
             )}
           </div>
         </div>
       ) : (
         <div className="bg-gray-900 border-b border-gray-800 px-4 py-4">
           <div className="flex items-center gap-2">
-            <span className="text-3xl">{carEmoji(car.make, car.assetType)}</span>
+            <span className="text-3xl"><Glyph e={carEmoji(car.make, car.assetType)} /></span>
             <div>
               <h1 className="font-bold text-lg">{carName}</h1>
               <div className="text-xs text-gray-400 flex gap-2">
-                {car.color && <span>🎨 {car.color}</span>}
-                {car.mileage && <span>📍 {car.mileage.toLocaleString()} mi</span>}
+                {car.color && <span><Glyph e="🎨" /> {car.color}</span>}
+                {car.mileage && <span><Glyph e="📍" /> {car.mileage.toLocaleString()} mi</span>}
               </div>
             </div>
           </div>
@@ -247,9 +246,9 @@ export default function CarDetailClient({
         {canWrite && (
           <button
             onClick={() => setEditOpen((o) => !o)}
-            className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-colors ${editOpen ? "bg-amber-500 text-gray-950" : "bg-gray-800 text-gray-300"}`}
+            className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-colors ${editOpen ? "bg-amber-500 text-on-accent" : "bg-gray-800 text-gray-300"}`}
           >
-            {editOpen ? t("close") : `✏️ ${t("editAsset")}`}
+            {editOpen ? t("close") : `${t("editAsset")}`}
           </button>
         )}
       </div>
@@ -263,11 +262,11 @@ export default function CarDetailClient({
             <div>
               <label className={labelCls}>Asset type</label>
               <select value={assetType} onChange={(e) => setAssetType(e.target.value)} className={inputCls}>
-                <option value="vehicle">🚗 Vehicle</option>
-                <option value="trailer">🚚 Trailer</option>
-                <option value="riding_mower">🚜 Riding mower</option>
-                <option value="equipment">🧰 Equipment</option>
-                <option value="bicycle">🚲 Bicycle</option>
+                <option value="vehicle"><Glyph e="🚗" /> Vehicle</option>
+                <option value="trailer"><Glyph e="🚚" /> Trailer</option>
+                <option value="riding_mower"><Glyph e="🚜" /> Riding mower</option>
+                <option value="equipment"><Glyph e="🧰" /> Equipment</option>
+                <option value="bicycle"><Glyph e="🚲" /> Bicycle</option>
               </select>
             </div>
 
@@ -424,7 +423,7 @@ export default function CarDetailClient({
 
             <div className="flex gap-2 pt-1">
               <button onClick={handleSave} disabled={pending}
-                className="flex-1 bg-amber-500 text-gray-950 font-bold py-2.5 rounded-xl text-sm active:scale-95 transition-transform disabled:opacity-40">
+                className="flex-1 bg-amber-500 text-on-accent font-bold py-2.5 rounded-xl text-sm active:scale-95 transition-transform disabled:opacity-40">
                 {pending ? "Saving…" : "Save Changes"}
               </button>
               <button onClick={() => setEditOpen(false)}
@@ -438,14 +437,14 @@ export default function CarDetailClient({
               {!showDelete ? (
                 <button onClick={() => setShowDelete(true)}
                   className="w-full text-xs text-red-500 py-2 rounded-lg active:bg-red-900/20">
-                  🗑 Remove this car from garage
+                  <Glyph e="🗑" /> Remove this car from garage
                 </button>
               ) : (
                 <div className="space-y-2">
                   <p className="text-xs text-gray-400 text-center">Jobs will be unlinked, not deleted. Are you sure?</p>
                   <div className="flex gap-2">
                     <button onClick={handleDelete} disabled={pending}
-                      className="flex-1 bg-red-700 text-white font-semibold py-2 rounded-xl text-sm active:bg-red-800 disabled:opacity-40">
+                      className="flex-1 bg-red-700 text-on-accent font-semibold py-2 rounded-xl text-sm active:bg-red-800 disabled:opacity-40">
                       Yes, remove
                     </button>
                     <button onClick={() => setShowDelete(false)}
@@ -463,21 +462,21 @@ export default function CarDetailClient({
         {!editOpen && (
           <>
             <div className="flex flex-wrap gap-2 text-sm text-gray-400">
-              <span className="bg-gray-800 px-3 py-1 rounded-full capitalize">{carEmoji(car.make, car.assetType)} {car.assetType.replace("_", " ").replace("vehicle", t("vehicle")).replace("trailer", t("trailerLabel") || "trailer").replace("equipment", t("equipment") || "equipment")}</span>
+              <span className="bg-gray-800 px-3 py-1 rounded-full capitalize"><Glyph e={carEmoji(car.make, car.assetType)} /> {car.assetType.replace("_", " ").replace("vehicle", t("vehicle")).replace("trailer", t("trailerLabel") || "trailer").replace("equipment", t("equipment") || "equipment")}</span>
               {relationshipLabel(car.relationshipToUser) && <span className="bg-sky-950/70 border border-sky-900/70 px-3 py-1 rounded-full text-sky-200">{relationshipLabel(car.relationshipToUser)}</span>}
-              {car.color && <span className="bg-gray-800 px-3 py-1 rounded-full">🎨 {car.color}</span>}
-              {car.mileage && car.assetType !== "bicycle" && <span className="bg-gray-800 px-3 py-1 rounded-full">📍 {car.mileage.toLocaleString()} {car.assetType === "vehicle" ? "mi" : "hrs"}</span>}
+              {car.color && <span className="bg-gray-800 px-3 py-1 rounded-full"><Glyph e="🎨" /> {car.color}</span>}
+              {car.mileage && car.assetType !== "bicycle" && <span className="bg-gray-800 px-3 py-1 rounded-full"><Glyph e="📍" /> {car.mileage.toLocaleString()} {car.assetType === "vehicle" ? "mi" : "hrs"}</span>}
               {(car as any).transmission && car.assetType === "vehicle" && (
                 <span className="bg-gray-800 px-3 py-1 rounded-full capitalize">
-                  ⚙️ {({"automatic":"Automatic","manual":"Manual","cvt":"CVT","dct":"DCT"} as Record<string,string>)[(car as any).transmission] ?? (car as any).transmission}
+                  <Glyph e="⚙" /> {({"automatic":"Automatic","manual":"Manual","cvt":"CVT","dct":"DCT"} as Record<string,string>)[(car as any).transmission] ?? (car as any).transmission}
                 </span>
               )}
               {/* Bicycle-specific chips */}
               {car.assetType === "bicycle" && (car as any).bikeType && (
-                <span className="bg-gray-800 px-3 py-1 rounded-full capitalize">🚴 {(car as any).bikeType.replace("_", " ")}</span>
+                <span className="bg-gray-800 px-3 py-1 rounded-full capitalize"><Glyph e="🚴" /> {(car as any).bikeType.replace("_", " ")}</span>
               )}
               {car.assetType === "bicycle" && (car as any).frameSize && (
-                <span className="bg-gray-800 px-3 py-1 rounded-full">📐 Frame: {(car as any).frameSize}</span>
+                <span className="bg-gray-800 px-3 py-1 rounded-full"><Glyph e="📐" /> Frame: {(car as any).frameSize}</span>
               )}
               {car.assetType === "bicycle" && (car as any).wheelSize && (
                 <span className="bg-gray-800 px-3 py-1 rounded-full">⭕ Wheels: {(car as any).wheelSize}&quot;</span>
@@ -494,11 +493,11 @@ export default function CarDetailClient({
                 const duration = years > 0 ? `${years}${yr} ${remMonths}${mo}` : `${remMonths}${mo}`;
                 return (
                   <span className="bg-gray-800 px-3 py-1 rounded-full text-xs">
-                    🗓 {lang === "es" ? `Propietario ${duration} · desde ${acquired.toLocaleDateString("es-US", { month: "short", year: "numeric" })}` : `Owned ${duration} · since ${acquired.toLocaleDateString("en-US", { month: "short", year: "numeric" })}`}
+                    <Glyph e="🗓" /> {lang === "es" ? `Propietario ${duration} · desde ${acquired.toLocaleDateString("es-US", { month: "short", year: "numeric" })}` : `Owned ${duration} · since ${acquired.toLocaleDateString("en-US", { month: "short", year: "numeric" })}`}
                   </span>
                 );
               })()}
-              {car.purchasePrice && <span className="bg-gray-800 px-3 py-1 rounded-full text-xs">{lang === "es" ? `💵 Pagado $${car.purchasePrice.toLocaleString()}` : `💵 Paid $${car.purchasePrice.toLocaleString()}`}</span>}
+              {car.purchasePrice && <span className="bg-gray-800 px-3 py-1 rounded-full text-xs">{lang === "es" ? `Pagado $${car.purchasePrice.toLocaleString()}` : `Paid $${car.purchasePrice.toLocaleString()}`}</span>}
               {car.notes && <span className="bg-gray-800 px-3 py-1 rounded-full">{car.notes}</span>}
             </div>
 
@@ -557,7 +556,7 @@ export default function CarDetailClient({
         {/* Cost of Ownership */}
         {(costData.purchasePrice || costData.totalServiceCost > 0) && (
           <section>
-            <h2 className="font-bold text-base mb-3">{`💰 ${t("costOfOwnership")}`}</h2>
+            <h2 className="font-bold text-base mb-3">{`${t("costOfOwnership")}`}</h2>
             <div className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden">
               {/* Big number row */}
               <div className="p-4 text-center">
@@ -576,20 +575,20 @@ export default function CarDetailClient({
               <div className="border-t border-gray-800 px-4 py-3 flex flex-wrap gap-4">
                 {costData.purchasePrice && (
                   <div className="text-xs">
-                    <span className="text-gray-500">🛒 Purchase </span>
+                    <span className="text-gray-500"><Glyph e="🛒" /> Purchase </span>
                     <span className="text-white font-medium">${costData.purchasePrice.toLocaleString()}</span>
                   </div>
                 )}
                 {costData.totalServiceCost > 0 && (
                   <div className="text-xs">
-                    <span className="text-gray-500">🔧 Maintenance </span>
+                    <span className="text-gray-500"><Glyph e="🔧" /> Maintenance </span>
                     <span className="text-white font-medium">${costData.totalServiceCost.toLocaleString()}</span>
                     <span className="text-gray-600"> ({costData.serviceCount} records)</span>
                   </div>
                 )}
                 {costData.costPerMile && (
                   <div className="text-xs">
-                    <span className="text-gray-500">📍 Per mile </span>
+                    <span className="text-gray-500"><Glyph e="📍" /> Per mile </span>
                     <span className="text-white font-medium">${costData.costPerMile.toFixed(2)}</span>
                   </div>
                 )}
@@ -602,11 +601,11 @@ export default function CarDetailClient({
                   <div className="space-y-1.5">
                     {costData.byCategory.map(({ cat, total }) => {
                       const catLabels: Record<string, string> = {
-                        oil_change: "🛢 Oil Change", tire_rotation: "🔄 Tire Rotation",
-                        brakes: "🛑 Brakes", tires: "🔵 Tires", alignment: "📐 Alignment",
-                        detailing: "✨ Detailing", inspection: "🔍 Inspection",
-                        parts: "🔩 Parts", maintenance: "🔧 Maintenance",
-                        modifications: "⚡ Modifications", other: "📦 Other",
+                        oil_change: "Oil Change", tire_rotation: "Tire Rotation",
+                        brakes: "Brakes", tires: "Tires", alignment: "Alignment",
+                        detailing: "Detailing", inspection: "Inspection",
+                        parts: "Parts", maintenance: "Maintenance",
+                        modifications: "Modifications", other: "Other",
                       };
                       const label = catLabels[cat] ?? cat;
                       const base = costData.totalServiceCost + costData.jobReceiptTotal;
@@ -636,7 +635,7 @@ export default function CarDetailClient({
                 <div className="text-xs text-gray-500 uppercase tracking-wide font-semibold mb-1">Warranty</div>
                 <div className="text-sm font-semibold text-white">{warranties.filter((w) => { const e = w.warrantyEnd ? new Date(w.warrantyEnd).getTime() : null; return !e || e > Date.now(); }).length} active item{warranties.length !== 1 ? "s" : ""}</div>
                 {warranties.some((w) => { const e = w.warrantyEnd ? new Date(w.warrantyEnd).getTime() : null; return e && e > Date.now() && e <= Date.now() + 30*24*60*60*1000; }) && (
-                  <div className="text-xs text-amber-400 mt-0.5">⚠ Some expiring soon</div>
+                  <div className="text-xs text-amber-400 mt-0.5"><Glyph e="⚠" /> Some expiring soon</div>
                 )}
               </div>
               <span className="text-gray-600 group-hover:text-gray-400 text-sm">→</span>
@@ -654,7 +653,7 @@ export default function CarDetailClient({
         {/* Gallery */}
         <section>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="font-bold text-base">{`📷 ${t("gallery")}`}</h2>
+            <h2 className="font-bold text-base">{`${t("gallery")}`}</h2>
             <Link href={`/cars/${car.id}/gallery`} className="text-xs bg-gray-800 text-gray-300 px-3 py-1.5 rounded-lg">{t("viewAll")}</Link>
           </div>
           <CarGallery carId={car.id} photos={photos} />
@@ -663,7 +662,7 @@ export default function CarDetailClient({
         {/* Service History preview */}
         <section>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="font-bold text-base">{`🛠 ${t("serviceHistory")}`}</h2>
+            <h2 className="font-bold text-base">{`${t("serviceHistory")}`}</h2>
             <Link href={`/cars/${car.id}/service-history`}
               className="text-xs bg-gray-800 text-gray-300 px-3 py-1.5 rounded-lg">
               {t("viewAll")}
@@ -681,8 +680,8 @@ export default function CarDetailClient({
                   <div>
                     <div className="text-sm font-medium text-white">{r.title}</div>
                     <div className="text-xs text-gray-500 flex gap-2 mt-0.5">
-                      <span>📅 {new Date(r.serviceDate).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}</span>
-                      {r.mileage && <span>📍 {r.mileage.toLocaleString()} mi</span>}
+                      <span><Glyph e="📅" /> {new Date(r.serviceDate).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}</span>
+                      {r.mileage && <span><Glyph e="📍" /> {r.mileage.toLocaleString()} mi</span>}
                     </div>
                   </div>
                 </div>
@@ -699,9 +698,9 @@ export default function CarDetailClient({
         {/* Jobs */}
         <section id="active-jobs">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="font-bold text-base">{`🔧 ${t("jobs")}`}</h2>
+            <h2 className="font-bold text-base">{`${t("jobs")}`}</h2>
             <Link href={`/jobs/new?carId=${car.id}`}
-              className="text-xs bg-amber-500 text-gray-950 font-semibold px-3 py-1.5 rounded-lg">
+              className="text-xs bg-amber-500 text-on-accent font-semibold px-3 py-1.5 rounded-lg">
               {`+ ${t("new")}`}
             </Link>
           </div>
@@ -801,7 +800,7 @@ function PublicCarSection({ carId, initialIsPublic, initialNotes, carYear, carMa
           onClick={handleToggle}
           className={`relative w-11 h-6 rounded-full transition-colors ${isPublic ? "bg-amber-500" : "bg-gray-700"}`}
         >
-          <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${isPublic ? "translate-x-5" : ""}`} />
+          <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-[#ffffff] shadow transition-transform ${isPublic ? "translate-x-5" : ""}`} />
         </button>
       </div>
 
@@ -818,9 +817,9 @@ function PublicCarSection({ carId, initialIsPublic, initialNotes, carYear, carMa
             <button
               onClick={() => save()}
               disabled={saving}
-              className="flex-1 py-2 rounded-xl bg-amber-500 text-black font-semibold text-sm disabled:opacity-40 hover:bg-amber-400 transition"
+              className="flex-1 py-2 rounded-xl bg-amber-500 text-on-accent font-semibold text-sm disabled:opacity-40 hover:bg-amber-400 transition"
             >
-              {saved ? "✓ Saved" : saving ? "Saving…" : "Save"}
+              {saved ? <>{"✓ Saved"}</> : saving ? "Saving…" : "Save"}
             </button>
             <a
               href={`/api/cars/${carId}/show-qr`}
@@ -828,7 +827,7 @@ function PublicCarSection({ carId, initialIsPublic, initialNotes, carYear, carMa
               rel="noreferrer"
               className="px-4 py-2 rounded-xl bg-gray-800 border border-gray-700 text-gray-300 text-sm hover:border-gray-500 transition text-center"
             >
-              🖨️ Print QR
+              <Glyph e="🖨" /> Print QR
             </a>
           </div>
         </>

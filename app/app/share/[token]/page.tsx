@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import SharePhotoGallery from "./SharePhotoGallery";
+import Glyph from "@/app/components/Glyph";
 
 export const dynamic = "force-dynamic";
 
@@ -50,7 +51,7 @@ export default async function SharePage({ params }: { params: Promise<{ token: s
       <div className="border-b border-gray-800 bg-gray-900 px-6 py-4">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
-            <span>🔗 Shared project</span>
+            <span><Glyph e="🔗" /> Shared project</span>
             {carLabel && <span>· {carLabel}</span>}
           </div>
           <h1 className="text-2xl font-bold text-white">{project.title}</h1>
@@ -75,7 +76,7 @@ export default async function SharePage({ params }: { params: Promise<{ token: s
           {/* Job tools */}
           {projectTools.length > 0 && (
             <div className="mt-4">
-              <div className="text-xs font-semibold text-gray-400 mb-2">🧰 Tools needed</div>
+              <div className="text-xs font-semibold text-gray-400 mb-2"><Glyph e="🧰" /> Tools needed</div>
               <div className="flex flex-wrap gap-1.5">
                 {projectTools.map((tool, i) => (
                   <span key={i} className="text-xs bg-gray-800 text-gray-300 border border-gray-700 rounded-full px-2.5 py-1">
@@ -101,7 +102,7 @@ export default async function SharePage({ params }: { params: Promise<{ token: s
               <div className="px-5 py-4 border-b border-gray-800">
                 <div className="flex items-center justify-between">
                   <h2 className="font-semibold text-white flex items-center gap-2">
-                    {phase.emoji && <span>{phase.emoji}</span>}
+                    {phase.emoji && <span><Glyph e={phase.emoji} /></span>}
                     {phase.title}
                   </h2>
                   <span className="text-xs text-gray-500">{phaseDone}/{phaseTotal}</span>
@@ -110,7 +111,7 @@ export default async function SharePage({ params }: { params: Promise<{ token: s
                   <div className="mt-2 flex flex-wrap gap-1.5">
                     {phaseTools.map((tool, i) => (
                       <span key={i} className="text-xs bg-gray-800 text-gray-400 border border-gray-700 rounded-full px-2 py-0.5">
-                        🔧 {tool}
+                        <Glyph e="🔧" /> {tool}
                       </span>
                     ))}
                   </div>
@@ -141,14 +142,14 @@ export default async function SharePage({ params }: { params: Promise<{ token: s
                         </p>
 
                         {task.warning && (
-                          <p className="mt-1 text-xs text-amber-400">⚠️ {task.warning}</p>
+                          <p className="mt-1 text-xs text-amber-400"><Glyph e="⚠" /> {task.warning}</p>
                         )}
                         {task.tip && (
-                          <p className="mt-1 text-xs text-sky-400">💡 {task.tip}</p>
+                          <p className="mt-1 text-xs text-sky-400"><Glyph e="💡" /> {task.tip}</p>
                         )}
                         {(task as any).torqueValue != null && (
                           <div className="mt-1 text-xs text-gray-400 bg-gray-700/50 border border-gray-600/50 rounded px-2 py-1 inline-block font-mono">
-                            🔧 {(task as any).torqueValue} {(task as any).torqueUnit}
+                            <Glyph e="🔧" /> {(task as any).torqueValue} {(task as any).torqueUnit}
                           </div>
                         )}
 

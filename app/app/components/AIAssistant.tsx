@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useApp } from "@/app/providers/AppProviders";
 import { useT } from "@/app/hooks/useT";
 import { trackMatomoEvent } from "@/app/lib/matomo";
+import Glyph from "@/app/components/Glyph";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -273,35 +274,35 @@ export default function AIAssistant() {
     const data: ActionResult = await res.json();
     if (!data.ok) {
       trackMatomoEvent("AI", "Action Failed", action.type ?? "unknown");
-      return "⚠️ Action failed.";
+      return "Action failed.";
     }
 
     trackMatomoEvent("AI", "Action Success", action.type ?? "unknown");
     switch (action.type) {
       case "create_car":
-        showToast(`🚗 Added ${data.label} to your garage`);
-        return `✅ Added **${data.label}** to your garage.`;
+        showToast(`Added ${data.label} to your garage`);
+        return `Added **${data.label}** to your garage.`;
       case "create_job":
-        showToast("📋 Job created!");
+        showToast("Job created!");
         if (data.jobId) setTimeout(() => { window.location.href = `/job/${data.jobId}`; }, 1500);
-        return `✅ Job created! Taking you there now...`;
+        return `Job created! Taking you there now...`;
       case "add_phases":
-        showToast(`✅ Added ${data.phasesAdded} phase(s) to the job`);
+        showToast(`Added ${data.phasesAdded} phase(s) to the job`);
         fetchContext(jobId, carId).then((c) => { if (c) setContext(c); });
         setTimeout(() => window.location.reload(), 1200);
-        return `✅ Added **${data.phasesAdded}** phase(s). Refreshing job...`;
+        return `Added **${data.phasesAdded}** phase(s). Refreshing job...`;
       case "add_tasks":
-        showToast(`✅ Added ${data.tasksAdded} task(s)`);
+        showToast(`Added ${data.tasksAdded} task(s)`);
         fetchContext(jobId, carId).then((c) => { if (c) setContext(c); });
         setTimeout(() => window.location.reload(), 1200);
-        return `✅ Added **${data.tasksAdded}** task(s). Refreshing...`;
+        return `Added **${data.tasksAdded}** task(s). Refreshing...`;
       case "update_tools":
-        showToast("✅ Tools updated");
+        showToast("Tools updated");
         fetchContext(jobId, carId).then((c) => { if (c) setContext(c); });
         setTimeout(() => window.location.reload(), 1200);
-        return `✅ Tools updated. Refreshing...`;
+        return `Tools updated. Refreshing...`;
       default:
-        return "✅ Done.";
+        return "Done.";
     }
   }
 
@@ -383,7 +384,7 @@ export default function AIAssistant() {
         speak(result);
       } else if (fullText.includes("<ACTION>")) {
         // <ACTION> present but JSON is unrecoverable
-        const errorMsg = (safeDisplay ? safeDisplay + "\n\n" : "") + "⚠️ That response was too long to process. Try asking for fewer phases at a time (e.g. 'add phases 1–3 first').";
+        const errorMsg = (safeDisplay ? safeDisplay + "\n\n" : "") + "That response was too long to process. Try asking for fewer phases at a time (e.g. 'add phases 1–3 first').";
         setMessages((prev) => {
           const updated = [...prev];
           updated[updated.length - 1] = { role: "assistant", content: errorMsg };
@@ -438,7 +439,7 @@ export default function AIAssistant() {
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          className="fixed bottom-6 right-4 z-50 bg-gray-900 text-white rounded-full shadow-xl flex items-center gap-2 pl-3.5 pr-4 py-3 text-sm font-semibold active:scale-95 transition-transform border border-gray-700 hover:bg-gray-800"
+          className="fixed bottom-[84px] md:bottom-6 right-4 z-50 bg-gray-900 text-white rounded-full shadow-xl flex items-center gap-2 pl-3.5 pr-4 py-3 text-sm font-semibold active:scale-95 transition-transform border border-gray-700 hover:bg-gray-800"
         >
           <MessageCircle size={18} className="flex-shrink-0" />
           <span className="text-sm font-bold tracking-wide">{lang === "es" ? "IA" : "AI"}</span>
@@ -552,7 +553,7 @@ export default function AIAssistant() {
                 disabled={voiceSupported === false}
                 className={`p-2.5 rounded-xl text-lg flex-shrink-0 transition-colors ${
                   listening
-                    ? "bg-red-600 text-white animate-pulse"
+                    ? "bg-red-600 text-on-accent animate-pulse"
                     : voiceSupported === false
                     ? "bg-gray-800 text-gray-600 cursor-not-allowed opacity-40"
                     : "bg-gray-800 text-gray-400 hover:text-white"
@@ -567,7 +568,7 @@ export default function AIAssistant() {
                     : "Tap to speak"
                 }
               >
-                🎙️
+                <Glyph e="🎙" />
               </button>
               <button
                 type="button"
@@ -578,11 +579,11 @@ export default function AIAssistant() {
                 <Send size={16} />
               </button>
             </div>
-            {listening && <p className="text-xs text-red-400 mt-1 text-center">🔴 Listening… speak now</p>}
-            {voiceError && <p className="text-xs text-amber-400 mt-1 text-center">⚠️ {voiceError}</p>}
+            {listening && <p className="text-xs text-red-400 mt-1 text-center"><Glyph e="🔴" /> Listening… speak now</p>}
+            {voiceError && <p className="text-xs text-amber-400 mt-1 text-center"><Glyph e="⚠" /> {voiceError}</p>}
             {voiceSupported === false && (
               <p className="text-xs text-gray-600 mt-1 text-center">
-                🎙️ Voice requires Chrome or Safari
+                <Glyph e="🎙" /> Voice requires Chrome or Safari
               </p>
             )}
             <p className="text-xs text-gray-600 mt-1 text-center">Car maintenance only · Enter to send</p>

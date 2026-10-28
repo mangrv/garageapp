@@ -22,6 +22,7 @@ RUN npx prisma generate
 
 # Build Next.js (standalone output for smaller image)
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV NEXT_PUBLIC_BASE_URL=https://garagemeet.com
 RUN npm run build
 
 # ── runner stage ─────────────────────────────────────────────
@@ -45,9 +46,6 @@ COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
 
-# SQLite DB lives in a mounted volume at /data
-RUN mkdir -p /data && chown nextjs:nodejs /data
-
 # Uploads live in /uploads (mounted volume)
 RUN mkdir -p /uploads && chown nextjs:nodejs /uploads
 
@@ -59,4 +57,5 @@ ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
 # Run migrations then start
-CMD ["sh", "-c", "DATABASE_URL=file:/data/garage.db node node_modules/prisma/build/index.js migrate deploy && node server.js"]
+# DATABASE_URL (PostgreSQL) comes from the runtime environment
+CMD ["sh", "-c", "node node_modules/prisma/build/index.js migrate deploy && node server.js"]

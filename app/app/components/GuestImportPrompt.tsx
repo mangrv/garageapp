@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { loadDraft, hasDraft, clearDraft, draftSummary } from "@/lib/guestDraft";
+import Glyph from "@/app/components/Glyph";
 
 export default function GuestImportPrompt({ onDone }: { onDone: () => void }) {
   const [draft, setDraft] = useState<ReturnType<typeof loadDraft>>(null);
@@ -47,7 +48,7 @@ export default function GuestImportPrompt({ onDone }: { onDone: () => void }) {
       const data = await res.json();
       if (res.ok) {
         clearDraft();
-        setResult({ ok: true, msg: lang === "es" ? `✅ Importado: ${draftSummary(draft)}` : `✅ Imported: ${draftSummary(draft)}` });
+        setResult({ ok: true, msg: lang === "es" ? `Importado: ${draftSummary(draft)}` : `Imported: ${draftSummary(draft)}` });
       } else {
         setResult({ ok: false, msg: data.error ?? (lang === "es" ? "Error al importar" : "Import failed") });
       }
@@ -66,11 +67,11 @@ export default function GuestImportPrompt({ onDone }: { onDone: () => void }) {
 
   return (
     <div className="bg-amber-900/20 border border-amber-700/40 rounded-2xl p-4 space-y-3">
-      <p className="text-sm font-semibold text-amber-400">🛠️ {txt.title}</p>
+      <p className="text-sm font-semibold text-amber-400"><Glyph e="🛠" /> {txt.title}</p>
       <p className="text-xs text-gray-400">{txt.desc}</p>
       <div className="flex gap-2">
         <button onClick={handleImport} disabled={importing}
-          className="flex-1 py-2.5 rounded-xl bg-amber-500 text-black font-semibold text-sm disabled:opacity-40">
+          className="flex-1 py-2.5 rounded-xl bg-amber-500 text-on-accent font-semibold text-sm disabled:opacity-40">
           {importing ? "…" : txt.yes}
         </button>
         <button onClick={handleDiscard}

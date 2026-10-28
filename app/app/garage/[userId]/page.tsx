@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { requireSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import Glyph from "@/app/components/Glyph";
 
 export const dynamic = "force-dynamic";
 
@@ -10,12 +11,6 @@ function carEmoji(make: string, assetType = "vehicle") {
   if (assetType === "riding_mower") return "🚜";
   if (assetType === "equipment") return "🧰";
   const m = make.toLowerCase();
-  if (m === "ford") return "🐎";
-  if (m === "jeep") return "🚙";
-  if (m === "chevy" || m === "chevrolet") return "🏁";
-  if (m === "dodge") return "🐏";
-  if (m === "toyota") return "🟦";
-  if (m === "honda") return "🔵";
   return "🚗";
 }
 
@@ -73,10 +68,10 @@ export default async function GaragePage({ params }: { params: Promise<{ userId:
           <Link href="/friends" className="text-gray-400 text-lg">←</Link>
           <div className="min-w-0 flex-1">
             <h1 className="text-lg font-bold truncate">
-              🚗 {owner.name ?? owner.email}&apos;s Garage
+              <Glyph e="🚗" /> {owner.name ?? owner.email}&apos;s Garage
             </h1>
             <p className="text-xs text-gray-500 mt-0.5">
-              {accessLevel === "full" ? "🔧 Full access" : "👁 View only"} · {cars.length} car{cars.length !== 1 ? "s" : ""}
+              {accessLevel === "full" ? <>{"🔧 Full access"}</> : <>{"👁 View only"}</>} · {cars.length} car{cars.length !== 1 ? "s" : ""}
             </p>
           </div>
         </div>
@@ -105,23 +100,23 @@ export default async function GaragePage({ params }: { params: Promise<{ userId:
                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 to-transparent" />
                     <div className="absolute bottom-3 left-4 right-4">
                       <div className="font-bold text-base text-white">
-                        {carEmoji(car.make, car.assetType)} {car.year} {car.make} {car.model}
+                        <Glyph e={carEmoji(car.make, car.assetType)} /> {car.year} {car.make} {car.model}
                       </div>
                       <div className="text-xs text-gray-300 flex gap-2 mt-0.5">
-                        {car.color && <span>🎨 {car.color}</span>}
-                        {car.mileage && <span>📍 {car.mileage.toLocaleString()} mi</span>}
+                        {car.color && <span><Glyph e="🎨" /> {car.color}</span>}
+                        {car.mileage && <span><Glyph e="📍" /> {car.mileage.toLocaleString()} mi</span>}
                       </div>
                     </div>
                   </div>
                 ) : (
                   <div className="px-4 pt-4 pb-3 flex items-center justify-between border-b border-gray-800">
                     <div className="flex items-center gap-3">
-                      <span className="text-3xl">{carEmoji(car.make, car.assetType)}</span>
+                      <span className="text-3xl"><Glyph e={carEmoji(car.make, car.assetType)} /></span>
                       <div>
                         <div className="font-bold text-base">{car.year} {car.make} {car.model}</div>
                         <div className="text-xs text-gray-400 flex gap-2 flex-wrap">
-                          {car.color && <span>🎨 {car.color}</span>}
-                          {car.mileage && <span>📍 {car.mileage.toLocaleString()} mi</span>}
+                          {car.color && <span><Glyph e="🎨" /> {car.color}</span>}
+                          {car.mileage && <span><Glyph e="📍" /> {car.mileage.toLocaleString()} mi</span>}
                         </div>
                       </div>
                     </div>
@@ -134,12 +129,12 @@ export default async function GaragePage({ params }: { params: Promise<{ userId:
               <div className="flex gap-2 px-3 pt-2 flex-wrap">
                 {car.jobs.length > 0 && (
                   <span className="text-xs bg-amber-900/40 text-amber-300 border border-amber-700/40 px-2 py-0.5 rounded-full">
-                    🔧 {car.jobs.length} active
+                    <Glyph e="🔧" /> {car.jobs.length} active
                   </span>
                 )}
                 {lastService && (
                   <span className="text-xs bg-gray-800 text-gray-400 px-2 py-0.5 rounded-full">
-                    🛠 Last: {new Date(lastService.serviceDate).toLocaleDateString("en-US", { month: "short", year: "numeric" })}
+                    <Glyph e="🛠" /> Last: {new Date(lastService.serviceDate).toLocaleDateString("en-US", { month: "short", year: "numeric" })}
                   </span>
                 )}
               </div>

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import { reorderIds } from "@/lib/posts-helpers";
+import Glyph from "@/app/components/Glyph";
 
 type Media = { id: string; filename: string; mediaType: "image" | "video"; isPrimary: boolean; processingStatus?: "processing" | "ready" };
 type Post = { id: string; title: string | null; caption: string | null; isPublished: boolean; job?: { title?: string | null } | null; media: Media[] };
@@ -45,10 +46,10 @@ export default function PostsManagerClient() {
               <img src={`/uploads/${m.filename}.thumb.webp`} alt="video thumb" className="w-full h-full object-cover" />
               <span className="absolute bottom-1 right-1 text-[10px] bg-black/70 px-1.5 rounded">VIDEO</span>
               {m.processingStatus === "processing" && (
-                <span className="absolute top-1 right-1 text-[10px] bg-blue-900/80 text-blue-200 px-1.5 rounded-full">⏳ Processing</span>
+                <span className="absolute top-1 right-1 text-[10px] bg-blue-900/80 text-blue-200 px-1.5 rounded-full"><Glyph e="⏳" /> Processing</span>
               )}
             </> : <img src={`/uploads/${m.filename}`} alt="post" className="w-full h-full object-cover" />}
-            {m.isPrimary && <span className="absolute top-1 left-1 text-[10px] bg-amber-500 text-black px-1.5 rounded">PRIMARY</span>}
+            {m.isPrimary && <span className="absolute top-1 left-1 text-[10px] bg-amber-500 text-on-accent px-1.5 rounded">PRIMARY</span>}
           </div>
           <div className="flex flex-wrap gap-1 text-xs">
             <button className="px-2 py-1 rounded bg-gray-700" onClick={async()=>{await fetch(`/api/posts/${p.id}/media/${m.id}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({isPrimary:true})});load();}}>{m.isPrimary ? "Primary" : "Set primary"}</button>

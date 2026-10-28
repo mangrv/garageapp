@@ -1,16 +1,17 @@
 import Link from "next/link";
+import { LogoMark } from "@/app/components/brand/Logo";
 
 export default function CTASection({ signedIn = false }: { signedIn?: boolean }) {
   return (
-    <section className="px-5 py-20">
-      <div className="max-w-2xl mx-auto bg-gradient-to-br from-amber-950/60 to-gray-900 border border-amber-500/20 rounded-3xl p-8 sm:p-10 text-center space-y-5">
-        <div className="text-5xl">🤝</div>
-        <h2 className="text-2xl sm:text-3xl font-bold">The Meet in GarageMeet</h2>
-        <p className="text-gray-400 text-sm leading-relaxed max-w-md mx-auto">
-          Share public project highlights, keep receipts and private records locked down, and connect with the people who help keep your vehicles moving.
+    <section className="px-4 sm:px-5 pb-16">
+      <div className="max-w-6xl mx-auto rounded-[28px] px-8 py-12 sm:py-14 text-center space-y-5" style={{ background: "#0e1a2b", color: "#ffffff" }}>
+        <LogoMark size={52} color="#7c93ff" className="mx-auto" />
+        <h2 className="text-2xl sm:text-4xl font-bold">The meet in GarageMeet</h2>
+        <p className="text-base leading-relaxed max-w-lg mx-auto" style={{ color: "#c5ccda" }}>
+          Share project highlights publicly, keep receipts and private records locked down, and connect with the people who help keep your vehicles moving.
         </p>
-        <Link href={signedIn ? "/dashboard" : "/register"} className="inline-flex items-center gap-2 bg-amber-500 text-gray-950 font-bold px-8 py-3.5 rounded-2xl text-sm hover:bg-amber-400 active:scale-95 transition-all">
-          {signedIn ? "Return to Dashboard" : "Create Your Garage"}
+        <Link href={signedIn ? "/dashboard" : "/register"} className="h-12 inline-flex items-center rounded-full px-7 text-base font-semibold bg-brand hover:opacity-90 transition-opacity" style={{ color: "#ffffff" }}>
+          {signedIn ? "Open my garage" : "Create your garage"}
         </Link>
       </div>
     </section>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import Glyph from "@/app/components/Glyph";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -90,7 +91,7 @@ function ProjectPreview({ project }: { project: AIJob }) {
     <div className="space-y-3">
       {/* Header */}
       <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
-        <h3 className="font-bold text-white text-base">🔧 {project.title}</h3>
+        <h3 className="font-bold text-white text-base"><Glyph e="🔧" /> {project.title}</h3>
         {project.notes && <p className="text-xs text-gray-400 mt-1">{project.notes}</p>}
         <div className="flex gap-3 mt-2 text-xs text-gray-500">
           <span>{project.phases.length} phases</span>
@@ -101,7 +102,7 @@ function ProjectPreview({ project }: { project: AIJob }) {
       {/* Job tools */}
       {project.toolsJson?.length > 0 && (
         <div className="bg-gray-800/60 border border-gray-700 rounded-xl p-3">
-          <div className="text-xs font-semibold text-gray-400 mb-2">🧰 Tools needed</div>
+          <div className="text-xs font-semibold text-gray-400 mb-2"><Glyph e="🧰" /> Tools needed</div>
           <div className="flex flex-wrap gap-1.5">
             {project.toolsJson.map((tool, i) => (
               <span key={i} className="text-xs bg-gray-700 text-gray-300 px-2 py-0.5 rounded-full">{tool}</span>
@@ -116,7 +117,7 @@ function ProjectPreview({ project }: { project: AIJob }) {
           <div key={pi} className="bg-gray-800/60 border border-gray-700 rounded-xl overflow-hidden">
             <div className="px-3 py-2 flex items-center justify-between border-b border-gray-700/60">
               <span className="text-sm font-medium text-white">
-                {phase.emoji} {phase.title}
+                <Glyph e={phase.emoji} /> {phase.title}
               </span>
               <span className="text-xs text-gray-500">{phase.tasks.length} tasks</span>
             </div>
@@ -133,14 +134,14 @@ function ProjectPreview({ project }: { project: AIJob }) {
                   <p className="text-xs text-gray-300">{task.title}</p>
                   {task.torqueValue && (
                     <span className="inline-block mt-0.5 text-xs text-gray-400 bg-gray-700/50 border border-gray-600/50 rounded px-1.5 py-0.5 font-mono">
-                      🔧 {task.torqueValue} {task.torqueUnit}
+                      <Glyph e="🔧" /> {task.torqueValue} {task.torqueUnit}
                     </span>
                   )}
                   {task.warning && (
-                    <p className="text-xs text-amber-400 mt-0.5">⚠️ {task.warning}</p>
+                    <p className="text-xs text-amber-400 mt-0.5"><Glyph e="⚠" /> {task.warning}</p>
                   )}
                   {task.tip && (
-                    <p className="text-xs text-sky-400 mt-0.5">💡 {task.tip}</p>
+                    <p className="text-xs text-sky-400 mt-0.5"><Glyph e="💡" /> {task.tip}</p>
                   )}
                 </div>
               ))}
@@ -260,7 +261,7 @@ export default function AIBuilder({
           const updated = [...prev];
           updated[updated.length - 1] = {
             role: "assistant",
-            content: preamble || "✅ Job plan ready! Review below and click **Create Job** when you're happy.",
+            content: preamble || "Job plan ready! Review below and click **Create Job** when you're happy.",
           };
           return updated;
         });
@@ -320,7 +321,7 @@ export default function AIBuilder({
         onClick={() => setOpen(true)}
         className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold py-3.5 rounded-xl text-base active:scale-95 transition-transform flex items-center justify-center gap-2"
       >
-        ✨ Build with AI
+        <Glyph e="✨" /> Build with AI
       </button>
 
       {/* Modal */}
@@ -330,16 +331,16 @@ export default function AIBuilder({
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800">
               <div>
-                <h2 className="font-bold text-white">✨ AI Job Builder</h2>
+                <h2 className="font-bold text-white"><Glyph e="✨" /> AI Job Builder</h2>
                 <p className="text-xs text-gray-500">Car maintenance only</p>
               </div>
-              <button onClick={reset} className="text-gray-400 text-xl px-2">✕</button>
+              <button onClick={reset} className="text-gray-400 text-xl px-2"><Glyph e="✕" /></button>
             </div>
 
             {/* Car selector */}
             {cars.length > 0 && (
               <div className="px-4 py-2 border-b border-gray-800 flex items-center gap-2">
-                <span className="text-xs text-gray-500 flex-shrink-0">🚗 For:</span>
+                <span className="text-xs text-gray-500 flex-shrink-0"><Glyph e="🚗" /> For:</span>
                 <select
                   value={carId}
                   onChange={(e) => setCarId(e.target.value)}
@@ -362,7 +363,7 @@ export default function AIBuilder({
                   <div
                     className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm whitespace-pre-wrap ${
                       msg.role === "user"
-                        ? "bg-indigo-600 text-white rounded-br-sm"
+                        ? "bg-indigo-600 text-on-accent rounded-br-sm"
                         : "bg-gray-800 text-gray-200 rounded-bl-sm"
                     }`}
                   >
@@ -387,9 +388,9 @@ export default function AIBuilder({
                 <button
                   onClick={createJob}
                   disabled={creating}
-                  className="w-full mt-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-sm transition-colors disabled:opacity-50"
+                  className="w-full mt-3 bg-emerald-600 hover:bg-emerald-500 text-on-accent font-bold py-3 rounded-xl text-sm transition-colors disabled:opacity-50"
                 >
-                  {creating ? "Creating project…" : "✅ Create this project →"}
+                  {creating ? "Creating project…" : <>{"✅ Create this project →"}</>}
                 </button>
                 <button
                   onClick={() => setGeneratedJob(null)}
@@ -420,7 +421,7 @@ export default function AIBuilder({
                     disabled={voiceSupported === false}
                     className={`p-2.5 rounded-xl text-lg flex-shrink-0 transition-colors ${
                       listening
-                        ? "bg-red-600 text-white animate-pulse"
+                        ? "bg-red-600 text-on-accent animate-pulse"
                         : voiceSupported === false
                         ? "bg-gray-800 text-gray-600 opacity-40 cursor-not-allowed"
                         : "bg-gray-800 text-gray-400 hover:text-white"
@@ -431,19 +432,19 @@ export default function AIBuilder({
                         : listening ? "Stop recording" : "Tap to speak"
                     }
                   >
-                    🎙️
+                    <Glyph e="🎙" />
                   </button>
                   <button
                     type="button"
                     onClick={send}
                     disabled={loading || !input.trim()}
-                    className="p-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl flex-shrink-0 disabled:opacity-40 transition-colors"
+                    className="p-2.5 bg-indigo-600 hover:bg-indigo-500 text-on-accent rounded-xl flex-shrink-0 disabled:opacity-40 transition-colors"
                   >
                     ↑
                   </button>
                 </div>
                 {listening && (
-                  <p className="text-xs text-red-400 mt-1 text-center">🔴 Listening… speak now</p>
+                  <p className="text-xs text-red-400 mt-1 text-center"><Glyph e="🔴" /> Listening… speak now</p>
                 )}
                 <p className="text-xs text-gray-600 mt-1 text-center">
                   Car maintenance only · Shift+Enter for new line

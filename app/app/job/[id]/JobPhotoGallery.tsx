@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { compressImage } from "@/app/lib/compressImage";
 import { trackMatomoEvent } from "@/app/lib/matomo";
+import Glyph from "@/app/components/Glyph";
 
 type JobPhoto = {
   id: string;
@@ -60,7 +61,7 @@ function Lightbox({ photos, startIdx, onClose }: { photos: JobPhoto[]; startIdx:
       <div className="flex items-center justify-between px-4 py-3 bg-black/80 flex-shrink-0">
         <span className="text-sm text-gray-400">{idx + 1} / {photos.length}</span>
         {photo.caption && <span className="text-sm text-gray-300 truncate max-w-[60%]">{photo.caption}</span>}
-        <button onClick={onClose} className="w-10 h-10 flex items-center justify-center text-white text-xl">✕</button>
+        <button onClick={onClose} className="w-10 h-10 flex items-center justify-center text-white text-xl"><Glyph e="✕" /></button>
       </div>
       <div
         ref={ref}
@@ -91,7 +92,7 @@ function Lightbox({ photos, startIdx, onClose }: { photos: JobPhoto[]; startIdx:
       {photos.length > 1 && photos.length <= 20 && (
         <div className="flex justify-center gap-1.5 py-3 flex-shrink-0">
           {photos.map((_, i) => (
-            <button key={i} onClick={() => goTo(i)} className={`rounded-full transition-all ${i === idx ? "w-4 h-1.5 bg-white" : "w-1.5 h-1.5 bg-gray-600"}`} />
+            <button key={i} onClick={() => goTo(i)} className={`rounded-full transition-all ${i === idx ? "w-4 h-1.5 bg-[#ffffff]" : "w-1.5 h-1.5 bg-gray-600"}`} />
           ))}
         </div>
       )}
@@ -162,7 +163,7 @@ function ReorderMode({
           <button
             onClick={handleDone}
             disabled={!allAssigned}
-            className="text-xs px-3 py-1.5 rounded-xl bg-blue-600 text-white font-semibold disabled:opacity-40 flex items-center gap-1"
+            className="text-xs px-3 py-1.5 rounded-xl bg-blue-600 text-on-accent font-semibold disabled:opacity-40 flex items-center gap-1"
           >
             <Check size={12} /> Done
           </button>
@@ -193,7 +194,7 @@ function ReorderMode({
               )}
               {pos !== null ? (
                 <div className={`absolute top-1.5 left-1.5 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shadow-lg ${
-                  isPrimary ? "bg-amber-400 text-gray-950" : "bg-blue-600 text-white"
+                  isPrimary ? "bg-amber-400 text-gray-950" : "bg-blue-600 text-on-accent"
                 }`}>
                   {isPrimary ? <Star size={12} fill="currentColor" /> : pos}
                 </div>
@@ -207,7 +208,7 @@ function ReorderMode({
         })}
       </div>
       <p className="text-xs text-gray-600 text-center">
-        ⭐ = primary photo (position 1) · Tap to assign order · Tap number to remove
+        <Glyph e="⭐" /> = primary photo (position 1) · Tap to assign order · Tap number to remove
       </p>
     </div>
   );
@@ -275,7 +276,7 @@ export default function JobPhotoGallery({ jobId, initialPhotos, initialFeedCapti
     ));
     setPhotos(prev => prev.map(p => selectedIds.has(p.id) ? { ...p, isPublic: makePublic } : p));
     setBulkBusy(false);
-    showToast(makePublic ? `📡 ${ids.length} photo${ids.length > 1 ? "s" : ""} added to feed!` : `${ids.length} photo${ids.length > 1 ? "s" : ""} removed from feed`);
+    showToast(makePublic ? `${ids.length} photo${ids.length > 1 ? "s" : ""} added to feed!` : `${ids.length} photo${ids.length > 1 ? "s" : ""} removed from feed`);
     exitSelectMode();
   };
 
@@ -291,7 +292,7 @@ export default function JobPhotoGallery({ jobId, initialPhotos, initialFeedCapti
       return next;
     });
     setBulkBusy(false);
-    showToast(`🗑 ${ids.length} photo${ids.length > 1 ? "s" : ""} deleted`);
+    showToast(`${ids.length} photo${ids.length > 1 ? "s" : ""} deleted`);
     exitSelectMode();
   };
 
@@ -498,7 +499,7 @@ export default function JobPhotoGallery({ jobId, initialPhotos, initialFeedCapti
           </span>
           {publicCount > 0 && (
             <>
-              <span className="text-[10px] bg-emerald-800 text-emerald-200 px-1.5 py-0.5 rounded-full flex items-center gap-1 flex-shrink-0">
+              <span className="text-[10px] bg-emerald-900 text-emerald-400 px-1.5 py-0.5 rounded-full flex items-center gap-1 flex-shrink-0">
                 <Globe size={9} /> {publicCount} on feed
               </span>
               <button
@@ -542,7 +543,7 @@ export default function JobPhotoGallery({ jobId, initialPhotos, initialFeedCapti
               <button
                 onClick={() => mediaFileRef.current?.click()}
                 disabled={uploading}
-                className="flex items-center gap-1.5 text-xs bg-blue-600 text-white font-semibold px-3 py-1.5 rounded-xl hover:bg-blue-500 active:scale-95 disabled:opacity-50 transition-all"
+                className="flex items-center gap-1.5 text-xs bg-blue-600 text-on-accent font-semibold px-3 py-1.5 rounded-xl hover:bg-blue-500 active:scale-95 disabled:opacity-50 transition-all"
               >
                 <Plus size={13} />
                 {uploading ? "Uploading…" : "Add media"}
@@ -559,7 +560,7 @@ export default function JobPhotoGallery({ jobId, initialPhotos, initialFeedCapti
           <p className="text-sm">Add your first media</p>
           <p className="text-xs mt-1 text-gray-700">Share your build progress on GarageMeet</p>
           <div className="mt-4 flex items-center justify-center gap-2">
-            <button onClick={() => mediaFileRef.current?.click()} className="text-xs bg-blue-600 text-white font-semibold px-3 py-1.5 rounded-xl">Add media</button>
+            <button onClick={() => mediaFileRef.current?.click()} className="text-xs bg-blue-600 text-on-accent font-semibold px-3 py-1.5 rounded-xl">Add media</button>
           </div>
         </div>
       ) : (
@@ -575,7 +576,7 @@ export default function JobPhotoGallery({ jobId, initialPhotos, initialFeedCapti
                   <button
                     onClick={saveCaption}
                     disabled={captionSaving}
-                    className="text-xs px-3 py-1 rounded-lg bg-blue-600 text-white font-semibold disabled:opacity-50"
+                    className="text-xs px-3 py-1 rounded-lg bg-blue-600 text-on-accent font-semibold disabled:opacity-50"
                   >
                     {captionSaving ? "Saving…" : "Save"}
                   </button>
@@ -755,11 +756,11 @@ export default function JobPhotoGallery({ jobId, initialPhotos, initialFeedCapti
                   )}
                   {selected.mediaType === "video" && selected.processingStatus === "processing" && (
                     <span className="flex items-center gap-1 bg-blue-900/80 text-blue-200 text-[10px] px-2 py-0.5 rounded-full">
-                      ⏳ Processing
+                      <Glyph e="⏳" /> Processing
                     </span>
                   )}
                   {selected.isPublic ? (
-                    <span className="flex items-center gap-1 bg-emerald-600 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">
+                    <span className="flex items-center gap-1 bg-emerald-600 text-on-accent text-[10px] font-semibold px-2 py-0.5 rounded-full">
                       <Globe size={9} /> On Feed
                     </span>
                   ) : (
@@ -776,14 +777,14 @@ export default function JobPhotoGallery({ jobId, initialPhotos, initialFeedCapti
                 <button
                   onClick={async () => {
                     const updated = await patch(selected.id, { isPublic: !selected.isPublic });
-                    if (updated?.isPublic) showToast("📡 Now on GarageMeet feed!");
+                    if (updated?.isPublic) showToast("Now on GarageMeet feed!");
                     else showToast("Removed from feed");
                   }}
                   disabled={busy}
                   className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-colors active:scale-95 disabled:opacity-50 ${
                     selected.isPublic
                       ? "bg-emerald-900/40 text-emerald-300 border border-emerald-700"
-                      : "bg-emerald-600 text-white hover:bg-emerald-500"
+                      : "bg-emerald-600 text-on-accent hover:bg-emerald-500"
                   }`}
                 >
                   {selected.isPublic ? <><Lock size={14} /> Remove from feed</> : <><Globe size={14} /> Share to GarageMeet feed</>}
@@ -794,7 +795,7 @@ export default function JobPhotoGallery({ jobId, initialPhotos, initialFeedCapti
                   <button
                     onClick={async () => {
                       await patch(selected.id, { isPrimary: !selected.isPrimary });
-                      showToast(selected.isPrimary ? "Removed as primary" : "⭐ Set as primary — moved to top");
+                      showToast(selected.isPrimary ? "Removed as primary" : "Set as primary — moved to top");
                     }}
                     disabled={busy}
                     className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm transition-colors active:scale-95 disabled:opacity-50 ${
@@ -849,7 +850,7 @@ export default function JobPhotoGallery({ jobId, initialPhotos, initialFeedCapti
               <button
                 onClick={() => bulkSetPublic(true)}
                 disabled={bulkBusy || selectedIds.size === 0}
-                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-600 text-white text-sm font-semibold active:scale-95 disabled:opacity-40 transition-all"
+                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-600 text-on-accent text-sm font-semibold active:scale-95 disabled:opacity-40 transition-all"
               >
                 <Globe size={15} />
                 Share to feed{selectedIds.size > 0 ? ` (${selectedIds.size})` : ""}

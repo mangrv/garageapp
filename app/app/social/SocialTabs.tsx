@@ -22,7 +22,7 @@ export default function SocialTabs({ active }: { active: "community" | "posts" |
               key={tab.href}
               href={tab.href}
               className={`flex-1 min-w-fit text-center text-xs font-semibold px-3 py-2 rounded-lg transition-colors ${
-                tab.href === activeHref ? "bg-amber-500 text-gray-950" : "text-gray-400 hover:text-white"
+                tab.href === activeHref ? "bg-amber-500 text-on-accent" : "text-gray-400 hover:text-white"
               }`}
             >
               {tab.label}

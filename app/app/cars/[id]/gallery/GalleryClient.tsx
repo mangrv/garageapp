@@ -4,6 +4,7 @@ import { useState, useRef, useTransition } from "react";
 import { useApp } from "@/app/providers/AppProviders";
 import Link from "next/link";
 import Image from "next/image";
+import Glyph from "@/app/components/Glyph";
 
 type PhotoItem = { id: string; filename: string; caption: string | null; createdAt: string; isPrivate: boolean };
 type ReceiptItem = { id: string; filename: string; vendor: string | null; receiptDate: string | null };
@@ -67,9 +68,9 @@ const CATEGORY_BADGE: Record<string, string> = {
 
 const TAB_LABELS: { key: Tab; label: string }[] = [
   { key: "all", label: "All" },
-  { key: "photo", label: "🚗 Car Photos" },
-  { key: "receipt", label: "🧾 Receipts" },
-  { key: "document", label: "📁 Documents" },
+  { key: "photo", label: "Car Photos" },
+  { key: "receipt", label: "Receipts" },
+  { key: "document", label: "Documents" },
 ];
 
 export default function GalleryClient({
@@ -171,7 +172,7 @@ export default function GalleryClient({
   };
 
   const buildShareMessage = (url: string) =>
-    `Check out this app I built — My Garage 🚗🔧\n\nTrack your vehicles, manage repairs, log service history, and more. You can browse as a guest or register free for the full experience.\n\n👉 ${url}`;
+    `Check out this app I built — My Garage \n\nTrack your vehicles, manage repairs, log service history, and more. You can browse as a guest or register free for the full experience.\n\n${url}`;
 
   const handleShare = async (img: GalleryImage) => {
     const url = `${window.location.origin}${img.src}`;
@@ -202,20 +203,20 @@ export default function GalleryClient({
       {/* Header */}
       <div className="sticky top-0 z-10 bg-gray-950/90 backdrop-blur border-b border-gray-800 px-4 py-3 flex items-center gap-3">
         <Link href={`/cars/${carId}`} className="text-amber-400 text-sm">← Back</Link>
-        <h1 className="font-bold text-base flex-1 truncate">📸 {carName} — Gallery</h1>
+        <h1 className="font-bold text-base flex-1 truncate"><Glyph e="📸" /> {carName} — Gallery</h1>
         <a
           href={`/api/cars/${carId}/gallery/download`}
           download
-          className="text-xs bg-amber-500 text-gray-950 font-semibold px-3 py-1.5 rounded-lg"
+          className="text-xs bg-amber-500 text-on-accent font-semibold px-3 py-1.5 rounded-lg"
         >
-          ⬇️ ZIP
+          <Glyph e="⬇" /> ZIP
         </a>
       </div>
 
       {/* Privacy legend */}
       <div className="mx-4 mt-3 mb-1 px-3 py-2 rounded-xl bg-gray-900 border border-gray-800 text-xs text-gray-400 flex items-center gap-2">
-        <span>🔒</span>
-        <span>Private items are only visible to you — friends cannot see them. Tap 🔒/🌐 in any item to toggle.</span>
+        <span><Glyph e="🔒" /></span>
+        <span>Private items are only visible to you — friends cannot see them. Tap <Glyph e="🔒" />/<Glyph e="🌐" /> in any item to toggle.</span>
       </div>
 
       {/* Filter tabs */}
@@ -226,7 +227,7 @@ export default function GalleryClient({
             onClick={() => { setActiveTab(key); setLightboxIndex(null); }}
             className={`text-xs px-3 py-1.5 rounded-full whitespace-nowrap font-medium transition-colors ${
               activeTab === key
-                ? "bg-amber-500 text-gray-950"
+                ? "bg-amber-500 text-on-accent"
                 : "bg-gray-800 text-gray-300"
             }`}
           >
@@ -247,9 +248,10 @@ export default function GalleryClient({
                 className={`relative w-full aspect-square overflow-hidden rounded-xl bg-gray-800 group ${img.isPrivate ? "ring-2 ring-inset ring-amber-500/60" : ""}`}
               >
                 {img.isPdf ? (
-                  <div className="w-full h-full flex items-center justify-center text-4xl">📄</div>
+                  <div className="w-full h-full flex items-center justify-center text-4xl"><Glyph e="📄" /></div>
                 ) : (
                   <Image
+                    unoptimized
                     src={img.src}
                     alt={img.caption ?? ""}
                     fill
@@ -263,7 +265,7 @@ export default function GalleryClient({
                 )}
                 {/* Category badge */}
                 <span className="absolute bottom-1 left-1 text-xs bg-black/60 rounded px-1">
-                  {CATEGORY_BADGE[img.category]}
+                  <Glyph e={CATEGORY_BADGE[img.category]} />
                 </span>
                 {/* Caption */}
                 {img.caption && (
@@ -280,7 +282,7 @@ export default function GalleryClient({
                   title={img.isPrivate ? "Private — tap to make public" : "Visible to friends — tap to make private"}
                   className="absolute top-1 right-1 text-sm bg-black/70 rounded-full w-6 h-6 flex items-center justify-center leading-none z-10 active:scale-90 transition-transform"
                 >
-                  {img.isPrivate ? "🔒" : "🌐"}
+                  {img.isPrivate ? <Glyph e="🔒" /> : <Glyph e="🌐" />}
                 </button>
               )}
             </div>
@@ -301,14 +303,14 @@ export default function GalleryClient({
               {lightboxIndex + 1} / {filtered.length}
             </span>
             <div className="flex items-center gap-2">
-              <span className="text-sm">{CATEGORY_BADGE[currentImage.category]}</span>
+              <span className="text-sm"><Glyph e={CATEGORY_BADGE[currentImage.category]} /></span>
               {currentImage.isPrivate && (
                 <span className="text-xs bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-full">
-                  🔒 Private
+                  <Glyph e="🔒" /> Private
                 </span>
               )}
             </div>
-            <button onClick={closeLightbox} className="text-2xl text-gray-300 leading-none">✕</button>
+            <button onClick={closeLightbox} className="text-2xl text-gray-300 leading-none"><Glyph e="✕" /></button>
           </div>
 
           {/* Image */}
@@ -320,7 +322,7 @@ export default function GalleryClient({
               ‹
             </button>
             {currentImage.isPdf ? (
-              <div className="text-8xl">📄</div>
+              <div className="text-8xl"><Glyph e="📄" /></div>
             ) : (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -356,7 +358,7 @@ export default function GalleryClient({
                     : "text-gray-300 bg-gray-800"
                 }`}
               >
-                <span className="text-xl">{currentImage.isPrivate ? "🔒" : "🌐"}</span>
+                <span className="text-xl">{currentImage.isPrivate ? <Glyph e="🔒" /> : <Glyph e="🌐" />}</span>
                 {currentImage.isPrivate ? "Private" : "Public"}
               </button>
             )}
@@ -364,7 +366,7 @@ export default function GalleryClient({
               onClick={() => handleShare(currentImage)}
               className="flex flex-col items-center gap-1 text-xs text-gray-300 bg-gray-800 px-4 py-3 rounded-xl"
             >
-              <span className="text-xl">🔗</span>
+              <span className="text-xl"><Glyph e="🔗" /></span>
               Share
             </button>
             <a
@@ -372,14 +374,14 @@ export default function GalleryClient({
               download
               className="flex flex-col items-center gap-1 text-xs text-gray-300 bg-gray-800 px-4 py-3 rounded-xl"
             >
-              <span className="text-xl">⬇️</span>
+              <span className="text-xl"><Glyph e="⬇" /></span>
               Save
             </a>
             <button
               onClick={closeLightbox}
               className="flex flex-col items-center gap-1 text-xs text-gray-300 bg-gray-800 px-4 py-3 rounded-xl"
             >
-              <span className="text-xl">✕</span>
+              <span className="text-xl"><Glyph e="✕" /></span>
               Close
             </button>
             <button
@@ -387,7 +389,7 @@ export default function GalleryClient({
               disabled={deleting}
               className="flex flex-col items-center gap-1 text-xs text-red-400 bg-gray-800 px-4 py-3 rounded-xl disabled:opacity-40"
             >
-              <span className="text-xl">🗑</span>
+              <span className="text-xl"><Glyph e="🗑" /></span>
               {lang === "es" ? "Eliminar" : "Delete"}
             </button>
           </div>

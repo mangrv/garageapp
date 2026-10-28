@@ -5,6 +5,7 @@ import {
   TrendingUp, TrendingDown, Minus, Star, RefreshCw, Info,
   ChevronDown, ChevronUp, DollarSign, Edit3, Check, X,
 } from "lucide-react";
+import Glyph from "@/app/components/Glyph";
 
 interface LineItem {
   label: string;
@@ -229,7 +230,7 @@ export default function VehicleValuePanel({
               <button
                 onClick={handleBaselineSave}
                 disabled={loading || !baselineInput}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white disabled:opacity-40 transition-colors active:scale-95"
+                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-on-accent disabled:opacity-40 transition-colors active:scale-95"
               >
                 {loading ? <RefreshCw size={13} className="animate-spin" /> : <Check size={13} />}
                 {loading ? "Calculating…" : "Calculate"}
@@ -333,7 +334,7 @@ export default function VehicleValuePanel({
                     {estimate.lineItems.filter(item => item.dollarAmount !== 0).map((item, i) => (
                       <div key={i} className="flex items-start justify-between gap-3">
                         <div className="flex items-start gap-2 min-w-0">
-                          <span className="text-sm flex-shrink-0 mt-0.5">{item.icon}</span>
+                          <span className="text-sm flex-shrink-0 mt-0.5"><Glyph e={item.icon} /></span>
                           <div className="min-w-0">
                             <div className="text-xs text-gray-200">{item.label}</div>
                             <div className="text-[11px] text-gray-500 leading-tight">{item.description}</div>

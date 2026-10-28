@@ -20,7 +20,7 @@ export default function GarageFilter({ current }: { current: string }) {
           onClick={() => router.push(f.value === "active" ? "/" : `/?filter=${f.value}`)}
           className={`flex-shrink-0 text-xs px-3 py-1.5 rounded-full font-medium transition-colors ${
             current === f.value
-              ? "bg-amber-500 text-gray-950"
+              ? "bg-amber-500 text-on-accent"
               : "bg-gray-800 text-gray-400 active:bg-gray-700"
           }`}
         >

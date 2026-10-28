@@ -8,6 +8,7 @@ import {
   Moon, Sun, Key, Cpu, Home, LogOut, Shield, Brain,
   ChevronLeft, Check, AlertCircle, ArrowLeft, Download, Lock
 } from "lucide-react";
+import Glyph from "@/app/components/Glyph";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -146,10 +147,10 @@ function AIModelSection({
         setKeyMasked("••••••••••••" + apiKeyInput.trim().slice(-4));
         setApiKeyInput("");
       }
-      setMsg({ text: selectedProvider === "ollama" ? "✅ Saved — using local Ollama" : "✅ Saved — using your custom key", type: "ok" });
+      setMsg({ text: selectedProvider === "ollama" ? "Saved — using local Ollama" : "Saved — using your custom key", type: "ok" });
       setTimeout(() => setMsg(null), 3000);
     } catch {
-      setMsg({ text: "❌ Failed to save", type: "err" });
+      setMsg({ text: "Failed to save", type: "err" });
     } finally {
       setSaving(false);
     }
@@ -167,7 +168,7 @@ function AIModelSection({
       setKeyMasked(null);
       setApiKeyInput("");
       setUseCustomKey(false);
-      setMsg({ text: "✅ Switched back to GarageMeet AI", type: "ok" });
+      setMsg({ text: "Switched back to GarageMeet AI", type: "ok" });
       setTimeout(() => setMsg(null), 3000);
     } finally {
       setSaving(false);
@@ -301,7 +302,7 @@ function AIModelSection({
             <button
               onClick={saveCustom}
               disabled={saving || (selectedNeedsKey && !keySet && !apiKeyInput.trim())}
-              className="w-full py-3 rounded-xl bg-amber-500 text-gray-950 font-bold text-sm disabled:opacity-40 active:scale-95 transition-all"
+              className="w-full py-3 rounded-xl bg-amber-500 text-on-accent font-bold text-sm disabled:opacity-40 active:scale-95 transition-all"
             >
               {saving ? "Saving…" : "Save Custom AI Settings"}
             </button>
@@ -316,7 +317,7 @@ function AIModelSection({
 
         {useCustomKey && (keySet || selectedProvider === "ollama") && !msg && (
           <div className="flex items-center gap-2 bg-blue-900/20 border border-blue-700/30 rounded-xl px-3 py-2.5">
-            <span className="text-blue-400 text-sm">🔑</span>
+            <span className="text-blue-400 text-sm"><Glyph e="🔑" /></span>
             <p className="text-xs text-blue-300">
               {selectedProvider === "ollama" ? "Using local Ollama" : "Using your custom key"} · {CUSTOM_MODELS.find(m => m.id === selectedModel)?.label ?? selectedModel}
             </p>
@@ -353,7 +354,7 @@ function AccountSection({ name, email, displayName: initialDisplayName }: { name
       });
       const data = await res.json();
       if (!res.ok) { setMsg({ text: data.error ?? "Failed", type: "err" }); return; }
-      setMsg({ text: "✅ Password updated", type: "ok" });
+      setMsg({ text: "Password updated", type: "ok" });
       setCurrentPw(""); setNewPw(""); setConfirmPw("");
     } catch {
       setMsg({ text: "Network error", type: "err" });
@@ -383,7 +384,7 @@ function AccountSection({ name, email, displayName: initialDisplayName }: { name
           <p className="text-xs text-gray-400 font-medium mb-2">Display Name</p>
           <div className="flex gap-2">
             <input value={displayName} onChange={(e)=>setDisplayName(e.target.value)} placeholder="How your name appears in feed" className={inputCls} />
-            <button type="button" className="px-3 rounded-xl bg-gray-700 text-xs" onClick={async()=>{await fetch('/api/settings',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({displayName})}); setMsg({text:'✅ Display name saved',type:'ok'});}}>Save</button>
+            <button type="button" className="px-3 rounded-xl bg-gray-700 text-xs" onClick={async()=>{await fetch('/api/settings',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({displayName})}); setMsg({text:"Display name saved",type:'ok'});}}>Save</button>
           </div>
         </div>
 
@@ -491,7 +492,7 @@ function PublicProfileSection({ initialUsername, initialBio, initialPublic }: {
             onClick={() => setIsPublic(v => !v)}
             className={`relative w-11 h-6 rounded-full transition-colors ${isPublic ? "bg-amber-500" : "bg-gray-700"}`}
           >
-            <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${isPublic ? "translate-x-5" : ""}`} />
+            <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-[#ffffff] shadow transition-transform ${isPublic ? "translate-x-5" : ""}`} />
           </button>
         </div>
 
@@ -499,7 +500,7 @@ function PublicProfileSection({ initialUsername, initialBio, initialPublic }: {
         <div>
           <label className="text-xs text-gray-400 font-medium block mb-1.5">Username (URL slug)</label>
           <div className="flex items-center gap-2">
-            <span className="text-gray-500 text-sm flex-shrink-0">garage.page/u/</span>
+            <span className="text-gray-500 text-sm flex-shrink-0">garagemeet.com/u/</span>
             <input
               type="text"
               value={username}
@@ -540,7 +541,7 @@ function PublicProfileSection({ initialUsername, initialBio, initialPublic }: {
         <button
           onClick={save}
           disabled={saving}
-          className="w-full py-2.5 rounded-xl bg-amber-500 text-black font-semibold text-sm disabled:opacity-40 hover:bg-amber-400 transition-colors"
+          className="w-full py-2.5 rounded-xl bg-amber-500 text-on-accent font-semibold text-sm disabled:opacity-40 hover:bg-amber-400 transition-colors"
         >
           {saving ? "Saving…" : "Save Profile"}
         </button>
@@ -560,7 +561,7 @@ function DataBackupSection() {
         <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3">
           <p className="text-xs text-amber-200">Current export scope: database records only. Uploaded photos, documents, and receipt files are not included in this export yet.</p>
         </div>
-        <a href="/api/export/garage" className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-amber-500 px-4 py-3 text-sm font-bold text-gray-950 hover:bg-amber-400 transition-colors">
+        <a href="/api/export/garage" className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-amber-500 px-4 py-3 text-sm font-bold text-on-accent hover:bg-amber-400 transition-colors">
           <Download size={16} />
           Export garage data
         </a>

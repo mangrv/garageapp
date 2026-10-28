@@ -5,6 +5,7 @@ import Link from "next/link";
 import ReceiptCard from "@/app/components/ReceiptCard";
 import ReceiptUploadButton from "@/app/components/ReceiptUploadButton";
 import ReceiptScanFlow from "@/app/components/ReceiptScanFlow";
+import Glyph from "@/app/components/Glyph";
 
 interface Receipt {
   id: string;
@@ -101,9 +102,9 @@ export default function ReceiptInboxClient({
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowScan(true)}
-              className="text-sm px-4 py-2 rounded-xl bg-amber-500 text-black font-semibold active:bg-amber-400 transition"
+              className="text-sm px-4 py-2 rounded-xl bg-amber-500 text-on-accent font-semibold active:bg-amber-400 transition"
             >
-              🤖 Scan
+              <Glyph e="🤖" /> Scan
             </button>
             <ReceiptUploadButton onCreated={handleCreated} />
           </div>
@@ -119,7 +120,7 @@ export default function ReceiptInboxClient({
           >
             Inbox
             {inboxReceipts.length > 0 && (
-              <span className="ml-2 bg-amber-500 text-black text-xs font-bold rounded-full px-1.5 py-0.5">
+              <span className="ml-2 bg-amber-500 text-on-accent text-xs font-bold rounded-full px-1.5 py-0.5">
                 {inboxReceipts.length}
               </span>
             )}
@@ -138,7 +139,7 @@ export default function ReceiptInboxClient({
         {/* Receipt list */}
         {displayed.length === 0 ? (
           <div className="text-center py-16 text-gray-600">
-            <p className="text-4xl mb-3">🧾</p>
+            <p className="text-4xl mb-3"><Glyph e="🧾" /></p>
             <p>{tab === "inbox" ? "Inbox is empty — all receipts are linked!" : "No receipts yet."}</p>
           </div>
         ) : (
@@ -153,11 +154,11 @@ export default function ReceiptInboxClient({
                       Linked to:{" "}
                       {r.job && (
                         <Link href={`/job/${r.job.id}`} className="text-amber-400">
-                          🔧 {r.job.title}
+                          <Glyph e="🔧" /> {r.job.title}
                         </Link>
                       )}
                       {r.serviceRecord && (
-                        <span className="text-blue-400">🛠 {r.serviceRecord.title}</span>
+                        <span className="text-blue-400"><Glyph e="🛠" /> {r.serviceRecord.title}</span>
                       )}
                     </p>
                   </div>
@@ -214,7 +215,7 @@ export default function ReceiptInboxClient({
                 Cancel
               </button>
               <button onClick={handleLink} disabled={linking}
-                className="flex-1 py-2 rounded-xl bg-amber-500 text-black font-semibold active:bg-amber-400 transition disabled:opacity-50">
+                className="flex-1 py-2 rounded-xl bg-amber-500 text-on-accent font-semibold active:bg-amber-400 transition disabled:opacity-50">
                 {linking ? "Linking…" : "Link Receipt"}
               </button>
             </div>

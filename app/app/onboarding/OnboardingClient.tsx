@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import Glyph from "@/app/components/Glyph";
 
 const AI_FEATURES = [
   { icon: "📷", label: "Receipt AI Scan", desc: "Snap a receipt and auto-fill service records" },
@@ -63,7 +64,7 @@ export default function OnboardingClient() {
 
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="text-5xl mb-2">🏎️</div>
+          <div className="text-5xl mb-2"><Glyph e="🏎" /></div>
           <h1 className="text-2xl font-bold">Welcome to GarageMeet!</h1>
           <p className="text-sm text-gray-400">Your account is ready. One last optional step — power up AI features.</p>
         </div>
@@ -74,7 +75,7 @@ export default function OnboardingClient() {
           <div className="grid grid-cols-2 gap-2">
             {AI_FEATURES.map((f) => (
               <div key={f.label} className="bg-gray-800/60 rounded-xl p-3 space-y-0.5">
-                <div className="text-lg">{f.icon}</div>
+                <div className="text-lg"><Glyph e={f.icon} /></div>
                 <div className="text-xs font-semibold text-white">{f.label}</div>
                 <div className="text-[11px] text-gray-500 leading-snug">{f.desc}</div>
               </div>
@@ -93,13 +94,13 @@ export default function OnboardingClient() {
           <div className="flex rounded-xl overflow-hidden border border-gray-700">
             <button
               onClick={() => setProvider("openai")}
-              className={`flex-1 py-2.5 text-sm font-semibold transition-colors ${provider === "openai" ? "bg-amber-500 text-gray-950" : "text-gray-400 hover:text-white"}`}
+              className={`flex-1 py-2.5 text-sm font-semibold transition-colors ${provider === "openai" ? "bg-amber-500 text-on-accent" : "text-gray-400 hover:text-white"}`}
             >
               OpenAI
             </button>
             <button
               onClick={() => setProvider("anthropic")}
-              className={`flex-1 py-2.5 text-sm font-semibold transition-colors border-l border-gray-700 ${provider === "anthropic" ? "bg-amber-500 text-gray-950" : "text-gray-400 hover:text-white"}`}
+              className={`flex-1 py-2.5 text-sm font-semibold transition-colors border-l border-gray-700 ${provider === "anthropic" ? "bg-amber-500 text-on-accent" : "text-gray-400 hover:text-white"}`}
             >
               Claude (Anthropic)
             </button>
@@ -132,7 +133,7 @@ export default function OnboardingClient() {
           <button
             onClick={handleSave}
             disabled={saving || skipping}
-            className="w-full bg-amber-500 text-gray-950 font-bold py-3 rounded-xl text-sm disabled:opacity-40 active:scale-95 transition-transform"
+            className="w-full bg-amber-500 text-on-accent font-bold py-3 rounded-xl text-sm disabled:opacity-40 active:scale-95 transition-transform"
           >
             {saving ? "Saving…" : "Save & Continue →"}
           </button>

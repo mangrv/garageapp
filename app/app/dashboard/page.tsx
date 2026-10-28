@@ -7,6 +7,8 @@ import { getSession } from "@/lib/session";
 import { T } from "@/app/components/T";
 import { DT } from "@/app/components/DT";
 import GuestImportBridge from "../components/GuestImportBridge";
+import Glyph from "@/app/components/Glyph";
+import { Car, Inbox, LayoutGrid, List, Plus, Wallet, Wrench, type LucideIcon } from "lucide-react";
 
 const ASSET_TYPES = [
   { type: "vehicle", label: "Cars", singular: "car", emoji: "🚗" },
@@ -21,12 +23,6 @@ function carEmoji(make: string, assetType = "vehicle") {
   if (assetType === "riding_mower") return "🚜";
   if (assetType === "equipment") return "🧰";
   if (assetType === "bicycle") return "🚲";
-  if (make.toLowerCase() === "ford") return "🐎";
-  if (make.toLowerCase() === "jeep") return "🚙";
-  if (make.toLowerCase() === "chevy" || make.toLowerCase() === "chevrolet") return "🏁";
-  if (make.toLowerCase() === "dodge") return "🐏";
-  if (make.toLowerCase() === "toyota") return "🟦";
-  if (make.toLowerCase() === "honda") return "🔵";
   return "🚗";
 }
 
@@ -34,21 +30,21 @@ function money(value: number) {
   return value.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
 }
 
-function SummaryCard({ href, emoji, label, value, sub }: { href?: string; emoji: string; label: string; value: string; sub: string }) {
+function SummaryCard({ href, icon, label, value, sub, tone = "accent" }: { href?: string; icon: LucideIcon; label: string; value: string; sub: string; tone?: "accent" | "warn" | "ok" }) {
+  const Icon = icon;
+  const tile = tone === "warn" ? "bg-[#fef3c7] text-[#92400e]" : tone === "ok" ? "bg-emerald-900 text-emerald-400" : "bg-amber-900 text-amber-500";
   const content = (
-    <div className="h-full rounded-2xl border border-gray-800 bg-gray-900 p-4 transition-colors hover:border-amber-500/40">
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">{label}</p>
-          <p className="mt-1 text-2xl font-bold text-white">{value}</p>
-        </div>
-        <span className="text-2xl">{emoji}</span>
+    <div className="h-full rounded-2xl border border-gray-700/70 bg-gray-900 p-4 shadow-card transition-colors hover:border-amber-500/50">
+      <div className="flex items-center gap-3">
+        <span className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${tile}`}><Icon size={20} /></span>
+        <p className="text-sm font-medium text-gray-500">{label}</p>
       </div>
-      <p className="mt-3 text-xs text-gray-500">{sub}</p>
+      <p className="mt-3 font-display text-[28px] leading-none font-bold text-white tabular">{value}</p>
+      <p className="mt-2 text-[13px] text-gray-500">{sub}</p>
     </div>
   );
 
-  return href ? <Link href={href}>{content}</Link> : content;
+  return href ? <Link href={href} className="block h-full">{content}</Link> : content;
 }
 
 export default async function Home({ searchParams }: { searchParams: Promise<{ filter?: string; view?: string; type?: string }> }) {
@@ -124,29 +120,32 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ f
     }),
   ]);
   const totalReceiptCost = receiptTotals._sum.totalAmount ?? 0;
+  const firstName = (session.name || session.email || "there").split(/[\s@]/)[0];
 
   return (
     <div className="min-h-screen pb-24 w-full max-w-full overflow-x-hidden" style={{ background: "var(--background)" }}>
       {/* Header */}
-      <header className="sticky top-0 z-10 backdrop-blur border-b border-sidebar-border px-3 sm:px-4 py-3 space-y-3" style={{ background: "var(--sidebar-bg)" }}>
-        <div className="flex items-center justify-between gap-3">
+      <header className="px-4 sm:px-6 pt-6 pb-2 space-y-4 max-w-6xl">
+        <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p className="font-semibold text-sm" style={{ color: "var(--sidebar-text)" }}>{selectedAsset ? selectedAsset.label : "Garage Overview"}</p>
-            <p className="text-xs" style={{ color: "var(--sidebar-muted)" }}>
-              <Link href="/dashboard?view=list" className="underline-offset-2 hover:underline">{assetSummary}</Link>
-              {" · "}{activeType ? filteredJobs : totalJobs} active jobs
+            <h1 className="text-[28px] sm:text-[32px] font-bold text-white leading-tight">
+              {selectedAsset ? selectedAsset.label : `Hi ${firstName}`}
+            </h1>
+            <p className="text-[15px] text-gray-500 mt-1">
+              <Link href="/dashboard?view=list" className="hover:underline underline-offset-2">{assetSummary}</Link>
+              {" · "}{activeType ? filteredJobs : totalJobs} open {(activeType ? filteredJobs : totalJobs) === 1 ? "job" : "jobs"}
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <div className="flex rounded-xl overflow-hidden border border-sidebar-border">
-              <Link href={activeType ? "/dashboard?view=list&type=" + activeType : "/dashboard?view=list"} className={`px-3 py-1.5 text-xs font-medium transition-colors ${currentView === "list" ? "bg-amber-500 text-[#ffffff]" : ""}`} style={currentView !== "list" ? { color: "var(--sidebar-muted)" } : {}}>List</Link>
-              <Link href="/dashboard" className={`px-3 py-1.5 text-xs font-medium transition-colors border-l border-sidebar-border ${currentView === "grid" ? "bg-amber-500 text-[#ffffff]" : ""}`} style={currentView !== "grid" ? { color: "var(--sidebar-muted)" } : {}}>Grid</Link>
+            <div className="flex h-11 rounded-full p-1 bg-gray-800" role="group" aria-label="View">
+              <Link href={activeType ? "/dashboard?view=list&type=" + activeType : "/dashboard?view=list"} aria-label="List view"
+                className={`w-10 rounded-full flex items-center justify-center transition-colors ${currentView === "list" ? "bg-gray-900 text-amber-500 shadow-card" : "text-gray-500"}`}><List size={18} /></Link>
+              <Link href={activeType ? "/dashboard?type=" + activeType : "/dashboard"} aria-label="Grid view"
+                className={`w-10 rounded-full flex items-center justify-center transition-colors ${currentView === "grid" ? "bg-gray-900 text-amber-500 shadow-card" : "text-gray-500"}`}><LayoutGrid size={18} /></Link>
             </div>
-            <Link
-              href="/cars/new"
-              className="flex-shrink-0 h-9 px-4 inline-flex items-center justify-center bg-amber-500 text-[#ffffff] font-bold rounded-xl text-sm active:scale-95 transition-transform whitespace-nowrap gap-1.5"
-            >
-              <span>+</span><span className="hidden sm:inline"><T k="addCar" /></span>
+            <Link href="/cars/new"
+              className="h-11 px-5 inline-flex items-center gap-2 bg-amber-500 text-on-accent font-semibold rounded-full text-[15px] hover:bg-amber-600 transition-colors whitespace-nowrap">
+              <Plus size={18} strokeWidth={2.4} /><span className="hidden sm:inline"><T k="addCar" /></span>
             </Link>
           </div>
         </div>
@@ -155,24 +154,30 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ f
 
       <GuestImportBridge />
 
-      <main className={`px-4 pt-6 ${currentView === "grid" ? "grid grid-cols-2 lg:grid-cols-3 gap-3" : "space-y-6"}`}>
+      <main className={`px-4 sm:px-6 pt-4 max-w-6xl ${currentView === "grid" ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" : "space-y-6"}`}>
         <section className="col-span-full space-y-3">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            <SummaryCard href="/dashboard?view=list" emoji="🏠" label="Assets" value={String(cars.length)} sub={assetGroups.map((a) => a.count + " " + a.label.toLowerCase()).join(" · ") || "No assets yet"} />
-            <SummaryCard href="/projects" emoji="🔧" label="Active Jobs" value={String(totalJobs)} sub={totalJobs + (totalJobs === 1 ? " job needs attention" : " jobs need attention")} />
-            <SummaryCard href="/receipts" emoji="🧾" label="Receipts" value={String(inboxCount)} sub={inboxCount === 1 ? "1 receipt needs filing" : inboxCount + " receipts need filing"} />
-            <SummaryCard emoji="💵" label="Tracked Costs" value={money(totalReceiptCost)} sub={receiptTotals._count.id + (receiptTotals._count.id === 1 ? " receipt logged" : " receipts logged")} />
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <Link href="/receipts" className="col-span-2 lg:col-span-1 rounded-2xl bg-brand p-5 flex flex-col justify-between min-h-[148px] hover:opacity-95 transition-opacity" style={{ color: "#ffffff" }}>
+              <span className="flex items-center gap-2 text-sm font-medium" style={{ color: "#d6ddff" }}><Wallet size={18} /> Tracked spend</span>
+              <span className="font-display text-[40px] leading-none font-bold tabular" style={{ letterSpacing: "-0.03em" }}>{money(totalReceiptCost)}</span>
+              <span className="text-[13px]" style={{ color: "#d6ddff" }}>{receiptTotals._count.id} {receiptTotals._count.id === 1 ? "receipt" : "receipts"} across {cars.length} {cars.length === 1 ? "asset" : "assets"}</span>
+            </Link>
+            <div className="hidden lg:block"><SummaryCard href="/dashboard?view=list" icon={Car} label="Assets" value={String(cars.length)} sub={assetGroups.map((a) => a.count + " " + a.label.toLowerCase()).join(" · ") || "No assets yet"} /></div>
+            <SummaryCard href="/projects" icon={Wrench} label="Open jobs" value={String(totalJobs)} sub={totalJobs === 1 ? "1 job in progress" : totalJobs + " jobs in progress"} />
+            <SummaryCard href="/receipts" icon={Inbox} tone={inboxCount > 0 ? "warn" : "ok"} label="Receipts to file" value={String(inboxCount)} sub={inboxCount === 0 ? "All filed" : inboxCount === 1 ? "1 waiting in your inbox" : inboxCount + " waiting in your inbox"} />
           </div>
           {assetGroups.length > 0 && (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
               {assetGroups.map((asset) => (
-                <Link key={asset.type} href={"/dashboard?view=list&type=" + asset.type} className={(activeType === asset.type ? "border-amber-500 bg-amber-500/10" : "border-gray-800 bg-gray-900 hover:border-amber-500/40") + " rounded-2xl border p-4 transition-colors"}>
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-2xl">{asset.emoji}</span>
-                    <span className="text-xl font-bold text-white">{asset.count}</span>
-                  </div>
-                  <p className="mt-3 text-sm font-semibold text-white">{asset.label}</p>
-                  <p className="mt-1 text-xs text-gray-500">{asset.activeJobs} active {asset.activeJobs === 1 ? "job" : "jobs"}</p>
+                <Link key={asset.type} href={"/dashboard?view=list&type=" + asset.type} className={(activeType === asset.type ? "border-amber-500 bg-amber-950" : "border-gray-700/70 bg-gray-900 hover:border-amber-500/50") + " rounded-2xl border p-4 shadow-card transition-colors flex items-center gap-3"}>
+                  <span className="w-11 h-11 rounded-xl bg-gray-800 text-gray-400 flex items-center justify-center shrink-0"><Glyph e={asset.emoji} size={22} /></span>
+                  <span className="min-w-0 flex-1">
+                    <span className="flex items-baseline justify-between gap-2">
+                      <span className="text-[15px] font-semibold text-white truncate">{asset.label}</span>
+                      <span className="font-display text-lg font-bold text-white tabular">{asset.count}</span>
+                    </span>
+                    <span className="block text-[13px] text-gray-500">{asset.activeJobs} open {asset.activeJobs === 1 ? "job" : "jobs"}</span>
+                  </span>
                 </Link>
               ))}
             </div>
@@ -182,7 +187,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ f
           <section className={`${currentView === "grid" ? "col-span-full" : ""} rounded-2xl p-4 border border-sidebar-border`} style={{ background: "var(--sidebar-accent)" }}>
             <div className="flex items-center justify-between mb-3">
               <h2 className="font-semibold text-sm flex items-center gap-1.5" style={{ color: "var(--sidebar-text)" }}>
-                <span>🛡️</span> <T k="warrantyAlerts" />
+                <span><Glyph e="🛡" /></span> <T k="warrantyAlerts" />
               </h2>
               <span className="text-xs" style={{ color: "var(--sidebar-muted)" }}>Top {warrantyAlerts.length}</span>
             </div>
@@ -191,7 +196,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ f
                 const end = w.warrantyEnd ? new Date(w.warrantyEnd) : null;
                 const diffDays = end ? Math.floor((end.getTime() - Date.now()) / (1000 * 60 * 60 * 24)) : null;
                 const car = w.receipt.serviceRecord?.car;
-                const dateColor = diffDays != null && diffDays <= 30 ? "#f59e0b" : "#22c55e";
+                const dateColor = diffDays != null && diffDays <= 30 ? "#b45309" : "#047857";
                 return (
                   <div key={w.id} className="text-xs flex items-center justify-between gap-2 rounded-lg px-3 py-2.5 border border-sidebar-border" style={{ background: "var(--sidebar-bg)" }}>
                     <div className="min-w-0">
@@ -210,9 +215,9 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ f
 
         {cars.length === 0 && (
           <div className={`text-center py-20 space-y-4 ${currentView === "grid" ? "col-span-full" : ""}`}>
-            <div className="text-6xl">🚗</div>
+            <div className="text-6xl"><Glyph e="🚗" /></div>
             <p className="text-gray-400 text-lg"><T k="noCarFound" /></p>
-            <Link href="/cars/new" className="inline-block bg-amber-500 text-gray-950 font-bold px-6 py-3 rounded-xl">
+            <Link href="/cars/new" className="inline-block bg-amber-500 text-on-accent font-bold px-6 py-3 rounded-xl">
               <T k="addFirstCar" />
             </Link>
           </div>
@@ -222,8 +227,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ f
           // Group by asset type for the inventory list view
           const TYPE_ORDER = ["vehicle", "bicycle", "riding_mower", "equipment", "trailer"];
           const TYPE_LABELS: Record<string, string> = {
-            vehicle: "🚗 Cars", bicycle: "🚲 Bicycles", trailer: "🚚 Trailers",
-            riding_mower: "🚜 Riding Mowers", equipment: "🧰 Equipment",
+            vehicle: "Cars", bicycle: "Bicycles", trailer: "Trailers",
+            riding_mower: "Riding Mowers", equipment: "Equipment",
           };
           const grouped = TYPE_ORDER
             .map(t => ({ type: t, label: TYPE_LABELS[t], items: (filteredCars as any[]).filter((c: any) => ((c as any).assetType || "vehicle") === t) }))
@@ -262,7 +267,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ f
                               {featured ? (
                                 <img src={`/uploads/${featured.filename}`} alt={carName} className="w-full h-full object-cover" />
                               ) : (
-                                <span className="text-2xl">{carEmoji(car.make, assetType)}</span>
+                                <span className="text-2xl"><Glyph e={carEmoji(car.make, assetType)} /></span>
                               )}
                             </div>
 
@@ -270,19 +275,19 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ f
                             <div className="flex-1 min-w-0">
                               <div className="font-semibold text-sm truncate text-gray-100"><DT text={carName} /></div>
                               <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-0.5">
-                                {car.color && <span className="text-xs text-gray-500">🎨 {car.color}</span>}
+                                {car.color && <span className="text-xs text-gray-500"><Glyph e="🎨" /> {car.color}</span>}
                                 {isBike && (car as any).bikeType && (
                                   <span className="text-xs text-gray-500 capitalize">{(car as any).bikeType}</span>
                                 )}
                                 {isBike && (car as any).frameSize && (
-                                  <span className="text-xs text-gray-500">📐 {(car as any).frameSize}</span>
+                                  <span className="text-xs text-gray-500"><Glyph e="📐" /> {(car as any).frameSize}</span>
                                 )}
                                 {isBike && (car as any).wheelSize && (
                                   <span className="text-xs text-gray-500">⭕ {(car as any).wheelSize}&quot;</span>
                                 )}
                                 {!isBike && car.mileage != null && (
                                   <span className="text-xs text-gray-500">
-                                    📍 {car.mileage.toLocaleString()} {isMower ? "hrs" : "mi"}
+                                    <Glyph e="📍" /> {car.mileage.toLocaleString()} {isMower ? "hrs" : "mi"}
                                   </span>
                                 )}
                                 {car.vin && !isBike && (
@@ -297,14 +302,14 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ f
                             {/* Right side: jobs + service */}
                             <div className="flex-shrink-0 text-right space-y-0.5">
                               {activeJobs > 0 ? (
-                                <div className="text-xs font-semibold text-amber-400">🔧 {activeJobs} active</div>
+                                <div className="text-xs font-semibold text-amber-400"><Glyph e="🔧" /> {activeJobs} active</div>
                               ) : (
                                 <div className="text-xs text-gray-600">No jobs</div>
                               )}
                               {lastServiceLabel ? (
-                                <div className="text-[11px] text-gray-500">🛠 {lastServiceLabel}</div>
+                                <div className="text-[11px] text-gray-500"><Glyph e="🛠" /> {lastServiceLabel}</div>
                               ) : (
-                                <div className="text-[11px] text-gray-600">📅 Added {addedLabel}</div>
+                                <div className="text-[11px] text-gray-600"><Glyph e="📅" /> Added {addedLabel}</div>
                               )}
                             </div>
 
@@ -320,7 +325,11 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ f
           );
         })()}
 
-        {currentView === "grid" && activeType && (filteredCars as any[]).map((car: any) => {
+        {currentView === "grid" && cars.length > 0 && !activeType && (
+          <h2 className="col-span-full text-xl font-semibold text-white pt-2">Your vehicles</h2>
+        )}
+        {currentView === "grid" && (filteredCars as any[]).map((car: any) => {
+          const compact = !activeType;
           const carName = `${car.year} ${car.make} ${car.model}${car.trim ? ` ${car.trim}` : ""}`;
           const featured = car.photos.find((p: any) => p.isFeatured) ?? car.photos[0] ?? null;
           const ACTIVE_STATUSES_GRID = ["todo", "up_next", "active", "in_progress", "blocked", "testing"];
@@ -331,13 +340,13 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ f
             : null;
           const addedLabel = new Date(car.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" });
           return (
-            <div key={car.id} className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden">
+            <div key={car.id} className="bg-gray-900 border border-gray-700/70 rounded-2xl overflow-hidden shadow-card">
               <Link href={`/cars/${car.id}`}>
-                <div className="relative h-36 bg-gray-800">
+                <div className="relative h-44 bg-gray-800">
                   {featured ? (
                     <img src={`/uploads/${featured.filename}`} alt={carName} className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-5xl">{carEmoji(car.make, (car as any).assetType ?? "vehicle")}</div>
+                    <div className="w-full h-full flex items-center justify-center text-5xl"><Glyph e={carEmoji(car.make, (car as any).assetType ?? "vehicle")} /></div>
                   )}
                   <div className="absolute inset-0 photo-overlay-gradient" />
                   <div className="absolute bottom-2 left-3 right-3">
@@ -353,20 +362,20 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ f
               <div className="px-3 py-2.5 flex items-center justify-between gap-2">
                 {activeJobs > 0 ? (
                   <span className="chip-active border px-2 py-1 rounded-full text-[11px] font-semibold whitespace-nowrap">
-                    🔧 {activeJobs} active
+                    <Glyph e="🔧" /> {activeJobs} active
                   </span>
                 ) : (
                   <span className="text-[11px] text-gray-600 font-medium">No active jobs</span>
                 )}
                 {lastServiceLabel ? (
-                  <span className="text-[11px] text-gray-500 whitespace-nowrap">🛠 {lastServiceLabel}</span>
+                  <span className="text-[11px] text-gray-500 whitespace-nowrap"><Glyph e="🛠" /> {lastServiceLabel}</span>
                 ) : (
-                  <span className="text-[11px] text-gray-600 whitespace-nowrap">📅 Added {addedLabel}</span>
+                  <span className="text-[11px] text-gray-600 whitespace-nowrap"><Glyph e="📅" /> Added {addedLabel}</span>
                 )}
               </div>
 
               {/* Jobs for this car */}
-              <div className="p-3 space-y-2">
+              {!compact && <div className="p-3 space-y-2">
                 {car.jobs.length === 0 ? (
                   <p className="text-xs text-gray-600 text-center py-2"><T k="noJobs" /></p>
                 ) : (
@@ -408,7 +417,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ f
                     <T k="newJob" />
                   </div>
                 </Link>
-              </div>
+              </div>}
             </div>
           );
         })}
@@ -418,12 +427,12 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ f
 
 
       <footer className="mt-8 pb-8 flex items-center justify-center gap-6">
-        <Link href="/templates" className="text-xs text-gray-700 hover:text-gray-500 transition-colors">
+        <Link href="/templates" className="text-sm text-gray-500 hover:text-white transition-colors">
           <T k="myTemplates" />
         </Link>
-        <Link href="/prd" className="text-xs text-gray-700 hover:text-gray-500 transition-colors">
-          📄 PRD
-        </Link>
+        {session.role === "admin" && (
+          <Link href="/prd" className="text-sm text-gray-500 hover:text-white transition-colors">Product notes</Link>
+        )}
       </footer>
     </div>
   );

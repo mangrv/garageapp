@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useTransition } from "react";
 import { useT } from "@/app/hooks/useT";
+import Glyph from "@/app/components/Glyph";
 
 type UserResult = { id: string; name: string | null; email: string };
 type Connection = {
@@ -20,7 +21,7 @@ type Connection = {
 };
 
 const PROMO_MESSAGE = (url: string) =>
-  `Hey! Check out this app I built — GarageMeet 🚗🔧\n\nYou can track your vehicles, manage repairs, log service history, and more. Browse as a guest or register free to get the full experience.\n\n👉 ${url}`;
+  `Hey! Check out this app I built — GarageMeet \n\nYou can track your vehicles, manage repairs, log service history, and more. Browse as a guest or register free to get the full experience.\n\n${url}`;
 
 export default function FriendsPage() {
   const t = useT();
@@ -149,9 +150,9 @@ export default function FriendsPage() {
           <button
             onClick={handleInvite}
             disabled={inviteLoading}
-            className="flex-shrink-0 flex items-center gap-2 bg-amber-500 text-gray-950 font-bold text-sm px-4 py-2.5 rounded-xl disabled:opacity-50 active:scale-95 transition-transform"
+            className="flex-shrink-0 flex items-center gap-2 bg-amber-500 text-on-accent font-bold text-sm px-4 py-2.5 rounded-xl disabled:opacity-50 active:scale-95 transition-transform"
           >
-            {inviteLoading ? "…" : inviteCopied ? "✅ Copied!" : "📋 Copy Invite"}
+            {inviteLoading ? "…" : inviteCopied ? <>{"✅ Copied!"}</> : <>{"📋 Copy Invite"}</>}
           </button>
         </div>
         {inviteCopied && (
@@ -196,7 +197,7 @@ export default function FriendsPage() {
                     <button
                       onClick={() => sendRequest(u.id)}
                       disabled={pending}
-                      className="text-xs bg-amber-500 text-gray-950 font-bold px-3 py-1.5 rounded-lg disabled:opacity-40"
+                      className="text-xs bg-amber-500 text-on-accent font-bold px-3 py-1.5 rounded-lg disabled:opacity-40"
                     >
                       + Connect
                     </button>
@@ -228,9 +229,9 @@ export default function FriendsPage() {
                 <button
                   onClick={() => updateConnection(c.id, { status: "accepted" })}
                   disabled={pending}
-                  className="flex-1 bg-emerald-700 hover:bg-emerald-600 text-white font-semibold text-xs py-2 rounded-xl transition-colors disabled:opacity-40"
+                  className="flex-1 bg-emerald-700 hover:bg-emerald-600 text-on-accent font-semibold text-xs py-2 rounded-xl transition-colors disabled:opacity-40"
                 >
-                  ✓ Accept
+                  <Glyph e="✓" /> Accept
                 </button>
                 <button
                   onClick={() => deleteConnection(c.id)}
@@ -247,7 +248,7 @@ export default function FriendsPage() {
 
       {pendingSent.length > 0 && (
         <div className="mb-6 space-y-3">
-          <div className="text-sm font-bold text-white">⏳ Sent Requests</div>
+          <div className="text-sm font-bold text-white"><Glyph e="⏳" /> Sent Requests</div>
           {pendingSent.map((c) => (
             <div key={c.id} className="bg-gray-900 border border-gray-700 rounded-2xl p-4 space-y-3">
               <div className="flex items-center gap-3">
@@ -274,7 +275,7 @@ export default function FriendsPage() {
 
       {/* Accepted connections */}
       <div className="space-y-3">
-        <div className="text-sm font-bold text-white">✅ My Connections</div>
+        <div className="text-sm font-bold text-white"><Glyph e="✅" /> My Connections</div>
         {loading && <p className="text-gray-500 text-sm">Loading…</p>}
         {!loading && myConnections.length === 0 && (
           <p className="text-gray-600 text-sm">No connections yet. Search for users above to get started.</p>
@@ -298,7 +299,7 @@ export default function FriendsPage() {
               {/* Row 2: Status badge + access selector */}
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-xs bg-emerald-900/50 text-emerald-300 border border-emerald-700/40 px-2.5 py-1 rounded-full font-medium">
-                  ✓ Connected
+                  <Glyph e="✓" /> Connected
                 </span>
                 {iAmRequester ? (
                   <select
@@ -323,7 +324,7 @@ export default function FriendsPage() {
                   href={`/garage/${c.friendId}`}
                   className="flex-1 flex items-center justify-center gap-1.5 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-200 text-xs font-semibold px-3 py-2 rounded-xl transition-colors"
                 >
-                  🚗 View Garage
+                  <Glyph e="🚗" /> View Garage
                 </a>
                 <button
                   onClick={() => deleteConnection(c.id)}

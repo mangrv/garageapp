@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { BookOpen, Pencil, Check, X, RefreshCw, Sparkles } from "lucide-react";
+import Glyph from "@/app/components/Glyph";
 
 /** Lightweight markdown renderer — h2, h3, bullet lists, bold, paragraphs */
 function SimpleMarkdown({ text }: { text: string }) {
@@ -149,7 +150,7 @@ export default function VehicleBlurbPanel({ carId, carLabel, blurb, generatedAt,
               <button
                 onClick={saveEdit}
                 disabled={saving}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold bg-amber-500 text-gray-950 hover:bg-amber-400 disabled:opacity-40 transition-colors active:scale-95"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold bg-amber-500 text-on-accent hover:bg-amber-400 disabled:opacity-40 transition-colors active:scale-95"
               >
                 {saving ? <RefreshCw size={12} className="animate-spin" /> : <Check size={12} />}
                 {saving ? "Saving…" : "Save"}
@@ -193,7 +194,7 @@ export default function VehicleBlurbPanel({ carId, carLabel, blurb, generatedAt,
         <div className="px-4 py-4">
           <SimpleMarkdown text={blurb} />
           <p className="text-[11px] text-gray-700 mt-4 border-t border-gray-800 pt-3">
-            ✦ AI-generated overview about the {carLabel} model · verify critical specs independently.
+            <Glyph e="✦" /> AI-generated overview about the {carLabel} model · verify critical specs independently.
           </p>
         </div>
       )}

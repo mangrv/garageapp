@@ -5,6 +5,7 @@ import { createServiceRecord, updateServiceRecord, deleteServiceRecord } from ".
 import { useApp } from "@/app/providers/AppProviders";
 import { t } from "@/lib/i18n";
 import ReceiptScanFlow from "@/app/components/ReceiptScanFlow";
+import Glyph from "@/app/components/Glyph";
 
 type ServiceRecord = {
   id: string;
@@ -109,10 +110,10 @@ function CSVImportModal({ carId, onClose, onImported }: {
       >
         <div className="px-4 py-4 border-b border-gray-800 flex items-center justify-between">
           <div>
-            <h2 className="font-bold text-white">📥 Import Service History</h2>
+            <h2 className="font-bold text-white"><Glyph e="📥" /> Import Service History</h2>
             <p className="text-xs text-gray-500 mt-0.5">Upload a CSV exported from your spreadsheet</p>
           </div>
-          <button onClick={onClose} className="text-gray-500 text-xl px-2">✕</button>
+          <button onClick={onClose} className="text-gray-500 text-xl px-2"><Glyph e="✕" /></button>
         </div>
 
         <div className="p-4 space-y-4">
@@ -152,7 +153,7 @@ function CSVImportModal({ carId, onClose, onImported }: {
                 onClick={() => fileRef.current?.click()}
                 className="w-full border-2 border-dashed border-gray-700 hover:border-amber-500 rounded-2xl py-8 text-center transition-colors"
               >
-                <div className="text-3xl mb-2">📄</div>
+                <div className="text-3xl mb-2"><Glyph e="📄" /></div>
                 <div className="text-sm text-gray-300 font-medium">Tap to select your CSV file</div>
                 <div className="text-xs text-gray-600 mt-1">Exported from Google Sheets, Excel, or Numbers</div>
               </button>
@@ -165,7 +166,7 @@ function CSVImportModal({ carId, onClose, onImported }: {
             <>
               <div className="flex items-center gap-2">
                 <div className="flex-1 bg-emerald-900/30 border border-emerald-700/40 rounded-xl px-3 py-2 text-sm text-emerald-300">
-                  ✅ Found <strong>{parsedRows.length}</strong> records · {headers.length} columns detected
+                  <Glyph e="✅" /> Found <strong>{parsedRows.length}</strong> records · {headers.length} columns detected
                 </div>
                 <button onClick={() => setStep("upload")} className="text-xs text-gray-500 px-2">← back</button>
               </div>
@@ -197,9 +198,9 @@ function CSVImportModal({ carId, onClose, onImported }: {
                           {(typeKey && row[typeKey]) || (detailKey && row[detailKey]?.slice(0, 60)) || `Row ${i + 1}`}
                         </div>
                         <div className="flex flex-wrap gap-3 text-gray-400">
-                          {dateKey && row[dateKey] && <span>📅 {row[dateKey]}</span>}
-                          {miKey && row[miKey] && <span>📍 {row[miKey]} mi</span>}
-                          {costKey && row[costKey] && <span>💰 {row[costKey]}</span>}
+                          {dateKey && row[dateKey] && <span><Glyph e="📅" /> {row[dateKey]}</span>}
+                          {miKey && row[miKey] && <span><Glyph e="📍" /> {row[miKey]} mi</span>}
+                          {costKey && row[costKey] && <span><Glyph e="💰" /> {row[costKey]}</span>}
                         </div>
                         {detailKey && row[detailKey] && (
                           <div className="text-gray-500 truncate">{row[detailKey]}</div>
@@ -220,23 +221,23 @@ function CSVImportModal({ carId, onClose, onImported }: {
               <button
                 onClick={handleImport}
                 disabled={importing}
-                className="w-full bg-amber-500 text-gray-950 font-bold py-3 rounded-2xl text-sm disabled:opacity-40 active:scale-95 transition-transform"
+                className="w-full bg-amber-500 text-on-accent font-bold py-3 rounded-2xl text-sm disabled:opacity-40 active:scale-95 transition-transform"
               >
-                {importing ? "Importing…" : `📥 Import ${parsedRows.length} Records`}
+                {importing ? "Importing…" : `Import ${parsedRows.length} Records`}
               </button>
             </>
           )}
 
           {step === "done" && (
             <div className="text-center py-8 space-y-4">
-              <div className="text-5xl">✅</div>
+              <div className="text-5xl"><Glyph e="✅" /></div>
               <div>
                 <div className="text-lg font-bold text-white">{importedCount} records imported!</div>
                 <div className="text-sm text-gray-400 mt-1">Your service history is now up to date.</div>
               </div>
               <button
                 onClick={onClose}
-                className="w-full bg-amber-500 text-gray-950 font-bold py-3 rounded-2xl text-sm"
+                className="w-full bg-amber-500 text-on-accent font-bold py-3 rounded-2xl text-sm"
               >
                 Done
               </button>
@@ -285,7 +286,7 @@ function ReceiptRelinkRow({ receipt, currentServiceRecordId, carId }: {
   if (done) {
     return (
       <div className="text-xs text-green-400 bg-green-900/20 border border-green-700/30 rounded-xl px-3 py-2">
-        ✓ Receipt moved — refresh to see updated view
+        <Glyph e="✓" /> Receipt moved — refresh to see updated view
       </div>
     );
   }
@@ -294,7 +295,7 @@ function ReceiptRelinkRow({ receipt, currentServiceRecordId, carId }: {
     <div className="bg-gray-800 border border-gray-700 rounded-xl p-3 space-y-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 min-w-0">
-          <span className="text-lg">🧾</span>
+          <span className="text-lg"><Glyph e="🧾" /></span>
           <div className="min-w-0">
             <p className="text-xs text-white truncate">{receipt.vendor ?? "Receipt"}</p>
             {receipt.totalAmount != null && (
@@ -329,9 +330,9 @@ function ReceiptRelinkRow({ receipt, currentServiceRecordId, carId }: {
           <button
             onClick={handleMove}
             disabled={!targetId || saving}
-            className="w-full bg-amber-500 text-gray-950 font-bold text-sm py-2.5 rounded-xl disabled:opacity-40 active:bg-amber-400 transition"
+            className="w-full bg-amber-500 text-on-accent font-bold text-sm py-2.5 rounded-xl disabled:opacity-40 active:bg-amber-400 transition"
           >
-            {saving ? "Moving…" : "✓ Move Receipt"}
+            {saving ? "Moving…" : <>{"✓ Move Receipt"}</>}
           </button>
         </div>
       )}
@@ -376,7 +377,7 @@ function ServiceRecordRow({ record }: { record: ServiceRecord }) {
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className={labelCls}>🔧 Service date</label>
+            <label className={labelCls}><Glyph e="🔧" /> Service date</label>
             <input type="date" value={serviceDate} onChange={(e) => setServiceDate(e.target.value)} className={inputCls} />
           </div>
           <div>
@@ -388,7 +389,7 @@ function ServiceRecordRow({ record }: { record: ServiceRecord }) {
         {/* Linked receipts — with re-link option */}
         {(record.receipts?.length ?? 0) > 0 && (
           <div>
-            <label className={labelCls}>🧾 Linked Receipts</label>
+            <label className={labelCls}><Glyph e="🧾" /> Linked Receipts</label>
             <div className="space-y-2">
               {record.receipts!.map((rc) => (
                 <ReceiptRelinkRow key={rc.id} receipt={rc} currentServiceRecordId={record.id} carId={record.carId} />
@@ -402,7 +403,7 @@ function ServiceRecordRow({ record }: { record: ServiceRecord }) {
           <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={3} placeholder="Observations, extra notes…" className={inputCls} />
         </div>
         <div className="flex gap-2">
-          <button onClick={handleSave} disabled={pending} className="flex-1 bg-amber-500 text-gray-950 font-bold py-2.5 rounded-xl text-sm disabled:opacity-40">
+          <button onClick={handleSave} disabled={pending} className="flex-1 bg-amber-500 text-on-accent font-bold py-2.5 rounded-xl text-sm disabled:opacity-40">
             {pending ? t("saving", lang) : t("save", lang)}
           </button>
           <button onClick={() => setEditing(false)} className="flex-1 bg-gray-800 text-gray-300 py-2.5 rounded-xl text-sm">{t("cancel", lang)}</button>
@@ -412,12 +413,12 @@ function ServiceRecordRow({ record }: { record: ServiceRecord }) {
             <div className="space-y-2">
               <p className="text-xs text-gray-400 text-center">{t("confirmDelete", lang)}</p>
               <div className="flex gap-2">
-                <button onClick={handleDelete} disabled={pending} className="flex-1 bg-red-700 text-white font-semibold py-2 rounded-xl text-sm disabled:opacity-40">Yes, remove</button>
+                <button onClick={handleDelete} disabled={pending} className="flex-1 bg-red-700 text-on-accent font-semibold py-2 rounded-xl text-sm disabled:opacity-40">Yes, remove</button>
                 <button onClick={() => setShowDelete(false)} className="flex-1 bg-gray-800 text-gray-300 py-2 rounded-xl text-sm">{t("cancel", lang)}</button>
               </div>
             </div>
           ) : (
-            <button onClick={() => setShowDelete(true)} className="w-full text-xs text-red-500 py-2">🗑 {t("deleteRecord", lang)}</button>
+            <button onClick={() => setShowDelete(true)} className="w-full text-xs text-red-500 py-2"><Glyph e="🗑" /> {t("deleteRecord", lang)}</button>
           )}
         </div>
       </div>
@@ -443,19 +444,19 @@ function ServiceRecordRow({ record }: { record: ServiceRecord }) {
             )}
           </div>
           <div className="flex flex-wrap gap-3 mt-1.5 text-xs text-gray-400">
-            <span>📅 {formatDate(record.serviceDate)}</span>
-            {record.mileage != null && <span>📍 {record.mileage.toLocaleString()} mi</span>}
+            <span><Glyph e="📅" /> {formatDate(record.serviceDate)}</span>
+            {record.mileage != null && <span><Glyph e="📍" /> {record.mileage.toLocaleString()} mi</span>}
             {(() => {
               // Prefer sum of linked receipt totals over the imported cost field
               const receiptSum = (record.receipts ?? []).reduce((s, r) => s + (r.totalAmount ?? 0), 0);
               const displayCost = receiptSum > 0 ? receiptSum : record.cost;
               return displayCost != null && displayCost > 0
-                ? <span className={(record.receipts?.length ?? 0) > 0 ? "💰 text-amber-400" : "💰"}>💰 ${displayCost.toFixed(2)}</span>
+                ? <span className={(record.receipts?.length ?? 0) > 0 ? "text-amber-400" : ""}><Glyph e="💰" /> ${displayCost.toFixed(2)}</span>
                 : null;
             })()}
-            {record.duration && <span>⏱ {record.duration}</span>}
+            {record.duration && <span><Glyph e="⏱" /> {record.duration}</span>}
             {record.jobId && (
-              <a href={`/job/${record.jobId}`} className="text-amber-400 underline">🔧 View job →</a>
+              <a href={`/job/${record.jobId}`} className="text-amber-400 underline"><Glyph e="🔧" /> View job →</a>
             )}
           </div>
           {record.notes && (
@@ -471,7 +472,7 @@ function ServiceRecordRow({ record }: { record: ServiceRecord }) {
               {expanded ? "▲" : "▼"}
             </button>
           )}
-          <button onClick={() => setEditing(true)} className="text-gray-600 text-sm active:text-amber-400 px-1">✏️</button>
+          <button onClick={() => setEditing(true)} className="text-gray-600 text-sm active:text-amber-400 px-1"><Glyph e="✏" /></button>
         </div>
       </div>
 
@@ -482,13 +483,13 @@ function ServiceRecordRow({ record }: { record: ServiceRecord }) {
           {/* Receipt line items — structured list (source of truth) */}
           {hasLineItems && (
             <div>
-              <div className="text-xs text-gray-500 font-semibold mb-1.5">🔩 Parts & Items</div>
+              <div className="text-xs text-gray-500 font-semibold mb-1.5"><Glyph e="🔩" /> Parts & Items</div>
               <div className="space-y-1">
                 {allLineItems.map((li) => (
                   <div key={li.id} className="text-xs">
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-1.5 min-w-0">
-                        <span className="text-amber-500/60 text-[10px]">🧾</span>
+                        <span className="text-amber-500/60 text-[10px]"><Glyph e="🧾" /></span>
                         <span className="text-gray-200 truncate">{li.name}</span>
                         {li.quantity > 1 && <span className="text-gray-500">×{li.quantity}</span>}
                       </div>
@@ -498,7 +499,7 @@ function ServiceRecordRow({ record }: { record: ServiceRecord }) {
                     </div>
                     {(li.warrantyProvider || li.warrantyEnd || li.warrantyStart) && (
                       <div className="ml-5 mt-0.5 text-sky-300">
-                        🛡️ {li.warrantyProvider ?? "Warranty"}
+                        <Glyph e="🛡" /> {li.warrantyProvider ?? "Warranty"}
                         {li.warrantyEnd ? ` · expires ${new Date(li.warrantyEnd).toLocaleDateString()}` : ""}
                       </div>
                     )}
@@ -520,23 +521,23 @@ function ServiceRecordRow({ record }: { record: ServiceRecord }) {
           {/* Plain-text details — always shown when present (imported data) */}
           {record.details && (
             <div>
-              <div className="text-xs text-gray-500 font-semibold">📝 Notes / Work Performed</div>
+              <div className="text-xs text-gray-500 font-semibold"><Glyph e="📝" /> Notes / Work Performed</div>
               <div className="text-xs text-gray-300 whitespace-pre-wrap leading-relaxed mt-0.5">{record.details}</div>
             </div>
           )}
           {record.partsUsed && (
             <div>
-              <div className="text-xs text-gray-500 font-semibold">🔩 Parts Used</div>
+              <div className="text-xs text-gray-500 font-semibold"><Glyph e="🔩" /> Parts Used</div>
               <div className="text-xs text-gray-300 whitespace-pre-wrap mt-0.5">{record.partsUsed}</div>
             </div>
           )}
 
           {record.partsSource && (
-            <div className="text-xs text-gray-400">🛒 From: <span className="text-gray-300">{record.partsSource}</span></div>
+            <div className="text-xs text-gray-400"><Glyph e="🛒" /> From: <span className="text-gray-300">{record.partsSource}</span></div>
           )}
           {record.nextServiceDue && (
             <div className="text-xs text-sky-400 bg-sky-900/20 border border-sky-700/30 rounded-lg px-2 py-1">
-              🔔 Next service due: {record.nextServiceDue}
+              <Glyph e="🔔" /> Next service due: {record.nextServiceDue}
             </div>
           )}
 
@@ -561,7 +562,7 @@ function ServiceRecordRow({ record }: { record: ServiceRecord }) {
                             "bg-sky-900/40 text-sky-300"
                           }`}
                         >
-                          🛡️ {li.name}{li.warrantyEnd ? ` · ${new Date(li.warrantyEnd).toLocaleDateString()}` : ""}
+                          <Glyph e="🛡" /> {li.name}{li.warrantyEnd ? ` · ${new Date(li.warrantyEnd).toLocaleDateString()}` : ""}
                         </span>
                       );
                     })
@@ -574,7 +575,7 @@ function ServiceRecordRow({ record }: { record: ServiceRecord }) {
                   // record.carId is defined on the ServiceRecord type
                   className="text-xs bg-sky-800/40 text-sky-300 border border-sky-700/40 px-3 py-1.5 rounded-xl font-semibold flex-shrink-0 active:opacity-70"
                 >
-                  🛡️ {warrantyItems.length > 0 ? "Edit" : "Add"} Warranty
+                  <Glyph e="🛡" /> {warrantyItems.length > 0 ? "Edit" : "Add"} Warranty
                 </a>
               </div>
             );
@@ -596,7 +597,7 @@ function ReceiptStrip({ receipts }: { receipts: { id: string; filename: string |
   return (
     <>
       <div className="mt-3 pt-3 border-t border-gray-800">
-        <div className="text-xs text-gray-500 font-semibold mb-2">🧾 Receipts</div>
+        <div className="text-xs text-gray-500 font-semibold mb-2"><Glyph e="🧾" /> Receipts</div>
         <div className="flex gap-2 flex-wrap">
           {receipts.map((r) => {
             const isImage = r.filename && /\.(jpg|jpeg|png|gif|webp)$/i.test(r.filename);
@@ -612,7 +613,7 @@ function ReceiptStrip({ receipts }: { receipts: { id: string; filename: string |
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={`/uploads/${r.filename}`} alt="receipt" className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-2xl">📄</div>
+                    <div className="w-full h-full flex items-center justify-center text-2xl"><Glyph e="📄" /></div>
                   )}
                 </div>
                 {r.totalAmount != null && (
@@ -643,7 +644,7 @@ function ReceiptStrip({ receipts }: { receipts: { id: string; filename: string |
           <button
             className="absolute top-4 right-4 text-white text-2xl bg-black/50 rounded-full w-10 h-10 flex items-center justify-center"
             onClick={() => setLightbox(null)}
-          >✕</button>
+          ><Glyph e="✕" /></button>
         </div>
       )}
     </>
@@ -691,7 +692,7 @@ function AddRecordForm({ carId, onClose }: { carId: string; onClose: () => void 
       </div>
       <div className="flex gap-2">
         <button onClick={handleCreate} disabled={pending || !title.trim()}
-          className="flex-1 bg-amber-500 text-gray-950 font-bold py-2.5 rounded-xl text-sm disabled:opacity-40">
+          className="flex-1 bg-amber-500 text-on-accent font-bold py-2.5 rounded-xl text-sm disabled:opacity-40">
           {pending ? t("saving", lang) : t("addServiceRecord", lang)}
         </button>
         <button onClick={onClose} className="flex-1 bg-gray-800 text-gray-300 py-2.5 rounded-xl text-sm">{t("cancel", lang)}</button>
@@ -753,7 +754,7 @@ export default function ServiceHistoryClient({
   });
 
   const handleImported = (count: number) => {
-    setImportFlash(lang === "es" ? `✅ ${count} registros importados — refresca para verlos` : `✅ ${count} records imported — refresh to see them`);
+    setImportFlash(lang === "es" ? `${count} registros importados — refresca para verlos` : `${count} records imported — refresh to see them`);
     setShowImport(false);
     setTimeout(() => window.location.reload(), 1500);
   };
@@ -773,9 +774,9 @@ export default function ServiceHistoryClient({
           </div>
           <button
             onClick={() => setShowAdd((o) => !o)}
-            className={`flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-semibold transition-colors ${showAdd ? "bg-amber-500 text-gray-950" : "bg-amber-500 text-gray-950"}`}
+            className={`flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-semibold transition-colors ${showAdd ? "bg-amber-500 text-on-accent" : "bg-amber-500 text-on-accent"}`}
           >
-            {showAdd ? (lang === "es" ? "✕ Cancelar" : "✕ Cancel") : (lang === "es" ? "+ Agregar" : "+ Add")}
+            {showAdd ? (lang === "es" ? <>{"✕ Cancelar"}</> : <>{"✕ Cancel"}</>) : (lang === "es" ? "+ Agregar" : "+ Add")}
           </button>
         </div>
 
@@ -785,13 +786,13 @@ export default function ServiceHistoryClient({
             onClick={() => setShowScan(true)}
             className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-semibold bg-amber-500/10 border border-amber-500/30 text-amber-400 active:bg-amber-500/20 transition-colors"
           >
-            🤖 {lang === "es" ? "Escaneo IA" : "AI Scan"}
+            <Glyph e="🤖" /> {lang === "es" ? "Escaneo IA" : "AI Scan"}
           </button>
           <button
             onClick={() => setShowImport(true)}
             className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium bg-gray-800 text-gray-300 border border-gray-700 active:bg-gray-700 transition-colors"
           >
-            📥 {lang === "es" ? "Importar CSV" : "Import CSV"}
+            <Glyph e="📥" /> {lang === "es" ? "Importar CSV" : "Import CSV"}
           </button>
         </div>
       </header>
@@ -820,7 +821,7 @@ export default function ServiceHistoryClient({
                   key={f.key}
                   onClick={() => setQuickFilter(f.key)}
                   className={`text-xs px-2.5 py-1 rounded-full border transition ${active
-                    ? "bg-amber-500 text-gray-950 border-amber-500 font-semibold"
+                    ? "bg-amber-500 text-on-accent border-amber-500 font-semibold"
                     : "bg-gray-800 text-gray-300 border-gray-700 active:bg-gray-700"
                     }`}
                 >
@@ -838,14 +839,14 @@ export default function ServiceHistoryClient({
 
         {initialRecords.length === 0 && !showAdd ? (
           <div className="text-center py-12 text-gray-600 space-y-3">
-            <div className="text-4xl">🛠</div>
+            <div className="text-4xl"><Glyph e="🛠" /></div>
             <p className="text-sm">{t("noServiceHistory", lang)}</p>
             <p className="text-xs">{lang === "es" ? "Importa tu CSV o agrega una entrada manual." : "Import your CSV or add a manual entry."}</p>
             <button
               onClick={() => setShowImport(true)}
               className="mt-2 text-sm bg-amber-500/20 text-amber-400 border border-amber-600/40 px-4 py-2 rounded-xl"
             >
-              📥 {lang === "es" ? "Importar desde CSV" : "Import from CSV"}
+              <Glyph e="📥" /> {lang === "es" ? "Importar desde CSV" : "Import from CSV"}
             </button>
           </div>
         ) : filteredRecords.length === 0 ? (

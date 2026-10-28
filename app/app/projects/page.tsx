@@ -2,6 +2,7 @@ import { requireSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import Glyph from "@/app/components/Glyph";
 
 export default async function ProjectsPage({
   searchParams,
@@ -59,21 +60,21 @@ export default async function ProjectsPage({
           </div>
           <Link
             href="/jobs/new"
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-500 text-black font-semibold text-sm hover:bg-amber-400 transition"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-500 text-on-accent font-semibold text-sm hover:bg-amber-400 transition"
           >
             + New
           </Link>
         </div>
 
         {/* Status tabs */}
-        <div className="flex gap-1 bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-1">
+        <div className="flex gap-1 bg-gray-900 border border-gray-800 rounded-xl p-1">
           {(["active", "done", "archived"] as const).map((s) => (
             <Link
               key={s}
               href={`/projects?status=${s}${carId ? `&carId=${carId}` : ""}`}
               className={`flex-1 text-center text-sm py-1.5 rounded-lg font-medium transition-colors capitalize ${
                 status === s
-                  ? "bg-white dark:bg-gray-800 text-foreground shadow-sm"
+                  ? "bg-gray-800 text-foreground shadow-sm"
                   : "text-gray-500 hover:text-foreground"
               }`}
             >
@@ -89,8 +90,8 @@ export default async function ProjectsPage({
               href={`/projects?status=${status}`}
               className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
                 !carId
-                  ? "bg-gray-900 dark:bg-white text-white dark:text-gray-900 border-transparent"
-                  : "border-gray-300 dark:border-gray-700 text-gray-500 hover:text-foreground"
+                  ? "bg-amber-500 text-on-accent border-transparent"
+                  : "border-gray-700 text-gray-500 hover:text-foreground"
               }`}
             >
               All vehicles
@@ -101,8 +102,8 @@ export default async function ProjectsPage({
                 href={`/projects?status=${status}&carId=${c.id}`}
                 className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap ${
                   carId === c.id
-                    ? "bg-gray-900 dark:bg-white text-white dark:text-gray-900 border-transparent"
-                    : "border-gray-300 dark:border-gray-700 text-gray-500 hover:text-foreground"
+                    ? "bg-amber-500 text-on-accent border-transparent"
+                    : "border-gray-700 text-gray-500 hover:text-foreground"
                 }`}
               >
                 {c.year} {c.make} {c.model}
@@ -114,7 +115,7 @@ export default async function ProjectsPage({
         {/* Job list */}
         {jobs.length === 0 ? (
           <div className="text-center py-16 text-gray-500">
-            <p className="text-4xl mb-3">🔧</p>
+            <p className="text-4xl mb-3"><Glyph e="🔧" /></p>
             <p className="font-medium">No {status} projects</p>
             {status === "active" && (
               <Link href="/jobs/new" className="inline-block mt-4 text-sm text-amber-500 hover:underline">
@@ -141,7 +142,7 @@ export default async function ProjectsPage({
                 <Link
                   key={job.id}
                   href={`/job/${job.id}`}
-                  className="block bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 hover:border-amber-500/40 transition-colors group"
+                  className="block bg-gray-900 border border-gray-800 rounded-2xl p-4 hover:border-amber-500/40 transition-colors group"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0 flex-1">
@@ -171,7 +172,7 @@ export default async function ProjectsPage({
                         <span>{donePhases}/{totalPhases} phases · {doneTasks}/{totalTasks} tasks</span>
                         <span>{progress}%</span>
                       </div>
-                      <div className="h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+                      <div className="h-1.5 bg-gray-800 rounded-full overflow-hidden">
                         <div
                           className={`h-full rounded-full transition-all ${
                             progress === 100 ? "bg-green-500" : "bg-amber-500"

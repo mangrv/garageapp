@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useGuest } from "@/app/providers/GuestProvider";
 import { useApp } from "@/app/providers/AppProviders";
 import { GuestCar } from "@/lib/guestDraft";
+import Glyph from "@/app/components/Glyph";
 
 export default function GuestPage() {
   const { isGuest, enterGuest, draft, addCar, removeCar, addServiceRecord, removeServiceRecord, addJob, removeJob } = useGuest();
@@ -31,7 +32,7 @@ export default function GuestPage() {
   }, []);
 
   const txt = {
-    title: lang === "es" ? "Modo Invitado 🔒" : "Guest Mode 🔒",
+    title: lang === "es" ? "Modo Invitado" : "Guest Mode",
     subtitle: lang === "es" ? "Los datos se guardan localmente hasta que te registres." : "Data saved locally until you register.",
     addCar: lang === "es" ? "Agregar Auto" : "Add Car",
     addService: lang === "es" ? "Agregar Servicio" : "Add Service Record",
@@ -58,8 +59,8 @@ export default function GuestPage() {
   return (
     <div className="min-h-screen bg-gray-950 text-white pb-24">
       {/* Guest banner */}
-      <div className="bg-amber-500 text-gray-950 text-xs font-semibold px-4 py-2.5 flex items-center justify-between">
-        <span>🔒 {txt.subtitle}</span>
+      <div className="bg-amber-500 text-on-accent text-xs font-semibold px-4 py-2.5 flex items-center justify-between">
+        <span><Glyph e="🔒" /> {txt.subtitle}</span>
         <div className="flex gap-3">
           <a href="/login" className="underline">{txt.signIn}</a>
           <a href="/login?register=1" className="underline">{txt.register}</a>
@@ -98,7 +99,7 @@ export default function GuestPage() {
                 addCar({ assetType: "vehicle", year: parseInt(year) || new Date().getFullYear(), make: make.trim(), model: model.trim(), color: color.trim() || undefined });
                 setMake(""); setModel(""); setColor("");
               }}
-              className="w-full py-2.5 rounded-xl bg-amber-500 text-black font-semibold text-sm"
+              className="w-full py-2.5 rounded-xl bg-amber-500 text-on-accent font-semibold text-sm"
             >
               + {txt.addCar}
             </button>
@@ -112,8 +113,8 @@ export default function GuestPage() {
             {draft.cars.map((car) => (
               <div key={car._draftId} className="bg-gray-900 border border-gray-800 rounded-xl px-3 py-2.5 flex justify-between items-center">
                 <div>
-                  <div className="text-sm font-medium text-white">🚗 {car.year} {car.make} {car.model}</div>
-                  {car.color && <div className="text-xs text-gray-500">🎨 {car.color}</div>}
+                  <div className="text-sm font-medium text-white"><Glyph e="🚗" /> {car.year} {car.make} {car.model}</div>
+                  {car.color && <div className="text-xs text-gray-500"><Glyph e="🎨" /> {car.color}</div>}
                 </div>
                 <button onClick={() => removeCar(car._draftId)} className="text-xs text-red-400">{txt.remove}</button>
               </div>
@@ -147,7 +148,7 @@ export default function GuestPage() {
                   addServiceRecord({ _carDraftId: srCarId, title: srTitle.trim(), serviceDate: srDate, mileage: srMileage ? parseInt(srMileage) : undefined });
                   setSrTitle(""); setSrMileage("");
                 }}
-                className="w-full py-2.5 rounded-xl bg-sky-700 text-white font-semibold text-sm"
+                className="w-full py-2.5 rounded-xl bg-sky-700 text-on-accent font-semibold text-sm"
               >
                 + {txt.addService}
               </button>
@@ -164,8 +165,8 @@ export default function GuestPage() {
               return (
                 <div key={sr._draftId} className="bg-gray-900 border border-gray-800 rounded-xl px-3 py-2.5 flex justify-between items-center">
                   <div>
-                    <div className="text-sm font-medium text-white">🔧 {sr.title}</div>
-                    <div className="text-xs text-gray-500">📅 {sr.serviceDate} {car ? `· ${car.year} ${car.make} ${car.model}` : ""}</div>
+                    <div className="text-sm font-medium text-white"><Glyph e="🔧" /> {sr.title}</div>
+                    <div className="text-xs text-gray-500"><Glyph e="📅" /> {sr.serviceDate} {car ? `· ${car.year} ${car.make} ${car.model}` : ""}</div>
                   </div>
                   <button onClick={() => removeServiceRecord(sr._draftId)} className="text-xs text-red-400">{txt.remove}</button>
                 </div>
@@ -185,7 +186,7 @@ export default function GuestPage() {
               : `You have ${draft.cars.length} car(s) and ${draft.serviceRecords.length} service record(s) in draft.`}
           </p>
           <div className="flex gap-2">
-            <a href="/login?register=1" className="flex-1 py-2.5 rounded-xl bg-amber-500 text-black font-semibold text-sm text-center">{txt.register}</a>
+            <a href="/login?register=1" className="flex-1 py-2.5 rounded-xl bg-amber-500 text-on-accent font-semibold text-sm text-center">{txt.register}</a>
             <a href="/login" className="flex-1 py-2.5 rounded-xl bg-gray-800 text-white text-sm text-center">{txt.signIn}</a>
           </div>
         </div>

@@ -14,7 +14,7 @@ interface AppContextValue {
 }
 
 const AppContext = createContext<AppContextValue>({
-  theme: "dark",
+  theme: "light",
   toggleTheme: () => {},
   lang: "en",
   setLang: () => {},
@@ -25,11 +25,11 @@ export function useApp() {
 }
 
 export function AppProviders({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>("light");
   const [lang, setLangState] = useState<Lang>("en");
 
   useEffect(() => {
-    const savedTheme = (localStorage.getItem("garage-theme") as Theme) || "dark";
+    const savedTheme = (localStorage.getItem("garage-theme") as Theme) || "light";
     const savedLang = (localStorage.getItem("garage-lang") as Lang) || "en";
     setTheme(savedTheme);
     setLangState(savedLang);

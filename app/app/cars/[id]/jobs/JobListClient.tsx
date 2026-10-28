@@ -154,7 +154,7 @@ export default function JobListClient({
     <div className="space-y-6">
       {todo.length > 0 && (
         <Section
-          title="📋 To Do"
+          title="To Do"
           titleColor="text-gray-400"
           items={todo}
           showReorder={todo.length > 1}
@@ -162,7 +162,7 @@ export default function JobListClient({
       )}
       {upNext.length > 0 && (
         <Section
-          title="🔜 Up Next"
+          title="Up Next"
           titleColor="text-blue-400"
           items={upNext}
           showReorder={upNext.length > 1}
@@ -170,7 +170,7 @@ export default function JobListClient({
       )}
       {active.length > 0 && (
         <Section
-          title="⚙️ In Progress"
+          title="In Progress"
           titleColor="text-amber-400"
           items={active}
           showReorder={active.length > 1}
@@ -178,7 +178,7 @@ export default function JobListClient({
       )}
       {blocked.length > 0 && (
         <Section
-          title="🚫 Blocked"
+          title="Blocked"
           titleColor="text-red-400"
           items={blocked}
           showReorder={blocked.length > 1}
@@ -186,7 +186,7 @@ export default function JobListClient({
       )}
       {testing.length > 0 && (
         <Section
-          title="🔍 Testing"
+          title="Testing"
           titleColor="text-blue-400"
           items={testing}
           showReorder={testing.length > 1}

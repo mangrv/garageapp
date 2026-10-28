@@ -1,17 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import RegisterForm from "./RegisterForm";
 import Link from "next/link";
+import Glyph from "@/app/components/Glyph";
 
 export const dynamic = "force-dynamic";
 
 function carEmoji(make: string) {
   const m = make.toLowerCase();
-  if (m === "ford") return "🐎";
-  if (m === "jeep") return "🚙";
-  if (m === "chevy" || m === "chevrolet") return "🏁";
-  if (m === "dodge") return "🐏";
-  if (m === "toyota") return "🟦";
-  if (m === "honda") return "🔵";
   if (m.includes("trailer")) return "🚚";
   return "🚗";
 }
@@ -37,7 +32,7 @@ export default async function RegisterPage({ params }: { params: Promise<{ token
     return (
       <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center p-6">
         <div className="max-w-sm w-full bg-gray-900 border border-red-800 rounded-2xl p-6 text-center space-y-3">
-          <div className="text-4xl">🔒</div>
+          <div className="text-4xl"><Glyph e="🔒" /></div>
           <h1 className="text-xl font-bold">Invalid Invite</h1>
           <p className="text-sm text-gray-400">This link is invalid, already used, or expired.</p>
           <Link href="/login" className="block text-sm text-amber-400 underline">Go to login →</Link>
@@ -99,7 +94,7 @@ export default async function RegisterPage({ params }: { params: Promise<{ token
         )}
 
         <div className="relative z-10 space-y-3">
-          <div className="text-5xl">🏠</div>
+          <div className="text-5xl"><Glyph e="🏠" /></div>
           <div>
             <h1 className="text-2xl font-bold leading-snug">GarageMeet</h1>
             <p className="text-sm text-gray-400 mt-1">
@@ -112,7 +107,7 @@ export default async function RegisterPage({ params }: { params: Promise<{ token
             <div className="flex flex-wrap gap-2 justify-center pt-1">
               {inviterCars.map((car) => (
                 <span key={car.id} className="inline-flex items-center gap-1 bg-gray-800 border border-gray-700 px-2.5 py-1 rounded-full text-xs text-gray-300">
-                  {carEmoji(car.make)} {car.year} {car.make} {car.model}
+                  <Glyph e={carEmoji(car.make)} /> {car.year} {car.make} {car.model}
                 </span>
               ))}
             </div>
@@ -120,10 +115,10 @@ export default async function RegisterPage({ params }: { params: Promise<{ token
 
           <div className="flex gap-2 justify-center text-xs pt-1">
             <span className="bg-gray-800/80 px-3 py-1 rounded-full text-gray-400">
-              🚗 {inviterCars.length} car{inviterCars.length !== 1 ? "s" : ""}
+              <Glyph e="🚗" /> {inviterCars.length} car{inviterCars.length !== 1 ? "s" : ""}
             </span>
             <span className="bg-gray-800/80 px-3 py-1 rounded-full text-gray-400">
-              🔧 {inviterJobCount} job{inviterJobCount !== 1 ? "s" : ""}
+              <Glyph e="🔧" /> {inviterJobCount} job{inviterJobCount !== 1 ? "s" : ""}
             </span>
           </div>
         </div>
@@ -135,7 +130,7 @@ export default async function RegisterPage({ params }: { params: Promise<{ token
         <div className="grid grid-cols-2 gap-3">
           {FEATURES.map((f) => (
             <div key={f.title} className="bg-gray-900 border border-gray-800 rounded-xl p-3 space-y-1">
-              <div className="text-xl">{f.icon}</div>
+              <div className="text-xl"><Glyph e={f.icon} /></div>
               <div className="text-xs font-bold text-white">{f.title}</div>
               <div className="text-xs text-gray-500 leading-snug">{f.desc}</div>
             </div>
@@ -171,7 +166,7 @@ export default async function RegisterPage({ params }: { params: Promise<{ token
             href={`/guest?token=${token}`}
             className="flex-1 py-3 rounded-xl bg-gray-800 text-gray-300 font-semibold text-sm text-center active:bg-gray-700"
           >
-            👀 Browse as guest
+            <Glyph e="👀" /> Browse as guest
           </Link>
         </div>
 

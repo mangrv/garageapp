@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { compressImage } from "@/app/lib/compressImage";
+import Glyph from "@/app/components/Glyph";
 
 interface ReceiptUploadButtonProps {
   jobId?: string;
@@ -225,11 +226,11 @@ export default function ReceiptUploadButton({
                 {entries.length > 1 ? `Add Receipts (${entries.length})` : "Add Receipt"}
               </h2>
               {anyProcessing && (
-                <span className="text-xs text-amber-400 animate-pulse">🤖 Reading…</span>
+                <span className="text-xs text-amber-400 animate-pulse"><Glyph e="🤖" /> Reading…</span>
               )}
               {allReady && entries.length > 0 && (
                 <span className="text-xs text-emerald-400">
-                  ✓ {entries.length === 1 ? "AI filled in details" : `${entries.length} receipts ready`}
+                  <Glyph e="✓" /> {entries.length === 1 ? "AI filled in details" : `${entries.length} receipts ready`}
                 </span>
               )}
             </div>
@@ -242,7 +243,7 @@ export default function ReceiptUploadButton({
                   onClick={() => cameraRef.current?.click()}
                   className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-700 rounded-2xl py-6 text-gray-400 active:border-amber-500 active:bg-amber-500/5 transition"
                 >
-                  <span className="text-4xl">📷</span>
+                  <span className="text-4xl"><Glyph e="📷" /></span>
                   <span className="text-xs font-medium">Take photo</span>
                 </button>
                 <button
@@ -250,7 +251,7 @@ export default function ReceiptUploadButton({
                   onClick={() => fileRef.current?.click()}
                   className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-700 rounded-2xl py-6 text-gray-400 active:border-amber-500 active:bg-amber-500/5 transition"
                 >
-                  <span className="text-4xl">🗂</span>
+                  <span className="text-4xl"><Glyph e="🗂" /></span>
                   <span className="text-xs font-medium">Choose files</span>
                 </button>
               </div>
@@ -276,10 +277,10 @@ export default function ReceiptUploadButton({
                         </span>
                       )}
                       {entry.scanState === "ready" && !entry.scanError && (
-                        <span className="text-xs text-emerald-400 shrink-0">✓ Ready</span>
+                        <span className="text-xs text-emerald-400 shrink-0"><Glyph e="✓" /> Ready</span>
                       )}
                       {entry.scanError && (
-                        <span className="text-xs text-amber-500 shrink-0">⚠️ Manual</span>
+                        <span className="text-xs text-amber-500 shrink-0"><Glyph e="⚠" /> Manual</span>
                       )}
                       <button
                         onClick={() =>
@@ -287,7 +288,7 @@ export default function ReceiptUploadButton({
                         }
                         className="text-gray-600 hover:text-gray-400 text-sm shrink-0 ml-1"
                       >
-                        ✕
+                        <Glyph e="✕" />
                       </button>
                     </div>
 
@@ -302,14 +303,14 @@ export default function ReceiptUploadButton({
                     )}
                     {!entry.preview && entry.scanState !== "idle" && (
                       <div className="w-full h-14 flex items-center justify-center bg-gray-800 rounded-xl text-gray-500 text-xs gap-2">
-                        <span>📄</span>
+                        <span><Glyph e="📄" /></span>
                         <span className="truncate max-w-[200px]">{entry.file.name}</span>
                       </div>
                     )}
 
                     {entry.scanError && (
                       <p className="text-xs text-amber-500 bg-amber-900/20 border border-amber-700/30 rounded-lg px-3 py-2">
-                        ⚠️ Couldn&apos;t read automatically — fill in details below.
+                        <Glyph e="⚠" /> Couldn&apos;t read automatically — fill in details below.
                       </p>
                     )}
 
@@ -405,7 +406,7 @@ export default function ReceiptUploadButton({
                     <button
                       onClick={() => saveAll(true)}
                       disabled={saving}
-                      className="flex-1 py-2.5 rounded-xl bg-amber-500 text-black font-semibold text-sm active:bg-amber-400 transition disabled:opacity-50"
+                      className="flex-1 py-2.5 rounded-xl bg-amber-500 text-on-accent font-semibold text-sm active:bg-amber-400 transition disabled:opacity-50"
                     >
                       {saving
                         ? "Saving…"

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useApp } from "@/app/providers/AppProviders";
+import Glyph from "@/app/components/Glyph";
 
 function SetPasswordForm({ onClose }: { onClose: () => void }) {
   const { lang } = useApp();
@@ -46,7 +47,7 @@ function SetPasswordForm({ onClose }: { onClose: () => void }) {
     confirmPw: lang === "es" ? "Confirmar contraseña" : "Confirm password",
     save: lang === "es" ? "Guardar contraseña" : "Save password",
     saving: lang === "es" ? "Guardando…" : "Saving…",
-    success: lang === "es" ? "✅ Contraseña guardada. Ya puedes iniciar sesión con tu correo." : "✅ Password saved. You can now sign in with your email too.",
+    success: lang === "es" ? "Contraseña guardada. Ya puedes iniciar sesión con tu correo." : "Password saved. You can now sign in with your email too.",
     back: lang === "es" ? "← Volver" : "← Back",
   };
 
@@ -111,7 +112,7 @@ function SetPasswordForm({ onClose }: { onClose: () => void }) {
         <button
           type="submit"
           disabled={saving}
-          className="flex-1 text-xs py-2 rounded-lg bg-amber-500 text-gray-950 font-bold disabled:opacity-40"
+          className="flex-1 text-xs py-2 rounded-lg bg-amber-500 text-on-accent font-bold disabled:opacity-40"
         >
           {saving ? txt.saving : txt.save}
         </button>
@@ -147,7 +148,7 @@ export default function SettingsPanel() {
                         : "bg-gray-800 border-gray-700 text-gray-400"
                     }`}
                   >
-                    🌙 {lang === "es" ? "Oscuro" : "Dark"}
+                    <Glyph e="🌙" /> {lang === "es" ? "Oscuro" : "Dark"}
                   </button>
                   <button
                     onClick={() => theme !== "light" && toggleTheme()}
@@ -157,7 +158,7 @@ export default function SettingsPanel() {
                         : "bg-gray-800 border-gray-700 text-gray-400"
                     }`}
                   >
-                    ☀️ {lang === "es" ? "Claro" : "Light"}
+                    <Glyph e="☀" /> {lang === "es" ? "Claro" : "Light"}
                   </button>
                 </div>
               </div>
@@ -200,7 +201,7 @@ export default function SettingsPanel() {
                   onClick={() => setShowPwForm(true)}
                   className="w-full text-xs py-2 rounded-lg bg-gray-800 border border-gray-700 text-gray-300 font-medium hover:border-amber-500/50 transition-colors"
                 >
-                  🔑 {lang === "es" ? "Establecer contraseña" : "Set / change password"}
+                  <Glyph e="🔑" /> {lang === "es" ? "Establecer contraseña" : "Set / change password"}
                 </button>
               </div>
             </>
@@ -213,7 +214,7 @@ export default function SettingsPanel() {
         className="bg-gray-800 border border-gray-700 text-gray-400 rounded-full w-12 h-12 flex items-center justify-center shadow-lg text-lg active:scale-95 transition-transform"
         title="Settings"
       >
-        {open ? "✕" : "⚙️"}
+        {open ? <Glyph e="✕" /> : <Glyph e="⚙" />}
       </button>
     </div>
   );

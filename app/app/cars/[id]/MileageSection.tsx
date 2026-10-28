@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useT } from "@/app/hooks/useT";
 import { useApp } from "@/app/providers/AppProviders";
 import { addMileageLog, deleteMileageLog, updateMileageLog } from "./actions";
+import Glyph from "@/app/components/Glyph";
 
 export type MileageLog = {
   id: string; mileage: number; recordedAt: string; source: string; notes: string | null; sourceName?: string | null; sourceId?: string | null;
@@ -39,8 +40,8 @@ export default function MileageSection({ carId, logs, currentMileage, assetType 
   const displayedLogs = showAll ? logs : logs.slice(0, 5);
   const sourceLabel: Record<string, string> = {
     manual: lang === "es" ? "Manual" : "Manual",
-    service: lang === "es" ? "🛠 Servicio" : "🛠 Service",
-    project: lang === "es" ? "🔧 Trabajo" : "🔧 Job",
+    service: lang === "es" ? "Servicio" : "Service",
+    project: lang === "es" ? "Trabajo" : "Job",
   };
 
   const readingLabel = assetType === "vehicle" ? (lang === "es" ? "Millaje" : "Mileage") : (lang === "es" ? "Uso" : "Usage");
@@ -49,12 +50,12 @@ export default function MileageSection({ carId, logs, currentMileage, assetType 
   return (
     <section>
       <div className="flex items-center justify-between mb-3">
-        <h2 className="font-bold text-base">📍 {readingLabel} {lang === "es" ? "Historial" : "History"}</h2>
+        <h2 className="font-bold text-base"><Glyph e="📍" /> {readingLabel} {lang === "es" ? "Historial" : "History"}</h2>
         <button
           onClick={() => setShowAdd((o) => !o)}
-          className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-colors ${showAdd ? "bg-amber-500 text-gray-950" : "bg-gray-800 text-gray-300"}`}
+          className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-colors ${showAdd ? "bg-amber-500 text-on-accent" : "bg-gray-800 text-gray-300"}`}
         >
-          {showAdd ? (lang === "es" ? "✕ Cancelar" : "✕ Cancel") : (lang === "es" ? `+ Registrar ${readingLabel.toLowerCase()}` : `+ Log ${readingLabel.toLowerCase()}`)}
+          {showAdd ? (lang === "es" ? <>{"✕ Cancelar"}</> : <>{"✕ Cancel"}</>) : (lang === "es" ? `+ Registrar ${readingLabel.toLowerCase()}` : `+ Log ${readingLabel.toLowerCase()}`)}
         </button>
       </div>
 
@@ -72,7 +73,7 @@ export default function MileageSection({ carId, logs, currentMileage, assetType 
                 autoFocus
               />
               {isLower && (
-                <p className="text-xs text-red-400 mt-1">{lang === "es" ? `⚠️ Menor que el último registro (${lastLogged?.toLocaleString()} mi) — ¿confirmar?` : `⚠️ Lower than last recorded (${lastLogged?.toLocaleString()} mi) — double check?`}</p>
+                <p className="text-xs text-red-400 mt-1">{lang === "es" ? `Menor que el último registro (${lastLogged?.toLocaleString()} mi) — ¿confirmar?` : `Lower than last recorded (${lastLogged?.toLocaleString()} mi) — double check?`}</p>
               )}
             </div>
             <div>
@@ -97,7 +98,7 @@ export default function MileageSection({ carId, logs, currentMileage, assetType 
           <button
             onClick={handleAdd}
             disabled={pending || !mileage}
-            className="w-full bg-amber-500 text-gray-950 font-bold py-2.5 rounded-xl text-sm disabled:opacity-40"
+            className="w-full bg-amber-500 text-on-accent font-bold py-2.5 rounded-xl text-sm disabled:opacity-40"
           >
             {pending ? (lang === "es" ? "Guardando…" : "Saving…") : (lang === "es" ? `Registrar ${readingLabel}` : `Log ${readingLabel}`)}
           </button>
@@ -198,7 +199,7 @@ function MileageLogRow({ log, carId, readingUnit, lang, sourceLabel, pending, st
           <button
             onClick={save}
             disabled={pending}
-            className="flex-1 bg-amber-500 text-gray-950 font-bold py-2 rounded-lg text-sm disabled:opacity-40"
+            className="flex-1 bg-amber-500 text-on-accent font-bold py-2 rounded-lg text-sm disabled:opacity-40"
           >
             {pending ? "Saving…" : "Save"}
           </button>
@@ -218,7 +219,7 @@ function MileageLogRow({ log, carId, readingUnit, lang, sourceLabel, pending, st
       <div className="flex-1 min-w-0">
         <div className="font-semibold text-sm text-white">{log.mileage.toLocaleString()} {readingUnit}</div>
         <div className="text-xs text-gray-500 flex flex-wrap gap-2 mt-0.5">
-          <span>📅 {new Date(log.recordedAt).toLocaleDateString(lang === "es" ? "es-US" : "en-US", { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" })}</span>
+          <span><Glyph e="📅" /> {new Date(log.recordedAt).toLocaleDateString(lang === "es" ? "es-US" : "en-US", { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" })}</span>
           {log.sourceId && (log.source === "service" || log.source === "job") ? (
             <Link
               href={`/cars/${carId}/service-history/${log.sourceId}`}
@@ -238,12 +239,12 @@ function MileageLogRow({ log, carId, readingUnit, lang, sourceLabel, pending, st
             onClick={() => setEditing(true)}
             className="text-gray-500 hover:text-gray-300 px-1.5 py-1 rounded transition-colors"
             title="Edit"
-          >✏️</button>
+          ><Glyph e="✏" /></button>
           <button
             onClick={() => startTransition(async () => { await deleteMileageLog(log.id, carId); })}
             disabled={pending}
             className="text-gray-600 text-sm active:text-red-400 px-1 disabled:opacity-40"
-          >🗑</button>
+          ><Glyph e="🗑" /></button>
         </div>
       )}
     </div>

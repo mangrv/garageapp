@@ -15,6 +15,7 @@ import {
 } from "./actions";
 import { useApp } from "@/app/providers/AppProviders";
 import { t } from "@/lib/i18n";
+import Glyph from "@/app/components/Glyph";
 
 // ── Types ────────────────────────────────────────────────────────
 
@@ -79,8 +80,8 @@ function textToToolsJson(text: string): string | null {
 const STATUS_LABEL: Record<string, string> = { todo: "To Do", in_progress: "In Progress", done: "Done" };
 const STATUS_COLOR: Record<string, string> = {
   todo: "bg-gray-700 text-gray-300",
-  in_progress: "bg-amber-700 text-amber-100",
-  done: "bg-emerald-700 text-emerald-100",
+  in_progress: "bg-amber-900 text-amber-400",
+  done: "bg-emerald-900 text-emerald-400",
 };
 const STATUS_BORDER: Record<string, string> = {
   todo: "border-gray-700",
@@ -115,7 +116,7 @@ function ToolsSection({
         className="text-xs text-gray-600 hover:text-gray-400 ml-1"
         title="Add tools"
       >
-        🧰 Add tools
+        <Glyph e="🧰" /> Add tools
       </button>
     );
   }
@@ -139,14 +140,14 @@ function ToolsSection({
           onClick={() => setOpen((o) => !o)}
           className="text-xs text-gray-500 bg-gray-800 border border-gray-700 rounded-full px-2 py-0.5 hover:text-gray-300 transition-colors"
         >
-          🧰 {tools.length} tool{tools.length !== 1 ? "s" : ""}
+          <Glyph e="🧰" /> {tools.length} tool{tools.length !== 1 ? "s" : ""}
         </button>
         <button
           onClick={() => { setEditing((e) => !e); setEditText(toolsToText(toolsJson)); }}
           className="text-gray-600 text-xs hover:text-amber-400 transition-colors"
           title="Edit tools"
         >
-          ✏️
+          <Glyph e="✏" />
         </button>
       </div>
 
@@ -161,7 +162,7 @@ function ToolsSection({
             placeholder="8mm socket, 10mm socket, torque wrench…"
           />
           <div className="flex gap-2">
-            <button onClick={handleSave} disabled={pending} className="text-xs bg-amber-500 text-gray-950 font-bold px-3 py-1.5 rounded-lg disabled:opacity-40">Save</button>
+            <button onClick={handleSave} disabled={pending} className="text-xs bg-amber-500 text-on-accent font-bold px-3 py-1.5 rounded-lg disabled:opacity-40">Save</button>
             <button onClick={() => setEditing(false)} className="text-xs bg-gray-700 text-gray-300 px-3 py-1.5 rounded-lg">Cancel</button>
           </div>
         </div>
@@ -222,7 +223,7 @@ function TaskPhotos({ photos, jobId }: { photos: Photo[]; jobId: string }) {
           {/* Top bar */}
           <div className="flex items-center justify-between px-4 py-3 bg-black/80 flex-shrink-0">
             <span className="text-sm text-gray-400">{lightboxIndex + 1} / {photos.length}</span>
-            <button onClick={() => setLightboxIndex(null)} className="text-2xl text-gray-300 w-10 h-10 flex items-center justify-center">✕</button>
+            <button onClick={() => setLightboxIndex(null)} className="text-2xl text-gray-300 w-10 h-10 flex items-center justify-center"><Glyph e="✕" /></button>
           </div>
 
           {/* Image + arrows */}
@@ -246,7 +247,7 @@ function TaskPhotos({ photos, jobId }: { photos: Photo[]; jobId: string }) {
             <div className="flex justify-center gap-1.5 py-2 bg-black/60 flex-shrink-0">
               {photos.map((_, i) => (
                 <button key={i} onClick={() => setLightboxIndex(i)}
-                  className={`rounded-full transition-all ${i === lightboxIndex ? "w-4 h-1.5 bg-white" : "w-1.5 h-1.5 bg-gray-600"}`} />
+                  className={`rounded-full transition-all ${i === lightboxIndex ? "w-4 h-1.5 bg-[#ffffff]" : "w-1.5 h-1.5 bg-gray-600"}`} />
               ))}
             </div>
           )}
@@ -262,8 +263,8 @@ function TaskPhotos({ photos, jobId }: { photos: Photo[]; jobId: string }) {
                   className="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white"
                   autoFocus
                 />
-                <button onClick={() => startTransition(async () => { await updatePhotoCaption(current.id, caption, jobId); setEditingId(null); })} disabled={pending} className="bg-amber-500 text-gray-950 font-bold px-3 rounded-lg text-sm">✓</button>
-                <button onClick={() => setEditingId(null)} className="bg-gray-800 text-gray-300 px-3 rounded-lg text-sm">✕</button>
+                <button onClick={() => startTransition(async () => { await updatePhotoCaption(current.id, caption, jobId); setEditingId(null); })} disabled={pending} className="bg-amber-500 text-on-accent font-bold px-3 rounded-lg text-sm"><Glyph e="✓" /></button>
+                <button onClick={() => setEditingId(null)} className="bg-gray-800 text-gray-300 px-3 rounded-lg text-sm"><Glyph e="✕" /></button>
               </div>
             ) : (
               <p className="text-sm text-gray-300">{current.caption || <span className="text-gray-600">No caption</span>}</p>
@@ -274,10 +275,10 @@ function TaskPhotos({ photos, jobId }: { photos: Photo[]; jobId: string }) {
           {editingId !== current.id && (
             <div className="flex justify-around px-4 py-3 bg-black/90 border-t border-gray-800 flex-shrink-0">
               <button onClick={() => { setCaption(current.caption ?? ""); setEditingId(current.id); }} className="flex flex-col items-center gap-1 text-xs text-gray-300">
-                <span className="text-xl">✏️</span>Edit
+                <span className="text-xl"><Glyph e="✏" /></span>Edit
               </button>
               <a href={`/uploads/${current.filename}`} download className="flex flex-col items-center gap-1 text-xs text-gray-300">
-                <span className="text-xl">⬇️</span>Save
+                <span className="text-xl"><Glyph e="⬇" /></span>Save
               </a>
               <button onClick={() => {
                 if (!confirm("Delete photo?")) return;
@@ -287,7 +288,7 @@ function TaskPhotos({ photos, jobId }: { photos: Photo[]; jobId: string }) {
                   else setLightboxIndex(null);
                 });
               }} disabled={pending} className="flex flex-col items-center gap-1 text-xs text-red-400 disabled:opacity-40">
-                <span className="text-xl">🗑</span>Delete
+                <span className="text-xl"><Glyph e="🗑" /></span>Delete
               </button>
             </div>
           )}
@@ -336,7 +337,7 @@ function CommentRow({ comment, jobId }: { comment: Comment; jobId: string }) {
             className="w-full bg-gray-700 border border-gray-600 rounded px-2 py-1.5 text-sm text-white"
           />
           <div className="flex gap-1">
-            <button onClick={() => startTransition(async () => { await editComment(comment.id, text, jobId); setEditing(false); })} disabled={pending} className="text-xs bg-amber-500 text-gray-950 font-bold px-3 py-1 rounded">Save</button>
+            <button onClick={() => startTransition(async () => { await editComment(comment.id, text, jobId); setEditing(false); })} disabled={pending} className="text-xs bg-amber-500 text-on-accent font-bold px-3 py-1 rounded">Save</button>
             <button onClick={() => { setEditing(false); setText(comment.text); }} className="text-xs bg-gray-600 text-gray-300 px-3 py-1 rounded">Cancel</button>
           </div>
         </div>
@@ -344,8 +345,8 @@ function CommentRow({ comment, jobId }: { comment: Comment; jobId: string }) {
         <>
           <div className="flex-1 text-sm text-gray-200">{comment.text}</div>
           <div className="flex gap-1 flex-shrink-0">
-            <button onClick={() => setEditing(true)} className="text-gray-500 text-xs active:text-amber-400">✏️</button>
-            <button onClick={() => startTransition(async () => { await deleteComment(comment.id, jobId); })} disabled={pending} className="text-gray-500 text-xs active:text-red-400">✕</button>
+            <button onClick={() => setEditing(true)} className="text-gray-500 text-xs active:text-amber-400"><Glyph e="✏" /></button>
+            <button onClick={() => startTransition(async () => { await deleteComment(comment.id, jobId); })} disabled={pending} className="text-gray-500 text-xs active:text-red-400"><Glyph e="✕" /></button>
           </div>
         </>
       )}
@@ -410,15 +411,15 @@ function TaskRow({ task, jobId, isFirst, isLast }: { task: Task; jobId: string; 
             <input value={taskTitle} onChange={(e) => setTaskTitle(e.target.value)} className={inputCls} />
           </div>
           <div>
-            <label className={labelCls}>⚠️ Warning (optional)</label>
+            <label className={labelCls}><Glyph e="⚠" /> Warning (optional)</label>
             <input value={taskWarning} onChange={(e) => setTaskWarning(e.target.value)} placeholder="Safety note…" className={inputCls} />
           </div>
           <div>
-            <label className={labelCls}>💡 Tip (optional)</label>
+            <label className={labelCls}><Glyph e="💡" /> Tip (optional)</label>
             <input value={taskTip} onChange={(e) => setTaskTip(e.target.value)} placeholder="Pro tip…" className={inputCls} />
           </div>
           <div>
-            <label className={labelCls}>🔩 Torque spec (optional)</label>
+            <label className={labelCls}><Glyph e="🔩" /> Torque spec (optional)</label>
             <div className="flex gap-2">
               <input
                 type="number"
@@ -440,7 +441,7 @@ function TaskRow({ task, jobId, isFirst, isLast }: { task: Task; jobId: string; 
             </div>
           </div>
           <div>
-            <label className={labelCls}>💰 Parts cost ($)</label>
+            <label className={labelCls}><Glyph e="💰" /> Parts cost ($)</label>
             <div className="flex gap-2">
               <div className="flex-1">
                 <input type="number" step="0.01" value={taskPartsCost} onChange={(e) => setTaskPartsCost(e.target.value)} placeholder="Parts $" className={inputCls} />
@@ -453,11 +454,11 @@ function TaskRow({ task, jobId, isFirst, isLast }: { task: Task; jobId: string; 
             <input value={taskPartsNote} onChange={(e) => setTaskPartsNote(e.target.value)} placeholder="e.g. NGK 9723, Amazon" className={inputCls} />
           </div>
           <div>
-            <label className={labelCls}>📅 Due date (optional)</label>
+            <label className={labelCls}><Glyph e="📅" /> Due date (optional)</label>
             <input type="date" value={taskDueDate} onChange={(e) => setTaskDueDate(e.target.value)} className={inputCls} />
           </div>
           <div className="flex gap-2 pt-1">
-            <button onClick={handleSaveTask} disabled={pending} className="flex-1 bg-amber-500 text-gray-950 font-bold py-2 rounded-lg text-sm disabled:opacity-40">Save</button>
+            <button onClick={handleSaveTask} disabled={pending} className="flex-1 bg-amber-500 text-on-accent font-bold py-2 rounded-lg text-sm disabled:opacity-40">Save</button>
             <button onClick={() => setEditingTask(false)} className="flex-1 bg-gray-700 text-gray-300 py-2 rounded-lg text-sm">Cancel</button>
           </div>
           {/* Move up/down */}
@@ -478,12 +479,12 @@ function TaskRow({ task, jobId, isFirst, isLast }: { task: Task; jobId: string; 
             <div className="space-y-1.5 pt-1 border-t border-gray-700">
               <p className="text-xs text-gray-400 text-center">Delete task + all its comments and photos?</p>
               <div className="flex gap-2">
-                <button onClick={handleDeleteTask} disabled={pending} className="flex-1 bg-red-700 text-white font-semibold py-1.5 rounded-lg text-sm">Yes, delete</button>
+                <button onClick={handleDeleteTask} disabled={pending} className="flex-1 bg-red-700 text-on-accent font-semibold py-1.5 rounded-lg text-sm">Yes, delete</button>
                 <button onClick={() => setShowDeleteConfirm(false)} className="flex-1 bg-gray-700 text-gray-300 py-1.5 rounded-lg text-sm">Cancel</button>
               </div>
             </div>
           ) : (
-            <button onClick={() => setShowDeleteConfirm(true)} className="w-full text-xs text-red-500 py-1.5 active:bg-red-900/20 rounded-lg">🗑 Delete task</button>
+            <button onClick={() => setShowDeleteConfirm(true)} className="w-full text-xs text-red-500 py-1.5 active:bg-red-900/20 rounded-lg"><Glyph e="🗑" /> Delete task</button>
           )}
         </div>
       ) : (
@@ -500,7 +501,7 @@ function TaskRow({ task, jobId, isFirst, isLast }: { task: Task; jobId: string; 
                   : "border-gray-500 bg-transparent active:border-emerald-400"
               }`}
             >
-              {task.done && <span className="text-white text-xs font-bold">✓</span>}
+              {task.done && <span className="text-white text-xs font-bold"><Glyph e="✓" /></span>}
             </button>
 
             {/* Content */}
@@ -512,32 +513,32 @@ function TaskRow({ task, jobId, isFirst, isLast }: { task: Task; jobId: string; 
                 {/* Compact metadata — one item per line, no bubbles for long text */}
               <div className="mt-1 space-y-0.5">
                 {isOverdue && (
-                  <p className="text-xs text-red-500 font-medium">⚠ Overdue · {new Date(task.dueDate!).toLocaleDateString()}</p>
+                  <p className="text-xs text-red-500 font-medium"><Glyph e="⚠" /> Overdue · {new Date(task.dueDate!).toLocaleDateString()}</p>
                 )}
                 {!isOverdue && task.dueDate && !task.done && (
-                  <p className="text-xs text-gray-500">📅 Due {new Date(task.dueDate).toLocaleDateString()}</p>
+                  <p className="text-xs text-gray-500"><Glyph e="📅" /> Due {new Date(task.dueDate).toLocaleDateString()}</p>
                 )}
                 {task.warning && (
-                  <p className="text-xs text-amber-500 font-medium">⚠ {task.warning}</p>
+                  <p className="text-xs text-amber-500 font-medium"><Glyph e="⚠" /> {task.warning}</p>
                 )}
                 {task.tip && (
-                  <p className="text-xs text-gray-500">💡 {task.tip}</p>
+                  <p className="text-xs text-gray-500"><Glyph e="💡" /> {task.tip}</p>
                 )}
                 {/* Short specs stay as chips */}
                 {(task.torqueValue != null || (task as any).partsCost != null || (task as any).laborCost != null) && (
                   <div className="flex flex-wrap gap-1 pt-0.5">
                     {task.torqueValue != null && (
-                      <span className="text-xs bg-gray-100 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300 border border-gray-200 dark:border-gray-600/50 rounded-md px-1.5 py-0.5 font-mono">
-                        🔧 {task.torqueValue} {task.torqueUnit}
+                      <span className="text-xs bg-gray-800 text-gray-400 border border-gray-700 rounded-md px-1.5 py-0.5 font-mono">
+                        <Glyph e="🔧" /> {task.torqueValue} {task.torqueUnit}
                       </span>
                     )}
                     {(task as any).partsCost != null && (
-                      <span className="text-xs bg-emerald-100 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700/30 rounded-md px-1.5 py-0.5">
+                      <span className="text-xs bg-emerald-900 text-emerald-400 border border-emerald-700/30 rounded-md px-1.5 py-0.5">
                         Parts ${(task as any).partsCost.toFixed(2)}
                       </span>
                     )}
                     {(task as any).laborCost != null && (
-                      <span className="text-xs bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300 border border-blue-200 dark:border-blue-700/30 rounded-md px-1.5 py-0.5">
+                      <span className="text-xs bg-blue-900 text-blue-400 border border-blue-700/30 rounded-md px-1.5 py-0.5">
                         Labor ${(task as any).laborCost.toFixed(2)}
                       </span>
                     )}
@@ -562,7 +563,7 @@ function TaskRow({ task, jobId, isFirst, isLast }: { task: Task; jobId: string; 
                 className="w-8 h-8 flex flex-col items-center justify-center rounded-lg text-gray-500 active:text-gray-300 active:bg-gray-700 transition-colors"
               >
                 {totalMedia > 0 && (
-                  <span className="text-[10px] bg-amber-500 text-gray-950 font-bold rounded-full w-4 h-4 flex items-center justify-center mb-0.5">{totalMedia}</span>
+                  <span className="text-[10px] bg-amber-500 text-on-accent font-bold rounded-full w-4 h-4 flex items-center justify-center mb-0.5">{totalMedia}</span>
                 )}
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   {expanded ? <polyline points="18 15 12 9 6 15"/> : <polyline points="6 9 12 15 18 9"/>}
@@ -588,16 +589,16 @@ function TaskRow({ task, jobId, isFirst, isLast }: { task: Task; jobId: string; 
                     className="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500" autoFocus />
                   <div className="flex gap-2">
                     <button onClick={handleAddComment} disabled={pending || !commentText.trim()}
-                      className="bg-amber-500 text-gray-950 font-semibold text-sm px-4 py-2 rounded-lg active:scale-95 disabled:opacity-40">Save</button>
+                      className="bg-amber-500 text-on-accent font-semibold text-sm px-4 py-2 rounded-lg active:scale-95 disabled:opacity-40">Save</button>
                     <button onClick={() => { setShowCommentBox(false); setCommentText(""); }} className="text-gray-400 text-sm px-3 py-2">Cancel</button>
                   </div>
                 </div>
               ) : (
                 <div className="flex gap-2">
                   <button onClick={() => setShowCommentBox(true)}
-                    className="flex items-center gap-1.5 text-xs text-gray-400 bg-gray-700 px-3 py-2 rounded-lg active:bg-gray-600">💬 Add note</button>
+                    className="flex items-center gap-1.5 text-xs text-gray-400 bg-gray-700 px-3 py-2 rounded-lg active:bg-gray-600"><Glyph e="💬" /> Add note</button>
                   <label className="flex items-center gap-1.5 text-xs text-gray-400 bg-gray-700 px-3 py-2 rounded-lg active:bg-gray-600 cursor-pointer">
-                    📷 Photo
+                    <Glyph e="📷" /> Photo
                     <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handlePhoto} />
                   </label>
                 </div>
@@ -657,7 +658,7 @@ function PhaseCard({ phase, jobId }: { phase: Phase; jobId: string }) {
           <div className="grid grid-cols-4 gap-2">
             <div>
               <label className={labelCls}>Emoji</label>
-              <input value={phaseEmoji} onChange={(e) => setPhaseEmoji(e.target.value)} placeholder="📋" className={`${inputCls} text-center`} />
+              <input value={phaseEmoji} onChange={(e) => setPhaseEmoji(e.target.value)} placeholder="" className={`${inputCls} text-center`} />
             </div>
             <div className="col-span-3">
               <label className={labelCls}>Phase title</label>
@@ -665,25 +666,25 @@ function PhaseCard({ phase, jobId }: { phase: Phase; jobId: string }) {
             </div>
           </div>
           <div className="flex gap-2">
-            <button onClick={handleSavePhase} disabled={pending} className="flex-1 bg-amber-500 text-gray-950 font-bold py-2 rounded-lg text-sm disabled:opacity-40">Save</button>
+            <button onClick={handleSavePhase} disabled={pending} className="flex-1 bg-amber-500 text-on-accent font-bold py-2 rounded-lg text-sm disabled:opacity-40">Save</button>
             <button onClick={() => setEditingPhase(false)} className="flex-1 bg-gray-700 text-gray-300 py-2 rounded-lg text-sm">Cancel</button>
           </div>
           {showDeleteConfirm ? (
             <div className="space-y-1.5 pt-1 border-t border-gray-700">
               <p className="text-xs text-gray-400 text-center">Delete this phase and all its tasks?</p>
               <div className="flex gap-2">
-                <button onClick={handleDeletePhase} disabled={pending} className="flex-1 bg-red-700 text-white font-semibold py-1.5 rounded-lg text-sm">Yes, delete</button>
+                <button onClick={handleDeletePhase} disabled={pending} className="flex-1 bg-red-700 text-on-accent font-semibold py-1.5 rounded-lg text-sm">Yes, delete</button>
                 <button onClick={() => setShowDeleteConfirm(false)} className="flex-1 bg-gray-700 text-gray-300 py-1.5 rounded-lg text-sm">Cancel</button>
               </div>
             </div>
           ) : (
-            <button onClick={() => setShowDeleteConfirm(true)} className="w-full text-xs text-red-500 py-1.5">🗑 Delete phase</button>
+            <button onClick={() => setShowDeleteConfirm(true)} className="w-full text-xs text-red-500 py-1.5"><Glyph e="🗑" /> Delete phase</button>
           )}
         </div>
       ) : (
         <>
           <div className="w-full text-left p-4 flex items-center gap-3 cursor-pointer" onClick={() => setOpen((o) => !o)}>
-            <span className="text-xl flex-shrink-0">{phase.emoji ?? "📋"}</span>
+            <span className="text-xl flex-shrink-0">{phase.emoji ?? <Glyph e="📋" />}</span>
             <div className="flex-1 min-w-0">
               <div className="font-semibold text-sm leading-tight">{phase.title}</div>
               <div className="flex items-center gap-2 mt-1">
@@ -691,7 +692,7 @@ function PhaseCard({ phase, jobId }: { phase: Phase; jobId: string }) {
                   {status === "todo" ? t("todo", lang) : status === "in_progress" ? t("inProgress", lang) : t("done", lang)}
                 </span>
                 <span className="text-xs text-gray-400">{doneCnt}/{totalCnt}</span>
-                {phaseCost > 0 && <span className="text-xs text-emerald-400">💰 ${phaseCost.toFixed(2)}</span>}
+                {phaseCost > 0 && <span className="text-xs text-emerald-400"><Glyph e="💰" /> ${phaseCost.toFixed(2)}</span>}
               </div>
               {/* Phase tools — shown inline, compact chips */}
               {parseTools(phase.toolsJson).length > 0 && (
@@ -705,7 +706,7 @@ function PhaseCard({ phase, jobId }: { phase: Phase; jobId: string }) {
                     title="Edit phase tools"
                     onClickCapture={(e) => { e.stopPropagation(); }}
                   >
-                    <span onClick={(e) => { e.stopPropagation(); setEditingPhase(true); }}>✏️</span>
+                    <span onClick={(e) => { e.stopPropagation(); setEditingPhase(true); }}><Glyph e="✏" /></span>
                   </button>
                 </div>
               )}
@@ -714,7 +715,7 @@ function PhaseCard({ phase, jobId }: { phase: Phase; jobId: string }) {
               )}
             </div>
             <div className="flex-shrink-0 flex items-center gap-2">
-              <button onClick={(e) => { e.stopPropagation(); setEditingPhase(true); }} className="text-gray-600 text-sm active:text-amber-400 px-1">✏️</button>
+              <button onClick={(e) => { e.stopPropagation(); setEditingPhase(true); }} className="text-gray-600 text-sm active:text-amber-400 px-1"><Glyph e="✏" /></button>
               <div className="flex flex-col items-end gap-1">
                 <div className="text-xs text-gray-400">{pct}%</div>
                 <div className="text-gray-500 text-sm">{open ? "▲" : "▼"}</div>
@@ -738,12 +739,12 @@ function PhaseCard({ phase, jobId }: { phase: Phase; jobId: string }) {
                   <div className="text-xs font-semibold text-gray-300">+ New task</div>
                   <input value={newTaskTitle} onChange={(e) => setNewTaskTitle(e.target.value)} placeholder="Task title *"
                     className={inputCls} autoFocus />
-                  <input value={newTaskWarning} onChange={(e) => setNewTaskWarning(e.target.value)} placeholder="⚠️ Warning (optional)"
+                  <input value={newTaskWarning} onChange={(e) => setNewTaskWarning(e.target.value)} placeholder="Warning (optional)"
                     className={inputCls} />
-                  <input value={newTaskTip} onChange={(e) => setNewTaskTip(e.target.value)} placeholder="💡 Tip (optional)"
+                  <input value={newTaskTip} onChange={(e) => setNewTaskTip(e.target.value)} placeholder="Tip (optional)"
                     className={inputCls} />
                   <div>
-                    <label className={labelCls}>🔩 Torque spec (optional)</label>
+                    <label className={labelCls}><Glyph e="🔩" /> Torque spec (optional)</label>
                     <div className="flex gap-2">
                       <input
                         type="number"
@@ -768,7 +769,7 @@ function PhaseCard({ phase, jobId }: { phase: Phase; jobId: string }) {
                     className={inputCls} />
                   <div className="flex gap-2">
                     <button onClick={handleAddTask} disabled={pending || !newTaskTitle.trim()}
-                      className="flex-1 bg-amber-500 text-gray-950 font-bold py-2 rounded-lg text-sm disabled:opacity-40">Add Task</button>
+                      className="flex-1 bg-amber-500 text-on-accent font-bold py-2 rounded-lg text-sm disabled:opacity-40">Add Task</button>
                     <button onClick={() => { setShowAddTask(false); setNewTaskTitle(""); setNewTaskWarning(""); setNewTaskTip(""); setNewTaskTorqueValue(""); }}
                       className="flex-1 bg-gray-700 text-gray-300 py-2 rounded-lg text-sm">Cancel</button>
                   </div>
@@ -824,7 +825,7 @@ function ServiceRecordPrompt({
   return (
     <div className="bg-gray-900 border border-emerald-600 rounded-2xl p-4 space-y-3">
       <div className="flex items-center gap-2">
-        <span className="text-emerald-400 text-lg">✅</span>
+        <span className="text-emerald-400 text-lg"><Glyph e="✅" /></span>
         <div>
           <div className="text-sm font-bold text-white">Add to Service History?</div>
           <div className="text-xs text-gray-400">This project is marked done. Save it as a permanent record?</div>
@@ -854,7 +855,7 @@ function ServiceRecordPrompt({
 
       <div className="flex gap-2">
         <button onClick={handleCreate} disabled={pending}
-          className="flex-1 bg-emerald-600 text-white font-bold py-2.5 rounded-xl text-sm active:scale-95 transition-transform disabled:opacity-40">
+          className="flex-1 bg-emerald-600 text-on-accent font-bold py-2.5 rounded-xl text-sm active:scale-95 transition-transform disabled:opacity-40">
           {pending ? "Saving…" : "Yes, add to history"}
         </button>
         <button onClick={onDone} className="flex-1 bg-gray-800 text-gray-400 py-2.5 rounded-xl text-sm">Skip</button>
@@ -905,7 +906,7 @@ function ProjectEditPanel({ project, cars, onClose }: { project: Job; cars: Car[
 
   return (
     <div className="bg-gray-900 border border-amber-600 rounded-2xl p-4 mx-4 my-2 space-y-3">
-      <div className="text-sm font-bold text-white">✏️ Edit Job</div>
+      <div className="text-sm font-bold text-white"><Glyph e="✏" /> Edit Job</div>
 
       <div>
         <label className={labelCls}>Title</label>
@@ -922,19 +923,19 @@ function ProjectEditPanel({ project, cars, onClose }: { project: Job; cars: Car[
         <div className="grid grid-cols-4 gap-1.5">
           {(["todo", "up_next", "in_progress", "blocked", "testing", "done", "archived"] as const).map((s) => {
             const LABELS: Record<string, string> = {
-              todo: "📋 To Do", up_next: "🔜 Up Next", in_progress: "⚙️ In Progress",
-              blocked: "🚫 Blocked", testing: "🔍 Testing", done: "✅ Done", archived: "📦 Archived"
+              todo: "To Do", up_next: "Up Next", in_progress: "In Progress",
+              blocked: "Blocked", testing: "Testing", done: "Done", archived: "Archived"
             };
             const isSelected = status === s || (s === "in_progress" && status === "active");
             return (
               <button key={s} onClick={() => setStatus(s)}
                 className={`text-[11px] py-1.5 px-1 rounded-lg font-medium transition-colors text-center ${
                   isSelected
-                    ? s === "blocked" ? "bg-red-600 text-white"
-                      : s === "done" ? "bg-emerald-600 text-white"
-                      : s === "testing" ? "bg-blue-600 text-white"
-                      : s === "up_next" ? "bg-blue-600 text-white"
-                      : "bg-amber-500 text-gray-950"
+                    ? s === "blocked" ? "bg-red-600 text-on-accent"
+                      : s === "done" ? "bg-emerald-600 text-on-accent"
+                      : s === "testing" ? "bg-blue-600 text-on-accent"
+                      : s === "up_next" ? "bg-blue-600 text-on-accent"
+                      : "bg-amber-500 text-on-accent"
                     : "bg-gray-800 text-gray-400"
                 }`}>
                 {LABELS[s]}
@@ -975,7 +976,7 @@ function ProjectEditPanel({ project, cars, onClose }: { project: Job; cars: Car[
       </div>
 
       <div className="flex gap-2">
-        <button onClick={handleSave} disabled={pending} className="flex-1 bg-amber-500 text-gray-950 font-bold py-2.5 rounded-xl text-sm disabled:opacity-40">
+        <button onClick={handleSave} disabled={pending} className="flex-1 bg-amber-500 text-on-accent font-bold py-2.5 rounded-xl text-sm disabled:opacity-40">
           {pending ? "Saving…" : "Save Changes"}
         </button>
         <button onClick={onClose} className="flex-1 bg-gray-800 text-gray-300 py-2.5 rounded-xl text-sm">Cancel</button>
@@ -986,12 +987,12 @@ function ProjectEditPanel({ project, cars, onClose }: { project: Job; cars: Car[
           <div className="space-y-2">
             <p className="text-xs text-gray-400 text-center">Permanently delete this project and all its data?</p>
             <div className="flex gap-2">
-              <button onClick={handleDelete} disabled={pending} className="flex-1 bg-red-700 text-white font-semibold py-2 rounded-xl text-sm disabled:opacity-40">Yes, delete</button>
+              <button onClick={handleDelete} disabled={pending} className="flex-1 bg-red-700 text-on-accent font-semibold py-2 rounded-xl text-sm disabled:opacity-40">Yes, delete</button>
               <button onClick={() => setShowDelete(false)} className="flex-1 bg-gray-800 text-gray-300 py-2 rounded-xl text-sm">Cancel</button>
             </div>
           </div>
         ) : (
-          <button onClick={() => setShowDelete(true)} className="w-full text-xs text-red-500 py-2 active:bg-red-900/20 rounded-lg">🗑 Delete project</button>
+          <button onClick={() => setShowDelete(true)} className="w-full text-xs text-red-500 py-2 active:bg-red-900/20 rounded-lg"><Glyph e="🗑" /> Delete project</button>
         )}
       </div>
     </div>
@@ -1016,9 +1017,9 @@ function SaveTemplatePanel({ jobId, projectTitle, onClose }: { jobId: string; pr
 
   return (
     <div className="bg-gray-900 border border-gray-700 rounded-2xl p-4 mx-4 my-2 space-y-3">
-      <div className="text-sm font-bold text-white">💾 Save as Template</div>
+      <div className="text-sm font-bold text-white"><Glyph e="💾" /> Save as Template</div>
       {saved ? (
-        <div className="text-center text-emerald-400 py-2 font-medium">✅ Template saved!</div>
+        <div className="text-center text-emerald-400 py-2 font-medium"><Glyph e="✅" /> Template saved!</div>
       ) : (
         <>
           <div>
@@ -1027,7 +1028,7 @@ function SaveTemplatePanel({ jobId, projectTitle, onClose }: { jobId: string; pr
           </div>
           <p className="text-xs text-gray-500">Saves all phases and tasks. You'll find it in "New Job" under My Templates.</p>
           <div className="flex gap-2">
-            <button onClick={handleSave} disabled={pending || !name.trim()} className="flex-1 bg-amber-500 text-gray-950 font-bold py-2.5 rounded-xl text-sm disabled:opacity-40">
+            <button onClick={handleSave} disabled={pending || !name.trim()} className="flex-1 bg-amber-500 text-on-accent font-bold py-2.5 rounded-xl text-sm disabled:opacity-40">
               {pending ? "Saving…" : "Save Template"}
             </button>
             <button onClick={onClose} className="flex-1 bg-gray-800 text-gray-300 py-2.5 rounded-xl text-sm">Cancel</button>
@@ -1056,7 +1057,7 @@ function AddPhasePanel({ jobId, onClose }: { jobId: string; onClose: () => void 
       <div className="grid grid-cols-4 gap-2">
         <div>
           <label className={labelCls}>Emoji</label>
-          <input value={emoji} onChange={(e) => setEmoji(e.target.value)} placeholder="📋" className={`${inputCls} text-center`} />
+          <input value={emoji} onChange={(e) => setEmoji(e.target.value)} placeholder="" className={`${inputCls} text-center`} />
         </div>
         <div className="col-span-3">
           <label className={labelCls}>Title *</label>
@@ -1064,7 +1065,7 @@ function AddPhasePanel({ jobId, onClose }: { jobId: string; onClose: () => void 
         </div>
       </div>
       <div className="flex gap-2">
-        <button onClick={handleAdd} disabled={pending || !title.trim()} className="flex-1 bg-amber-500 text-gray-950 font-bold py-2.5 rounded-xl text-sm disabled:opacity-40">Add Phase</button>
+        <button onClick={handleAdd} disabled={pending || !title.trim()} className="flex-1 bg-amber-500 text-on-accent font-bold py-2.5 rounded-xl text-sm disabled:opacity-40">Add Phase</button>
         <button onClick={onClose} className="flex-1 bg-gray-800 text-gray-300 py-2.5 rounded-xl text-sm">Cancel</button>
       </div>
     </div>
@@ -1129,7 +1130,7 @@ export default function BoardView({ project, cars, totalTasks, doneTasks, pct, r
     !showCompletionPrompt;
 
   function buildShareMessage(url: string) {
-    return `Check out this app I built — My Garage 🚗🔧\n\nTrack your vehicles, manage repairs, log service history, and more. You can browse as a guest or register free for the full experience.\n\n👉 ${url}`;
+    return `Check out this app I built — My Garage \n\nTrack your vehicles, manage repairs, log service history, and more. You can browse as a guest or register free for the full experience.\n\n${url}`;
   }
 
   async function handleClone() {
@@ -1180,8 +1181,8 @@ export default function BoardView({ project, cars, totalTasks, doneTasks, pct, r
   const totalProjectCost = project.phases.flatMap(ph => ph.tasks).reduce((s, t) => s + ((t as any).partsCost ?? 0) + ((t as any).laborCost ?? 0), 0);
 
   const statusBadge: Record<string, string> = {
-    active: "bg-blue-800 text-blue-200",
-    done: "bg-emerald-800 text-emerald-200",
+    active: "bg-blue-900 text-blue-400",
+    done: "bg-emerald-900 text-emerald-400",
     archived: "bg-gray-700 text-gray-400",
   };
 
@@ -1209,22 +1210,22 @@ export default function BoardView({ project, cars, totalTasks, doneTasks, pct, r
             <h1 className="font-bold text-base leading-tight truncate text-white">{project.title}</h1>
             <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
               <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase tracking-wide ${
-                project.status === "done" ? "bg-emerald-700 text-emerald-100" :
+                project.status === "done" ? "bg-emerald-900 text-emerald-400" :
                 project.status === "archived" ? "bg-gray-800 text-gray-400" :
-                project.status === "blocked" ? "bg-red-700 text-red-100" :
-                project.status === "testing" ? "bg-blue-800 text-blue-100" :
-                project.status === "up_next" ? "bg-blue-700 text-blue-100" :
+                project.status === "blocked" ? "bg-red-900 text-red-400" :
+                project.status === "testing" ? "bg-blue-900 text-blue-400" :
+                project.status === "up_next" ? "bg-blue-900 text-blue-400" :
                 project.status === "todo" ? "bg-gray-700 text-gray-300" :
-                "bg-amber-700 text-amber-100"
+                "bg-amber-900 text-amber-400"
               }`}>{{
-                todo: "📋 To Do",
-                up_next: "🔜 Up Next",
-                active: "⚙️ In Progress",
-                in_progress: "⚙️ In Progress",
-                blocked: "🚫 Blocked",
-                testing: "🔍 Testing",
-                done: "✅ Done",
-                archived: "📦 Archived",
+                todo: "To Do",
+                up_next: "Up Next",
+                active: "In Progress",
+                in_progress: "In Progress",
+                blocked: "Blocked",
+                testing: "Testing",
+                done: "Done",
+                archived: "Archived",
               }[project.status] ?? project.status}</span>
               {project.carLabel && <span className="text-xs text-gray-500 truncate">{project.carLabel}</span>}
               {project.clonedFromId && project.clonedFromTitle && (
@@ -1233,15 +1234,15 @@ export default function BoardView({ project, cars, totalTasks, doneTasks, pct, r
                   className="text-[10px] text-amber-400/80 hover:text-amber-300 flex items-center gap-1 truncate"
                   title={`Cloned from: ${project.clonedFromTitle}`}
                 >
-                  🔁 Cloned from: {project.clonedFromTitle}
+                  <Glyph e="🔁" /> Cloned from: {project.clonedFromTitle}
                 </a>
               )}
             </div>
           </div>
           <button
             onClick={() => { setShowEdit((o) => !o); setShowAddPhase(false); setShowSaveTemplate(false); setShowExportMenu(false); }}
-            className={`flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-xl transition-colors ${showEdit ? "bg-amber-500 text-gray-950" : "text-gray-400 active:bg-gray-800"}`}>
-            {showEdit ? "✕" : (
+            className={`flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-xl transition-colors ${showEdit ? "bg-amber-500 text-on-accent" : "text-gray-400 active:bg-gray-800"}`}>
+            {showEdit ? <Glyph e="✕" /> : (
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -1254,7 +1255,7 @@ export default function BoardView({ project, cars, totalTasks, doneTasks, pct, r
         <div className="mt-3">
           <div className="flex justify-between text-xs text-gray-500 mb-1.5">
             <span>{doneTasks}/{totalTasks} tasks</span>
-            {(() => { const total = (receiptTotal ?? 0) + (attachmentTotal ?? 0) + totalProjectCost; return total > 0 ? <span className="text-emerald-400">💰 ${total.toFixed(2)}</span> : null; })()}
+            {(() => { const total = (receiptTotal ?? 0) + (attachmentTotal ?? 0) + totalProjectCost; return total > 0 ? <span className="text-emerald-400"><Glyph e="💰" /> ${total.toFixed(2)}</span> : null; })()}
             <span>{pct}%</span>
           </div>
           <div className="h-1.5 bg-gray-800 rounded-full overflow-hidden">
@@ -1268,21 +1269,21 @@ export default function BoardView({ project, cars, totalTasks, doneTasks, pct, r
             onClick={shareToken ? handleCopyShare : handleShare}
             disabled={shareLoading}
             className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold transition-colors border ${
-              shareCopied ? "bg-emerald-600 text-white border-transparent" :
+              shareCopied ? "bg-emerald-600 text-on-accent border-transparent" :
               shareToken ? "border-emerald-700 text-emerald-400" :
               "border-gray-700 text-gray-400 active:border-gray-500"
             }`}>
-            🔗 {shareCopied ? "Copied!" : shareToken ? "Shared" : shareLoading ? "…" : "Share"}
+            <Glyph e="🔗" /> {shareCopied ? "Copied!" : shareToken ? "Shared" : shareLoading ? "…" : "Share"}
           </button>
           <button
             onClick={() => { setShowExportMenu((o) => !o); setShowSaveTemplate(false); setShowEdit(false); setShowAddPhase(false); }}
             className={`flex-1 flex items-center justify-center gap-1 py-2 rounded-xl text-xs font-semibold transition-colors border ${
-              showExportMenu || showSaveTemplate ? "bg-amber-500 text-gray-950 border-transparent" : "border-gray-700 text-gray-400 active:border-gray-500"
+              showExportMenu || showSaveTemplate ? "bg-amber-500 text-on-accent border-transparent" : "border-gray-700 text-gray-400 active:border-gray-500"
             }`}>
             ••• More
           </button>
           <div className="flex-shrink-0 flex rounded-xl overflow-hidden border border-gray-700">
-            <button onClick={() => setView("list")} className={`px-3 py-2 text-xs transition-colors ${view === "list" ? "bg-gray-700 text-white" : "text-gray-500 active:bg-gray-800"}`}>☰</button>
+            <button onClick={() => setView("list")} className={`px-3 py-2 text-xs transition-colors ${view === "list" ? "bg-gray-700 text-white" : "text-gray-500 active:bg-gray-800"}`}><Glyph e="☰" /></button>
             <button onClick={() => setView("board")} className={`px-3 py-2 text-xs transition-colors border-l border-gray-700 ${view === "board" ? "bg-gray-700 text-white" : "text-gray-500 active:bg-gray-800"}`}>⊞</button>
           </div>
         </div>
@@ -1300,7 +1301,7 @@ export default function BoardView({ project, cars, totalTasks, doneTasks, pct, r
                     : "border-transparent text-gray-500 hover:text-gray-300"
                 }`}
               >
-                <span>{tab.emoji}</span>
+                <span><Glyph e={tab.emoji} /></span>
                 <span>{tab.label}</span>
               </button>
             ))}
@@ -1314,11 +1315,11 @@ export default function BoardView({ project, cars, totalTasks, doneTasks, pct, r
             <details className="group">
               <summary className="cursor-pointer list-none">
                 <span className="inline-flex items-center gap-1 text-xs text-gray-500 select-none active:text-gray-300">
-                  🧰 {projectTools.length} tools needed
+                  <Glyph e="🧰" /> {projectTools.length} tools needed
                 </span>
               </summary>
               <div className="absolute left-0 right-0 mx-4 mt-1 bg-gray-900 border border-gray-700 rounded-xl p-3 z-20 shadow-xl">
-                <div className="text-xs text-gray-400 font-semibold mb-2">🧰 Tools needed for this job</div>
+                <div className="text-xs text-gray-400 font-semibold mb-2"><Glyph e="🧰" /> Tools needed for this job</div>
                 <div className="flex flex-wrap gap-1.5">
                   {projectTools.map((t, i) => (
                     <span key={i} className="text-xs bg-gray-800 text-gray-300 border border-gray-700 px-2 py-0.5 rounded-full">{t}</span>
@@ -1350,16 +1351,16 @@ export default function BoardView({ project, cars, totalTasks, doneTasks, pct, r
               <details className="group">
                 <summary className="cursor-pointer list-none">
                   <span className="inline-flex items-center gap-1 text-xs text-gray-500 select-none active:text-gray-300">
-                    🔩 {torqueTasks.length} torque spec{torqueTasks.length !== 1 ? "s" : ""}
+                    <Glyph e="🔩" /> {torqueTasks.length} torque spec{torqueTasks.length !== 1 ? "s" : ""}
                   </span>
                 </summary>
                 <div className="absolute left-0 right-0 mx-4 mt-1 bg-gray-900 border border-gray-700 rounded-xl p-3 z-20 shadow-xl">
-                  <div className="text-xs text-gray-400 font-semibold mb-2">🔩 Torque specifications</div>
+                  <div className="text-xs text-gray-400 font-semibold mb-2"><Glyph e="🔩" /> Torque specifications</div>
                   <div className="space-y-2">
                     {torqueTasks.map((t, i) => (
                       <div key={i} className="flex items-start gap-2 text-xs border-b border-gray-800 pb-1.5 last:border-0 last:pb-0">
                         <div className="flex-1 min-w-0">
-                          <div className="text-gray-500 text-xs">{t.phaseEmoji} {t.phase}</div>
+                          <div className="text-gray-500 text-xs"><Glyph e={t.phaseEmoji} /> {t.phase}</div>
                           <div className="text-gray-200 mt-0.5 leading-snug">{t.title}</div>
                         </div>
                         <span className="text-orange-300 font-mono font-bold flex-shrink-0 bg-orange-900/30 px-2 py-0.5 rounded-lg">
@@ -1395,12 +1396,12 @@ export default function BoardView({ project, cars, totalTasks, doneTasks, pct, r
       {allDoneButNotLogged && (
         <div className="mx-4 mt-3 bg-emerald-600 rounded-2xl px-4 py-3 flex items-center justify-between gap-3">
           <div>
-            <div className="text-sm font-semibold text-white">✅ All tasks complete!</div>
+            <div className="text-sm font-semibold text-white"><Glyph e="✅" /> All tasks complete!</div>
             <div className="text-xs text-emerald-100 mt-0.5">Log this job as a service record?</div>
           </div>
           <button
             onClick={() => setShowCompletionPrompt(true)}
-            className="flex-shrink-0 bg-white text-emerald-700 text-xs font-bold px-4 py-2 rounded-xl active:bg-emerald-50"
+            className="flex-shrink-0 bg-[#ffffff] text-[#047857] text-xs font-bold px-4 py-2 rounded-xl"
           >
             Log it
           </button>
@@ -1410,7 +1411,7 @@ export default function BoardView({ project, cars, totalTasks, doneTasks, pct, r
       {/* Share link banner */}
       {shareToken && (
         <div className="mx-4 mt-3 bg-emerald-950/60 border border-emerald-800 rounded-xl px-3 py-2.5 text-xs text-emerald-300 flex items-center justify-between gap-2">
-          <span>🔗 Shared — <span className="font-mono opacity-60">/share/{shareToken.slice(0, 8)}…</span></span>
+          <span><Glyph e="🔗" /> Shared — <span className="font-mono opacity-60">/share/{shareToken.slice(0, 8)}…</span></span>
           <div className="flex gap-2">
             <button onClick={handleCopyShare} className="underline text-emerald-400">
               {shareCopied ? "Copied!" : "Copy link"}
@@ -1423,7 +1424,7 @@ export default function BoardView({ project, cars, totalTasks, doneTasks, pct, r
       {/* Notes banner (if set) */}
       {project.notes && !showEdit && (
         <div className="mx-4 mt-3 bg-gray-800/60 border border-gray-700 rounded-xl px-3 py-2.5 text-xs text-gray-400 whitespace-pre-wrap">
-          📝 {project.notes}
+          <Glyph e="📝" /> {project.notes}
         </div>
       )}
 
@@ -1443,7 +1444,7 @@ export default function BoardView({ project, cars, totalTasks, doneTasks, pct, r
             <button
               onClick={() => { setShowCompletionPrompt(true); setShowExportMenu(false); }}
               className="w-full flex items-center gap-3 bg-emerald-900/40 border border-emerald-700/50 text-emerald-200 px-3 py-3 rounded-xl text-sm active:bg-emerald-900 text-left">
-              <span className="text-lg">📋</span>
+              <span className="text-lg"><Glyph e="📋" /></span>
               <div>
                 <div className="font-semibold text-sm">Log as Service Record</div>
                 <div className="text-xs text-emerald-400/70">Add this job to your vehicle&apos;s service history</div>
@@ -1456,7 +1457,7 @@ export default function BoardView({ project, cars, totalTasks, doneTasks, pct, r
             onClick={() => { setShowExportMenu(false); handleClone(); }}
             disabled={cloning}
             className="w-full flex items-center gap-3 bg-gray-800 text-gray-200 px-3 py-3 rounded-xl text-sm active:bg-gray-700 text-left disabled:opacity-50">
-            <span className="text-lg">🔁</span>
+            <span className="text-lg"><Glyph e="🔁" /></span>
             <div>
               <div className="font-semibold text-sm">{cloning ? "Cloning…" : "Clone Job"}</div>
               <div className="text-xs text-gray-500">Copy all phases &amp; tasks, reset completion state</div>
@@ -1467,7 +1468,7 @@ export default function BoardView({ project, cars, totalTasks, doneTasks, pct, r
           <button
             onClick={() => { setShowSaveTemplate((o) => !o); }}
             className="w-full flex items-center gap-3 bg-gray-800 hover:bg-gray-750 text-gray-200 px-3 py-3 rounded-xl text-sm active:bg-gray-700 text-left">
-            <span className="text-lg">📁</span>
+            <span className="text-lg"><Glyph e="📁" /></span>
             <div>
               <div className="font-semibold text-sm">Save as Template</div>
               <div className="text-xs text-gray-500">Reuse this job&apos;s phases &amp; tasks in future jobs</div>
@@ -1486,11 +1487,11 @@ export default function BoardView({ project, cars, totalTasks, doneTasks, pct, r
             <div className="flex gap-2">
               <a href={`/api/export/job/${project.id}?fmt=md`} download
                 className="flex-1 flex items-center justify-center gap-1.5 bg-gray-800 text-gray-300 px-3 py-2.5 rounded-xl text-xs font-medium active:bg-gray-700">
-                📝 Markdown
+                <Glyph e="📝" /> Markdown
               </a>
               <a href={`/api/export/job/${project.id}?fmt=json`} download
                 className="flex-1 flex items-center justify-center gap-1.5 bg-gray-800 text-gray-300 px-3 py-2.5 rounded-xl text-xs font-medium active:bg-gray-700">
-                🗂 JSON
+                <Glyph e="🗂" /> JSON
               </a>
             </div>
           </div>

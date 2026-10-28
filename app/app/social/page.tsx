@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import FeedCard from "../feed/FeedCard";
 import SocialTabs from "./SocialTabs";
+import Glyph from "@/app/components/Glyph";
 
 export default async function SocialPage() {
   const session = await requireSession().catch(() => null);
@@ -42,10 +43,10 @@ export default async function SocialPage() {
       <main className="max-w-lg mx-auto px-4 pt-4 space-y-6">
         {serialized.length === 0 ? (
           <div className="text-center py-20 space-y-4">
-            <div className="text-6xl">🏁</div>
+            <div className="text-6xl"><Glyph e="🏁" /></div>
             <h2 className="text-lg font-bold text-white">No community posts yet</h2>
             <p className="text-gray-400 text-sm max-w-xs mx-auto">Share a project when you are ready. Private garage records stay private unless you publish them.</p>
-            <Link href="/dashboard" className="inline-block bg-amber-500 text-gray-950 font-bold px-6 py-3 rounded-xl text-sm">Go to my garage</Link>
+            <Link href="/dashboard" className="inline-block bg-amber-500 text-on-accent font-bold px-6 py-3 rounded-xl text-sm">Go to my garage</Link>
           </div>
         ) : (
           serialized.map((job: any) => <FeedCard key={job.id + job.feedUpdatedAt} job={job} isOwner={job.user?.id === session.userId} />)

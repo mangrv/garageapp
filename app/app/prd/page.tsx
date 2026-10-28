@@ -1,10 +1,11 @@
-export default function PRDPage() {
+
+import Glyph from "@/app/components/Glyph";export default function PRDPage() {
   return (
     <div className="min-h-screen bg-gray-950 pb-24">
       <header className="sticky top-0 z-10 bg-gray-950 border-b border-gray-800 px-4 py-4">
         <div className="flex items-center gap-3">
           <a href="/dashboard" className="text-gray-400 text-sm">← Back</a>
-          <h1 className="font-bold text-lg">📄 App PRD</h1>
+          <h1 className="font-bold text-lg"><Glyph e="📄" /> App PRD</h1>
         </div>
       </header>
 
@@ -107,7 +108,7 @@ export default function PRDPage() {
               {
                 route: "/cars/[id]",
                 title: "Car Detail (unified)",
-                desc: "Hero image, inline edit form (✏️ Edit car), photo gallery (upload / caption / date taken / feature / delete / lightbox), projects list with progress bars.",
+                desc: "Hero image, inline edit form (Edit car), photo gallery (upload / caption / date taken / feature / delete / lightbox), projects list with progress bars.",
               },
               {
                 route: "/jobs/new",
@@ -117,7 +118,7 @@ export default function PRDPage() {
               {
                 route: "/job/[id]",
                 title: "Job Board",
-                desc: "Sticky header with overall progress. ☰ List or ⊞ Board view. Phase cards auto-compute status from task completion. Each task: checkbox, warning badge, tip badge, expand for photos + comments.",
+                desc: "Sticky header with overall progress. List or ⊞ Board view. Phase cards auto-compute status from task completion. Each task: checkbox, warning badge, tip badge, expand for photos + comments.",
               },
             ].map((p) => (
               <div key={p.route} className="bg-gray-900 border border-gray-800 rounded-xl p-3">
@@ -141,12 +142,12 @@ export default function PRDPage() {
               ["⚙️", "Differential Service", "5 phases — front diff, rear diff, transfer case"],
               ["🔄", "Transmission Fluid", "6 phases — drain/fill or pan drop, filter, gasket, level check"],
               ["🛞", "Brake Job", "7 phases — pads, rotors, bed-in procedure"],
-              ["🚿", "Car Wash + Detail", "10 phases — full process + 📝 log (products, paint rating, next wax)"],
+              ["🚿", "Car Wash + Detail", "10 phases — full process + log (products, paint rating, next wax)"],
               ["🔩", "Pentastar Oil Cooler", "18 phases — advanced Jeep 3.6L job"],
               ["📋", "Blank", "Empty — build your own phases"],
             ].map(([emoji, title, desc]) => (
               <div key={title} className="flex gap-3 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2.5">
-                <span className="text-lg flex-shrink-0">{emoji}</span>
+                <span className="text-lg flex-shrink-0"><Glyph e={emoji} /></span>
                 <div>
                   <div className="text-xs font-semibold text-white">{title}</div>
                   <div className="text-xs text-gray-500">{desc}</div>
@@ -180,7 +181,7 @@ export default function PRDPage() {
 
         {/* What's built */}
         <section>
-          <h2 className="text-base font-bold text-white mb-3">✅ All Features Built</h2>
+          <h2 className="text-base font-bold text-white mb-3"><Glyph e="✅" /> All Features Built</h2>
           <ul className="space-y-1.5">
             {[
               "Add / edit / delete custom phases from the project board",
@@ -201,7 +202,7 @@ export default function PRDPage() {
               "PWA installable on iPhone home screen",
             ].map((item) => (
               <li key={item} className="flex gap-2 text-xs text-gray-300">
-                <span className="text-emerald-500 flex-shrink-0">✓</span>
+                <span className="text-emerald-500 flex-shrink-0"><Glyph e="✓" /></span>
                 {item}
               </li>
             ))}
@@ -209,7 +210,7 @@ export default function PRDPage() {
         </section>
 
         <section>
-          <h2 className="text-base font-bold text-white mb-3">🔜 Potential Future Additions</h2>
+          <h2 className="text-base font-bold text-white mb-3"><Glyph e="🔜" /> Potential Future Additions</h2>
           <ul className="space-y-1.5">
             {[
               "Mileage history log (track changes over time, not just current value)",

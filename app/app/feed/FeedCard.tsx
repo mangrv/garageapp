@@ -55,15 +55,15 @@ type FeedJob = {
 };
 
 const STATUS_LABEL: Record<string, string> = {
-  todo: "📋 To Do", up_next: "🔜 Up Next", active: "⚙️ In Progress",
-  in_progress: "⚙️ In Progress", blocked: "🚫 Blocked", testing: "🔍 Testing",
-  done: "✅ Done", archived: "📦 Archived",
+  todo: "To Do", up_next: "Up Next", active: "In Progress",
+  in_progress: "In Progress", blocked: "Blocked", testing: "Testing",
+  done: "Done", archived: "Archived",
 };
 const STATUS_COLOR: Record<string, string> = {
-  todo: "bg-gray-700 text-gray-300", up_next: "bg-blue-700 text-blue-100",
-  active: "bg-amber-700 text-amber-100", in_progress: "bg-amber-700 text-amber-100",
-  blocked: "bg-red-700 text-red-100", testing: "bg-blue-800 text-blue-100",
-  done: "bg-emerald-700 text-emerald-100", archived: "bg-gray-800 text-gray-500",
+  todo: "bg-gray-700 text-gray-300", up_next: "bg-blue-900 text-blue-400",
+  active: "bg-amber-900 text-amber-400", in_progress: "bg-amber-900 text-amber-400",
+  blocked: "bg-red-900 text-red-400", testing: "bg-blue-900 text-blue-400",
+  done: "bg-emerald-900 text-emerald-400", archived: "bg-gray-800 text-gray-500",
 };
 
 function timeAgo(iso: string) {

@@ -3,6 +3,7 @@
 import { useGuest } from "@/app/providers/GuestProvider";
 import { useApp } from "@/app/providers/AppProviders";
 import { usePathname } from "next/navigation";
+import Glyph from "@/app/components/Glyph";
 
 const HIDE_ON = ["/login", "/register", "/guest"];
 
@@ -28,9 +29,9 @@ export default function GuestBanner() {
   ].filter(Boolean).join(" · ") || (lang === "es" ? "sin datos aún" : "no data yet");
 
   return (
-    <div className="sticky top-0 z-50 bg-amber-500 text-gray-950 text-xs font-semibold px-4 py-2 flex items-center justify-between">
+    <div className="sticky top-0 z-50 bg-amber-500 text-on-accent text-xs font-semibold px-4 py-2 flex items-center justify-between">
       <span>
-        {lang === "es" ? "🔒 Modo Invitado — " : "🔒 Guest Mode — "}
+        {lang === "es" ? <>{"🔒 Modo Invitado — "}</> : <>{"🔒 Guest Mode — "}</>}
         {lang === "es" ? "Los datos no se guardan. " : "Data not saved. "}
         <span className="opacity-80">{items}</span>
       </span>

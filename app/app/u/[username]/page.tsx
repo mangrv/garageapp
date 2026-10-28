@@ -1,8 +1,28 @@
+import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
+import Avatar from "@/app/components/Avatar";
 import { getSession } from "@/lib/session";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ConnectButton from "./ConnectButton";
+import Glyph from "@/app/components/Glyph";
+
+export async function generateMetadata({ params }: { params: Promise<{ username: string }> }): Promise<Metadata> {
+  const { username } = await params;
+  const user = await (prisma.user as any).findFirst({
+    where: { username: username.toLowerCase(), isPublic: true },
+    select: { name: true, username: true, publicBio: true, _count: { select: { cars: { where: { isPublic: true } } } } },
+  }).catch(() => null);
+  if (!user) return { title: "Garage not found", robots: { index: false } };
+  const who = user.name || `@${user.username}`;
+  const count = user._count?.cars ?? 0;
+  const title = `${who}'s garage`;
+  const description = user.publicBio
+    ? String(user.publicBio).slice(0, 155)
+    : `${who} shares ${count} ${count === 1 ? "vehicle" : "vehicles"} on GarageMeet — builds, service history and projects.`;
+  const path = `/u/${user.username}`;
+  return { title, description, alternates: { canonical: path }, openGraph: { title: `${title} · GarageMeet`, description, url: path, type: "profile" } };
+}
 
 export default async function PublicProfilePage({
   params,
@@ -54,17 +74,15 @@ export default async function PublicProfilePage({
   }
 
   const profileUrl = `${process.env.NEXT_PUBLIC_BASE_URL || ""}/u/${username}`;
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(profileUrl)}&bgcolor=111827&color=F59E0B&margin=12`;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(profileUrl)}&bgcolor=ffffff&color=2446F0&margin=12`;
 
   return (
     <div className="min-h-screen bg-gray-950 text-white">
       {/* Header */}
-      <div className="bg-gradient-to-b from-gray-900 to-gray-950 border-b border-gray-800">
+      <div className="bg-gray-900 border-b border-gray-700">
         <div className="max-w-2xl mx-auto px-6 py-10 flex flex-col sm:flex-row items-center sm:items-start gap-6">
           {/* Avatar placeholder */}
-          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center flex-shrink-0 text-3xl font-bold text-white shadow-lg">
-            {(user.name ?? username)[0]?.toUpperCase()}
-          </div>
+          <Avatar name={user.name ?? username} seed={username} size={88} />
 
           <div className="flex-1 text-center sm:text-left">
             <h1 className="text-2xl font-bold">{user.name ?? username}</h1>
@@ -86,7 +104,7 @@ export default async function PublicProfilePage({
           <div className="flex flex-col items-center gap-2 flex-shrink-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={qrUrl} alt="QR code" width={80} height={80} className="rounded-lg" />
-            <span className="text-[10px] text-gray-600">garage.page</span>
+            <span className="text-[11px] text-gray-500">Scan to share</span>
           </div>
         </div>
       </div>
@@ -115,7 +133,7 @@ export default async function PublicProfilePage({
                     />
                   ) : (
                     <div className="w-full h-40 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center text-5xl">
-                      🚗
+                      <Glyph e="🚗" />
                     </div>
                   )}
                   <div className="p-4">

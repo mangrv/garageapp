@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import FeedCard from "../../feed/FeedCard";
 import SocialTabs from "../SocialTabs";
+import Glyph from "@/app/components/Glyph";
 
 export default async function SocialSavedPage() {
   const session = await requireSession().catch(() => null);
@@ -44,7 +45,7 @@ export default async function SocialSavedPage() {
       <main className="max-w-lg mx-auto px-4 pt-4 space-y-6">
         {serialized.length === 0 ? (
           <div className="text-center py-20 space-y-3">
-            <div className="text-5xl">🔖</div>
+            <div className="text-5xl"><Glyph e="🔖" /></div>
             <h2 className="text-lg font-bold text-white">No saved posts</h2>
             <p className="text-sm text-gray-500">Save community posts you want to revisit later.</p>
           </div>

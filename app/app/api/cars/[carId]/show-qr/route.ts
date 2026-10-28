@@ -23,7 +23,7 @@ export async function GET(
     select: { username: true, name: true },
   }) as any;
 
-  const base = process.env.NEXT_PUBLIC_BASE_URL || "https://garage.jorgeiglesias.com";
+  const base = process.env.NEXT_PUBLIC_BASE_URL || "https://garagemeet.com";
   const cardUrl = user?.username
     ? `${base}/u/${user.username}/car/${carId}`
     : `${base}/car/${carId}`;

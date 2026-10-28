@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Glyph from "@/app/components/Glyph";
 
 export default function MatomoCheckPage() {
   const [status, setStatus] = useState<"checking" | "ok" | "missing">("checking");
@@ -26,8 +27,8 @@ export default function MatomoCheckPage() {
         <p className="text-sm text-gray-300">
           Status:{" "}
           {status === "checking" && <span className="text-gray-500">Checking…</span>}
-          {status === "ok" && <span className="text-emerald-400 font-semibold">Loaded ✅</span>}
-          {status === "missing" && <span className="text-red-400 font-semibold">Not found ❌</span>}
+          {status === "ok" && <span className="text-emerald-400 font-semibold">Loaded <Glyph e="✅" /></span>}
+          {status === "missing" && <span className="text-red-400 font-semibold">Not found <Glyph e="❌" /></span>}
         </p>
         <p className="text-xs text-gray-500">_paq queue length: {queueLen}</p>
       </div>

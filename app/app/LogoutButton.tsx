@@ -1,5 +1,6 @@
 "use client";
 
+import Glyph from "@/app/components/Glyph";
 export default function LogoutButton({ name }: { name: string | null }) {
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
@@ -13,7 +14,7 @@ export default function LogoutButton({ name }: { name: string | null }) {
       aria-label="Logout"
       title="Logout"
     >
-      <span>👤</span>
+      <span><Glyph e="👤" /></span>
       <span className="hidden md:inline max-w-24 truncate">{name ?? "Me"}</span>
       <span className="text-gray-500">↩</span>
     </button>

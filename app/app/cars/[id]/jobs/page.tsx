@@ -56,7 +56,7 @@ export default async function CarJobsPage({ params }: { params: Promise<{ id: st
         </div>
         <Link
           href={`/jobs/new?carId=${id}`}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-amber-500 text-gray-950 hover:bg-amber-400 transition-colors active:scale-95"
+          className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-amber-500 text-on-accent hover:bg-amber-400 transition-colors active:scale-95"
         >
           <Plus size={13} />
           {tr.newJob}

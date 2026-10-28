@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import localFont from "next/font/local";
 import "./globals.css";
 import AppShell from "./components/AppShell";
 import { AppProviders } from "./providers/AppProviders";
@@ -8,14 +9,33 @@ import AIAssistant from "./components/AIAssistant";
 import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 
+const plex = localFont({
+  src: [
+    { path: "./fonts/ibm-plex-sans-latin-400-normal.woff2", weight: "400" },
+    { path: "./fonts/ibm-plex-sans-latin-500-normal.woff2", weight: "500" },
+    { path: "./fonts/ibm-plex-sans-latin-600-normal.woff2", weight: "600" },
+    { path: "./fonts/ibm-plex-sans-latin-700-normal.woff2", weight: "700" },
+  ],
+  variable: "--font-plex",
+  display: "swap",
+});
+const grotesk = localFont({ src: "./fonts/space-grotesk-latin-wght-normal.woff2", weight: "300 700", variable: "--font-grotesk", display: "swap" });
+
 export const metadata: Metadata = {
-  title: "GarageMeet",
-  description: "Online car meets with friends. Track your garage, share service records, and connect with fellow enthusiasts.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://garagemeet.com"),
+  title: { default: "GarageMeet", template: "%s · GarageMeet" },
+  description: "Service history, receipts, warranties and projects for every vehicle you own — and a place to share the builds you are proud of.",
   manifest: "/manifest.json",
+  appleWebApp: { capable: true, title: "GarageMeet", statusBarStyle: "default" },
+  openGraph: { siteName: "GarageMeet", type: "website", locale: "en_US" },
+  twitter: { card: "summary_large_image" },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#030712",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f3f6fb" },
+    { media: "(prefers-color-scheme: dark)", color: "#0b1220" },
+  ],
   width: "device-width",
   initialScale: 1,
 };
@@ -24,10 +44,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   let isAdmin = false;
   let inboxCount = 0;
   let hasApiKey = false;
+  let userName: string | null = null;
+  let userId: string | null = null;
   let vehicles: { id: string; year: number; make: string; model: string; color: string | null; assetType: string }[] = [];
   try {
     const session = await getSession();
     if (session) {
+      userName = session.name || session.email;
+      userId = session.userId;
       const [user, cars] = await Promise.all([
         (prisma.user as any).findUnique({
           where: { id: session.userId },
@@ -51,11 +75,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   }
 
   return (
-    <html lang="en" data-theme="dark">
+    <html lang="en" data-theme="light" className={`${plex.variable} ${grotesk.variable}`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: `
           try {
-            var t = localStorage.getItem('garage-theme') || 'dark';
+            var t = localStorage.getItem('garage-theme') || 'light';
             document.documentElement.setAttribute('data-theme', t);
           } catch(e) {}
         `}} />
@@ -72,11 +96,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           })();
         `}} />
       </head>
-      <body className="bg-gray-950 text-gray-100 min-h-screen antialiased overflow-x-hidden">
+      <body className="bg-gray-950 text-white min-h-screen antialiased overflow-x-hidden">
         <AppProviders>
           <GuestProvider>
             <GuestBanner />
-            <AppShell isAdmin={isAdmin} inboxCount={inboxCount} hasApiKey={hasApiKey}>
+            <AppShell isAdmin={isAdmin} inboxCount={inboxCount} hasApiKey={hasApiKey} userName={userName} userId={userId}>
               {children}
             </AppShell>
             <AIAssistant />

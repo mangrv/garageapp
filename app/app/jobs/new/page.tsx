@@ -3,16 +3,17 @@ import { redirect } from "next/navigation";
 import { randomUUID } from "crypto";
 import { requireSession } from "@/lib/session";
 import AIBuilder from "./AIBuilder";
+import Glyph from "@/app/components/Glyph";
 
 const TEMPLATES = [
-  { id: "tune_up",       label: "🔧 Tune Up (Full) — plugs, filters, PCV, fluids" },
-  { id: "oil_change",    label: "🛢 Oil Change + Filters — oil, air, cabin" },
-  { id: "diff_service",  label: "⚙️ Differential Service — front, rear, transfer case" },
-  { id: "trans_service", label: "🔄 Transmission Fluid Service" },
-  { id: "brake_job",     label: "🛞 Brake Job — pads, rotors, bed-in" },
-  { id: "car_wash",      label: "🚿 Car Wash + Detail — full process log" },
-  { id: "pentastar",     label: "🔩 Pentastar Oil Cooler + Throttle Body (advanced)" },
-  { id: "blank",         label: "📋 Blank — start from scratch" },
+  { id: "tune_up",       label: "Tune Up (Full) — plugs, filters, PCV, fluids" },
+  { id: "oil_change",    label: "Oil Change + Filters — oil, air, cabin" },
+  { id: "diff_service",  label: "Differential Service — front, rear, transfer case" },
+  { id: "trans_service", label: "Transmission Fluid Service" },
+  { id: "brake_job",     label: "Brake Job — pads, rotors, bed-in" },
+  { id: "car_wash",      label: "Car Wash + Detail — full process log" },
+  { id: "pentastar",     label: "Pentastar Oil Cooler + Throttle Body (advanced)" },
+  { id: "blank",         label: "Blank — start from scratch" },
 ];
 
 export default async function NewJob({
@@ -71,7 +72,7 @@ export default async function NewJob({
 
           {/* Car picker */}
           <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4 space-y-3">
-            <div className="text-sm font-semibold text-gray-300">🚗 Which car?</div>
+            <div className="text-sm font-semibold text-gray-300"><Glyph e="🚗" /> Which car?</div>
             {cars.length === 0 ? (
               <div className="text-sm text-gray-500">
                 No cars yet.{" "}
@@ -111,7 +112,7 @@ export default async function NewJob({
 
           {/* Job details */}
           <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4 space-y-3">
-            <div className="text-sm font-semibold text-gray-300">🔧 Job</div>
+            <div className="text-sm font-semibold text-gray-300"><Glyph e="🔧" /> Job</div>
             <div>
               <label className="block text-xs text-gray-400 mb-1">Title *</label>
               <input
@@ -134,12 +135,12 @@ export default async function NewJob({
 
           {/* Template */}
           <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4 space-y-2">
-            <div className="text-sm font-semibold text-gray-300">📋 Start from template</div>
+            <div className="text-sm font-semibold text-gray-300"><Glyph e="📋" /> Start from template</div>
 
             {/* User saved templates */}
             {userTemplates.length > 0 && (
               <div className="space-y-1">
-                <div className="text-xs text-amber-400 font-medium px-1 pt-1">💾 My Templates</div>
+                <div className="text-xs text-amber-400 font-medium px-1 pt-1"><Glyph e="💾" /> My Templates</div>
                 {userTemplates.map((ut) => (
                   <label key={ut.id} className="flex items-center gap-3 p-2.5 rounded-xl cursor-pointer active:bg-gray-800 bg-gray-800/50">
                     <input type="radio" name="template" value={`user:${ut.id}`} className="accent-amber-500 w-4 h-4" />
@@ -147,7 +148,7 @@ export default async function NewJob({
                   </label>
                 ))}
                 <div className="border-t border-gray-800 pt-2 mt-1" />
-                <div className="text-xs text-gray-500 font-medium px-1">🔧 Built-in Templates</div>
+                <div className="text-xs text-gray-500 font-medium px-1"><Glyph e="🔧" /> Built-in Templates</div>
               </div>
             )}
 
@@ -167,7 +168,7 @@ export default async function NewJob({
 
           <button
             type="submit"
-            className="w-full bg-amber-500 text-gray-950 font-bold py-3.5 rounded-xl text-base active:scale-95 transition-transform"
+            className="w-full bg-amber-500 text-on-accent font-bold py-3.5 rounded-xl text-base active:scale-95 transition-transform"
           >
             Create Job →
           </button>
@@ -256,7 +257,7 @@ async function seedTuneUp(jobId: string) {
         "Check belt tensioner — bounce test (should have minimal play)",
         "Squeeze upper/lower radiator hoses — soft + mushy = replace soon",
         "Check heater hoses",
-        "📸 Photo anything that looks questionable",
+        "Photo anything that looks questionable",
       ]
     },
     {
@@ -329,7 +330,7 @@ async function seedDiffService(jobId: string) {
         "Pump new fluid in fill hole until it reaches bottom of fill hole threads",
         "Reinstall fill plug",
         "Wipe down + inspect for leaks",
-        "📸 Photo of fill/drain plug area",
+        "Photo of fill/drain plug area",
       ]
     },
     {
@@ -420,7 +421,7 @@ async function seedTransService(jobId: string) {
     {
       e: "6️⃣", t: "Test drive + log", tasks: [
         "Test drive — check for smooth shifts",
-        "No harsh shifts, slipping, or delay = ✅",
+        "No harsh shifts, slipping, or delay =",
         "Recheck for leaks after drive",
         "Log: date, mileage, fluid spec + brand, qty used",
       ]
@@ -510,7 +511,7 @@ async function seedCarWash(jobId: string) {
     },
     {
       e: "📝", t: "Log this wash", tasks: [
-        "Rate paint condition: ⭐⭐⭐⭐⭐",
+        "Rate paint condition:",
         "Products used today: ___",
         "Any issues noted (chips, scratches, swirls): ___",
         "Next wax/sealant due: ___",
@@ -538,21 +539,21 @@ async function seedPentastar(jobId: string) {
     { e: "1️⃣", t: "Prep the Work Area", tasks: [{ t: "Let engine cool completely" }, { t: "Disconnect negative battery terminal" }, { t: "Remove engine cover" }, { t: "Set up magnetic trays" }, { t: "Lay rags over fenders" }, { t: "Put cardboard under car" }, { t: "Tools ready: 8mm, 10mm, 13mm" }, { t: "Extensions ready" }, { t: "Spark plug socket ready" }, { t: "Torque wrench ready" }] },
     { e: "2️⃣", t: "Remove Intake System", tasks: [{ t: "Remove air intake tube" }, { t: "Remove air box lid if needed" }, { t: "Disconnect MAF sensor" }, { t: "Disconnect throttle body connector" }, { t: "Remove throttle body bolts" }, { t: "Pull off throttle body — set aside" }] },
     { e: "3️⃣", t: "Clean Throttle Body", tasks: [{ t: "Spray throttle body cleaner" }, { t: "Clean throttle plate" }, { t: "Clean inside bore" }, { t: "Use microfiber or lint-free rag" }, { t: "Set aside — install new gasket during reassembly", tip: "Don't install gasket yet" }] },
-    { e: "4️⃣", t: "Remove Intake Manifold", tasks: [{ t: "Disconnect MAP sensor" }, { t: "Disconnect EVAP line" }, { t: "Disconnect PCV hose" }, { t: "Disconnect injector harness clips" }, { t: "Remove intake manifold bolts" }, { t: "Lift manifold slowly" }, { t: "Cover intake ports with clean rags", w: "⚠️ Do this immediately — dropped bolts = engine destruction" }] },
-    { e: "5️⃣", t: "First Inspection Phase", tasks: [{ t: "Check: Oil pooled around oil cooler", tip: "Very common on Pentastar" }, { t: "Check: Spark plug wells for oil" }, { t: "Check: Intake ports carbon level" }, { t: "Check: Wiring harness brittleness" }, { t: "📸 Take photos NOW — document everything" }] },
+    { e: "4️⃣", t: "Remove Intake Manifold", tasks: [{ t: "Disconnect MAP sensor" }, { t: "Disconnect EVAP line" }, { t: "Disconnect PCV hose" }, { t: "Disconnect injector harness clips" }, { t: "Remove intake manifold bolts" }, { t: "Lift manifold slowly" }, { t: "Cover intake ports with clean rags", w: "Do this immediately — dropped bolts = engine destruction" }] },
+    { e: "5️⃣", t: "First Inspection Phase", tasks: [{ t: "Check: Oil pooled around oil cooler", tip: "Very common on Pentastar" }, { t: "Check: Spark plug wells for oil" }, { t: "Check: Intake ports carbon level" }, { t: "Check: Wiring harness brittleness" }, { t: "Take photos NOW — document everything" }] },
     { e: "6️⃣", t: "Remove Ignition Coils", tasks: [{ t: "Remove coil bolts" }, { t: "Remove ignition coils" }, { t: "Inspect coil boots" }, { t: "If clean → set aside for reinstall" }] },
     { e: "7️⃣", t: "Replace Spark Plugs", tasks: [{ t: "Blow debris out of wells" }, { t: "Remove old spark plugs" }, { t: "Install new spark plugs" }, { t: "Torque to 13 ft-lb" }, { t: "Dielectric grease on coil boots (optional)", tip: "Prevents boots sticking to plugs later" }] },
     { e: "8️⃣", t: "Remove Oil Cooler Housing", tasks: [{ t: "Disconnect oil pressure sensor connector" }, { t: "Disconnect coolant lines" }, { t: "Disconnect oil temp sensor" }, { t: "Remove cooler bolts" }, { t: "Lift cooler assembly out" }] },
-    { e: "9️⃣", t: "Clean Engine Valley", tasks: [{ t: "Clean pooled oil with paper towels" }, { t: "Spray brake cleaner on sludge/dirt" }, { t: "Wipe clean — repeat until aluminum looks dry" }, { t: "Verify no debris near oil passages", w: "⚠️ Do NOT let debris fall into oil passages" }] },
+    { e: "9️⃣", t: "Clean Engine Valley", tasks: [{ t: "Clean pooled oil with paper towels" }, { t: "Spray brake cleaner on sludge/dirt" }, { t: "Wipe clean — repeat until aluminum looks dry" }, { t: "Verify no debris near oil passages", w: "Do NOT let debris fall into oil passages" }] },
     { e: "🔟", t: "Replace Oil Pressure Sending Unit", tasks: [{ t: "Remove old sensor from cooler housing" }, { t: "Install new sensor", tip: "Snug only — do NOT overtighten" }] },
     { e: "1️⃣1️⃣", t: "Replace PCV Valve", tasks: [{ t: "Unscrew old PCV valve" }, { t: "Install new PCV valve", tip: "Takes about 30 seconds" }] },
-    { e: "1️⃣2️⃣", t: "Install New Oil Cooler Housing", tasks: [{ t: "Clean mating surface with brake cleaner" }, { t: "Place new cooler unit" }, { t: "Hand thread all bolts first" }, { t: "Torque: center → outward pattern" }, { t: "Torque to 8–9 Nm (70–80 in-lb)", w: "⚠️ Do NOT overtighten — #1 DIY mistake" }] },
+    { e: "1️⃣2️⃣", t: "Install New Oil Cooler Housing", tasks: [{ t: "Clean mating surface with brake cleaner" }, { t: "Place new cooler unit" }, { t: "Hand thread all bolts first" }, { t: "Torque: center → outward pattern" }, { t: "Torque to 8–9 Nm (70–80 in-lb)", w: "Do NOT overtighten — #1 DIY mistake" }] },
     { e: "1️⃣3️⃣", t: "Final Cleaning", tasks: [{ t: "Clean intake manifold interior" }, { t: "Clean throttle body mounting area" }, { t: "Clean any spilled oil", tip: "Prevents false leak scares after startup" }] },
     { e: "1️⃣4️⃣", t: "Reinstall Intake Manifold", tasks: [{ t: "Remove all intake port rags — count them" }, { t: "Install intake manifold" }, { t: "Torque bolts in cross pattern" }, { t: "Reconnect injector harness" }, { t: "Reconnect MAP sensor" }, { t: "Reconnect EVAP line" }, { t: "Reconnect PCV hose" }] },
     { e: "1️⃣5️⃣", t: "Reinstall Throttle Body", tasks: [{ t: "Install new throttle body gasket" }, { t: "Install throttle body" }, { t: "Reconnect throttle body connector" }] },
     { e: "1️⃣6️⃣", t: "Reinstall Intake Tube", tasks: [{ t: "Reconnect intake hose" }, { t: "Reconnect MAF sensor" }] },
     { e: "1️⃣7️⃣", t: "Fluids", tasks: [{ t: "Check coolant reservoir level" }, { t: "Top off coolant if needed" }] },
-    { e: "1️⃣8️⃣", t: "First Startup", tasks: [{ t: "Reconnect negative battery terminal" }, { t: "Start engine" }, { t: "Expect slightly rough idle ~10 sec (normal)" }, { t: "Check for oil leaks" }, { t: "Check for coolant leaks" }, { t: "📸 Record first startup" }, { t: "⏰ Recheck coolant level next morning", tip: "Air pockets purge overnight" }] },
+    { e: "1️⃣8️⃣", t: "First Startup", tasks: [{ t: "Reconnect negative battery terminal" }, { t: "Start engine" }, { t: "Expect slightly rough idle ~10 sec (normal)" }, { t: "Check for oil leaks" }, { t: "Check for coolant leaks" }, { t: "Record first startup" }, { t: "Recheck coolant level next morning", tip: "Air pockets purge overnight" }] },
   ];
 
   for (let i = 0; i < phases.length; i++) {
