@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { signToken, COOKIE_NAME } from "@/lib/auth";
 import bcrypt from "bcryptjs";
 import { randomUUID } from "crypto";
+import { trackServerMatomoEvent } from "@/lib/matomo-server";
 
 const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
 const GOOGLE_USERINFO_URL = "https://openidconnect.googleapis.com/v1/userinfo";
@@ -141,6 +142,7 @@ export async function GET(req: NextRequest) {
       }
     }
 
+    void trackServerMatomoEvent({ category: "Account", action: isNewUser ? "sign_up" : "login", name: invite ? "google_invite" : "google", userId: user.id, path: "/api/auth/google/callback" });
     const token = await signToken({
       userId: user.id,
       email: user.email,

@@ -4,6 +4,7 @@ import { requireSession } from "@/lib/session";
 import { normalizePostBody } from "@/lib/posts-helpers";
 import { mediaExists } from "@/lib/media-storage";
 import path from "path";
+import { trackServerMatomoEvent } from "@/lib/matomo-server";
 
 export async function GET() {
   const session = await requireSession().catch(() => null);
@@ -42,5 +43,6 @@ export async function POST(req: NextRequest) {
       ...normalized,
     },
   });
+  void trackServerMatomoEvent({ category: "Community", action: "post_published", userId: session.userId, path: "/social" });
   return NextResponse.json({ post });
 }

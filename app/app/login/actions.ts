@@ -5,6 +5,7 @@ import { signToken, COOKIE_NAME } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
+import { trackServerMatomoEvent } from "@/lib/matomo-server";
 
 function safeNext(value: FormDataEntryValue | null) {
   if (typeof value !== "string") return "/dashboard";
@@ -28,6 +29,7 @@ export async function loginAction(
   const valid = await bcrypt.compare(password, user.passwordHash);
   if (!valid) return { error: "Invalid email or password" };
 
+  void trackServerMatomoEvent({ category: "Account", action: "login", name: "email", userId: user.id, path: "/login" });
   const token = await signToken({ userId: user.id, email: user.email, name: user.name, role: (user as any).role ?? "user" });
   const cookieStore = await cookies();
   cookieStore.set(COOKIE_NAME, token, {

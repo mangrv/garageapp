@@ -42,6 +42,7 @@ export async function POST(req: NextRequest) {
       toolsJson: project.toolsJson?.length ? JSON.stringify(project.toolsJson) : null,
     },
   });
+  void trackServerMatomoEvent({ category: "Garage", action: "job_created", name: "ai", userId: session.userId, path: "/jobs/new" });
 
   // Create phases + tasks
   for (let i = 0; i < project.phases.length; i++) {

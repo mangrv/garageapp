@@ -8,6 +8,7 @@ import { unlink } from "fs/promises";
 import path from "path";
 import { requireSession } from "@/lib/session";
 import { buildUserMediaPath, persistMedia } from "@/lib/media-storage";
+import { trackServerMatomoEvent } from "@/lib/matomo-server";
 
 export async function createServiceRecordFromJob(data: {
   carId: string;
@@ -46,6 +47,7 @@ export async function createServiceRecordFromJob(data: {
       cost: totalCost > 0 ? totalCost : null,
     } as any,
   });
+  void requireSession().then((sess) => trackServerMatomoEvent({ category: "Garage", action: "service_logged", name: "from_job", userId: sess.userId, path: "/job/:id" })).catch(() => {});
 
   // Log mileage to history
   if (parsedMileage) {

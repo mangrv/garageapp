@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { requireSession } from "@/lib/session";
 import { randomUUID } from "crypto";
 import { buildUserMediaPath, persistMedia } from "@/lib/media-storage";
+import { trackServerMatomoEvent } from "@/lib/matomo-server";
 
 const MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
 const ALLOWED_MIME = new Set([
@@ -111,6 +112,7 @@ export async function POST(req: NextRequest) {
     },
     include: { lineItems: true },
   });
+  void trackServerMatomoEvent({ category: "Garage", action: "receipt_added", name: status, userId: session.userId, path: "/receipts" });
 
   return NextResponse.json({ receipt });
 }

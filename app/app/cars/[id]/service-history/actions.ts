@@ -2,7 +2,9 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { getSession } from "@/lib/session";
 import { randomUUID } from "crypto";
+import { trackServerMatomoEvent } from "@/lib/matomo-server";
 
 async function logMileageFromService(carId: string, mileage: number, recordedAt: Date, sourceId: string) {
   await prisma.mileageLog.create({
@@ -42,6 +44,7 @@ export async function createServiceRecord(data: {
       serviceDate: new Date(data.serviceDate),
     },
   });
+  void getSession().then((sess) => trackServerMatomoEvent({ category: "Garage", action: "service_logged", name: "manual", userId: sess?.userId, path: "/cars/:id/service-history" }));
 
   if (data.mileage) {
     await logMileageFromService(data.carId, data.mileage, new Date(data.serviceDate), record.id);

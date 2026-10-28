@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { randomUUID } from "crypto";
 import { requireSession } from "@/lib/session";
 import CarForm from "./CarForm";
+import { trackServerMatomoEvent } from "@/lib/matomo-server";
 
 export default function NewCar() {
   async function create(formData: FormData) {
@@ -57,6 +58,7 @@ export default function NewCar() {
         wheelSize,
       },
     });
+    void trackServerMatomoEvent({ category: "Garage", action: "vehicle_added", name: assetType, userId: session.userId, path: "/cars/new" });
 
     redirect("/dashboard");
   }

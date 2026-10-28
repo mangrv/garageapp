@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireSession } from "@/lib/session";
+import { trackServerMatomoEvent } from "@/lib/matomo-server";
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   let session;
@@ -19,5 +20,8 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   if (typeof body.status === "string") updates.status = body.status;
 
   const updated = await prisma.job.update({ where: { id }, data: updates });
+  if (updates.status === "done" && job.status !== "done") {
+    void trackServerMatomoEvent({ category: "Garage", action: "job_completed", userId: session.userId, path: "/job/:id" });
+  }
   return NextResponse.json({ job: updated });
 }

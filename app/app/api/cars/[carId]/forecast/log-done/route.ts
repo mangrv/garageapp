@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireSession } from "@/lib/session";
 import { randomUUID } from "crypto";
+import { trackServerMatomoEvent } from "@/lib/matomo-server";
 
 export async function POST(
   req: NextRequest,
@@ -31,6 +32,7 @@ export async function POST(
       notes: "Logged from maintenance forecast",
     },
   });
+  void trackServerMatomoEvent({ category: "Garage", action: "service_logged", name: "forecast", userId: session.userId, path: "/cars/:id" });
 
   // Update car mileage + log if higher
   if (parsedMileage && parsedMileage > (car.mileage ?? 0)) {

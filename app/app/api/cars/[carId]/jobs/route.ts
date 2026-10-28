@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireSession } from "@/lib/session";
 import { randomUUID } from "crypto";
+import { trackServerMatomoEvent } from "@/lib/matomo-server";
 
 export async function POST(
   req: NextRequest,
@@ -39,6 +40,7 @@ export async function POST(
       },
     },
   });
+  void trackServerMatomoEvent({ category: "Garage", action: "job_created", name: "quick_add", userId: session.userId, path: "/cars/:id/jobs" });
 
   const project = await prisma.job.findUnique({
     where: { id: jobId },

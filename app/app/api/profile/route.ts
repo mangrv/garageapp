@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireSession } from "@/lib/session";
+import { trackServerMatomoEvent } from "@/lib/matomo-server";
 
 export async function PATCH(req: NextRequest) {
   let session;
@@ -41,6 +42,10 @@ export async function PATCH(req: NextRequest) {
         ...(isPublic !== undefined && { isPublic: Boolean(isPublic) }),
       },
     });
+  }
+
+  if (isPublic !== undefined) {
+    void trackServerMatomoEvent({ category: "Community", action: "public_profile", name: Boolean(isPublic) ? "on" : "off", userId: session.userId, path: "/settings" });
   }
 
   return NextResponse.json({ ok: true });

@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { randomUUID } from "crypto";
 import { signToken, COOKIE_NAME } from "@/lib/auth";
+import { trackServerMatomoEvent } from "@/lib/matomo-server";
 
 export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => null);
@@ -70,6 +71,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Auto-login: create session and redirect to onboarding
+  void trackServerMatomoEvent({ category: "Account", action: "sign_up", name: "email_invite", userId: userId, path: "/register/invite" });
   const sessionToken = await signToken({
     userId,
     email: email.toLowerCase(),

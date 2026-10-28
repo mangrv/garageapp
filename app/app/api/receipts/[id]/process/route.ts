@@ -8,6 +8,7 @@ import { readMedia } from "@/lib/media-storage";
 import { callGarageAIVisionJsonObject } from "@/lib/ai-provider";
 import { execFile } from "child_process";
 import { promisify } from "util";
+import { trackServerMatomoEvent } from "@/lib/matomo-server";
 
 const execFileAsync = promisify(execFile);
 
@@ -260,6 +261,7 @@ Review the actual receipt image yourself. Use the OCR only as a hint. Correct OC
     });
   }
 
+  void trackServerMatomoEvent({ category: "Garage", action: "receipt_scanned", name: String(extractionMethod), userId: session.userId, path: "/receipts/:id" });
   return NextResponse.json({
     extracted,
     method: extractionMethod,

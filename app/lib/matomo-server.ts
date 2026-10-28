@@ -21,7 +21,7 @@ export async function trackServerMatomoEvent(opts: {
     if (typeof opts.value === "number") params.set("e_v", String(opts.value));
     if (opts.userId) params.set("uid", opts.userId);
 
-    await fetch(`${base}?${params.toString()}`, { method: "GET", cache: "no-store" });
+    await fetch(`${base}?${params.toString()}`, { method: "GET", cache: "no-store", signal: AbortSignal.timeout(3000) });
   } catch {
     // telemetry should never break app flow
   }

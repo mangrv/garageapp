@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireSession } from "@/lib/session";
+import { trackServerMatomoEvent } from "@/lib/matomo-server";
 
 export async function POST(
   _req: NextRequest,
@@ -65,6 +66,7 @@ export async function POST(
       },
     },
   });
+  void trackServerMatomoEvent({ category: "Garage", action: "job_created", name: "clone", userId: session.userId, path: "/job/:id" });
 
   return NextResponse.json({ id: cloned.id });
 }

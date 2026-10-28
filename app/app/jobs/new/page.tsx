@@ -4,6 +4,7 @@ import { randomUUID } from "crypto";
 import { requireSession } from "@/lib/session";
 import AIBuilder from "./AIBuilder";
 import Glyph from "@/app/components/Glyph";
+import { trackServerMatomoEvent } from "@/lib/matomo-server";
 
 const TEMPLATES = [
   { id: "tune_up",       label: "Tune Up (Full) — plugs, filters, PCV, fluids" },
@@ -42,6 +43,7 @@ export default async function NewJob({
     const project = await prisma.job.create({
       data: { title, userId: sess.userId, carId, notes, status: "active" },
     });
+    void trackServerMatomoEvent({ category: "Garage", action: "job_created", name: template === "blank" ? "blank" : template.startsWith("user:") ? "my_template" : template, userId: sess.userId, path: "/jobs/new" });
 
     if (template.startsWith("user:")) {
       const userTemplateId = template.slice(5);

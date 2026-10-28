@@ -6,6 +6,8 @@ import { AppProviders } from "./providers/AppProviders";
 import { GuestProvider } from "./providers/GuestProvider";
 import GuestBanner from "./components/GuestBanner";
 import AIAssistant from "./components/AIAssistant";
+import MatomoTracker from "./components/MatomoTracker";
+import { Suspense } from "react";
 import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 
@@ -85,8 +87,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         `}} />
         <script dangerouslySetInnerHTML={{ __html: `
           var _paq = window._paq = window._paq || [];
-          _paq.push(['trackPageView']);
-          _paq.push(['enableLinkTracking']);
+          _paq.push(['disableCookies']);
           (function() {
             var u="https://analytics.jlikr.com/";
             _paq.push(['setTrackerUrl', u+'matomo.php']);
@@ -97,6 +98,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         `}} />
       </head>
       <body className="bg-gray-950 text-white min-h-screen antialiased overflow-x-hidden">
+        <Suspense fallback={null}>
+          <MatomoTracker userId={userId} />
+        </Suspense>
         <AppProviders>
           <GuestProvider>
             <GuestBanner />
