@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireSession } from "@/lib/session";
+import { trackVehiclesAdded } from "@/lib/matomo-server";
 import { randomUUID } from "crypto";
 import type { GuestDraft } from "@/lib/guestDraft";
 
@@ -146,6 +147,7 @@ export async function POST(req: NextRequest) {
       summary.receipts++;
     }
 
+    void trackVehiclesAdded({ userId: session.userId, added: summary.cars, name: "guest_import", path: "/guest" });
     return NextResponse.json({ ok: true, summary });
   } catch (e: any) {
     console.error("Guest import error:", e);

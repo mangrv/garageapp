@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireSession } from "@/lib/session";
-import { trackServerMatomoEvent } from "@/lib/matomo-server";
+import { trackServerMatomoEvent, trackVehiclesAdded } from "@/lib/matomo-server";
 
 export async function POST(req: NextRequest) {
   let session;
@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
           } as any,
         });
         await trackServerMatomoEvent({ category: "AI API", action: "execute_success", name: "create_car", userId: session.userId, path: "/api/ai/execute" });
+        void trackVehiclesAdded({ userId: session.userId, added: 1, name: "ai_assistant", path: "/api/ai/execute" });
         return NextResponse.json({ ok: true, carId: car.id, label: `${car.year} ${car.make} ${car.model}` });
       }
 
